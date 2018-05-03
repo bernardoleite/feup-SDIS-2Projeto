@@ -72,6 +72,7 @@ public class Server {
         counter++;
 
         users.add(new User(register.getEmail(),register.getPassword(),false,counter));
+        System.out.println("New Registration");
         return true;
     }
 
