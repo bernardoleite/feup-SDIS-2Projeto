@@ -1,13 +1,29 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
+import java.rmi.RemoteException;
+import java.util.*;
+import java.net.*;
 import java.io.*;
 
 
 public class Client {
 
-
+    private static AuthenticationChannel authChannel;
+    private String ip_authentication = "224.0.0.3";
+    private Integer port_authentication = 4444;
     public Client(){}
+
+    public void setAuthenticationChannel() {
+        try{
+            authChannel = new AuthenticationChannel(ip_authentication, port_authentication);
+        }
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void sendAuthentication(byte[] message) throws RemoteException, UnknownHostException, InterruptedException {
+        authChannel.sendMessage(message);
+	}
 
     public static void main(String[] args){
 
@@ -30,5 +46,6 @@ public class Client {
         }
 
         System.out.println(message);
+        SendMessageToChannel sendMessageToChannel = new SendMessageToChannel("authentication", message.getBytes());
     }
 }
