@@ -7,7 +7,8 @@ import java.io.*;
 public class MessageTreatment {
 
 	private byte[] messageToBeTreated;
-
+    private byte[] sendMessage;
+    private boolean isToSendMessage = false;
 	public MessageTreatment(byte[] messageToBeTreated){
       
         this.messageToBeTreated = messageToBeTreated;
@@ -19,14 +20,39 @@ public class MessageTreatment {
         String answer = new String(this.messageToBeTreated, 0, this.messageToBeTreated.length);
         String[] splitMessage = answer.split(" ");
         String action= splitMessage[0]; 
-
+        String email = splitMessage[1];
+        String password = splitMessage[2].trim();
+     
         switch(action){
             case "Register":
-                System.out.println("New Registration");
-                Register register = new Register(splitMessage[1],splitMessage[2]);
-            case "Login":
-                System.out.println("Login Attempt");
-                Login login = new Login(splitMessage[1],splitMessage[2]);
+                Register register = new Register(email,password);
+                isToSendMessage = true;
+                if(register.registerUser()){
+                    sendMessage = Messages.successRegister(email).getBytes();
+                }
+                else{
+                    sendMessage = Messages.unsuccessRegister(email).getBytes();
+                }
+                break;
+            case "Login":  
+                isToSendMessage = true;
+
+                Login login = new Login(email,password);
+                if(login.existUser()){
+                    sendMessage = Messages.successLogin(email).getBytes();
+                }
+                else{
+                    sendMessage = Messages.unsuccessLogin(email).getBytes();
+                }
+                break;
         }
+    }
+
+    public byte[] getSendMessage() {
+        return sendMessage;
+    }
+
+    public boolean getIsToSendMessage() {
+        return isToSendMessage;
     }
 }

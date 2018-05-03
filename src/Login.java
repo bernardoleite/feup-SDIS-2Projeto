@@ -6,8 +6,8 @@ import java.io.*;
 
 public class Login {
 
-    private String email;
-    private String password;
+    private String email="";
+    private String password="";
 
     public Login(String email, String password){
         this.email= email;
@@ -15,4 +15,8 @@ public class Login {
     }
 
    
+    public boolean existUser() {
+        System.out.println("Login Attempt");
+        return Server.existUser(email,password);
+    }
 }

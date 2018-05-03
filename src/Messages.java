@@ -22,4 +22,20 @@ public class Messages {
         return "Login " + email + ' ' + password;
     }
 
+    public static String successRegister(String email){
+        return "Success "+ email + " registration.";
+    }
+
+    public static String unsuccessRegister(String email){
+        return "User "+ email + " already exists.";
+    }
+    
+    public static String successLogin(String email){
+        return "Success "+ email + " login.";
+    }
+
+    public static String unsuccessLogin(String email){
+        return "Failed "+ email + " login.";
+    }
+
 }

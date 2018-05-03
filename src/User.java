@@ -6,14 +6,14 @@ import java.io.*;
 
 public class User {
 
-    private String email;
-    private String password;
-    private String isAdmin;
+    private String email="";
+    private String password="";
+    private boolean isAdmin;
     private Integer id;
     private ArrayList<Travel> myTravels = new ArrayList<Travel>();
     private ArrayList<Travel> joinTravels= new ArrayList<Travel>();
 
-    public User(String email, String password, String isAdmin,Integer id){
+    public User(String email, String password, Boolean isAdmin,Integer id){
         this.email=email;
         this.password=password;
         this.isAdmin=isAdmin;
@@ -52,5 +52,13 @@ public class User {
     public boolean deleteJoinTravel(Travel travel){
 
         return joinTravels.remove(travel);
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getPassword(){
+        return password;
     }
 }

@@ -38,16 +38,31 @@ public class AuthenticationChannel implements Runnable{
     public void sendMessage(byte[] toSendContent) throws UnknownHostException, InterruptedException{
 
 		try(DatagramSocket senderSocket = new DatagramSocket()){
-
 			//create a packet that will contain the data
 			DatagramPacket msgPacket = new DatagramPacket(toSendContent ,toSendContent.length,address,port);
 			senderSocket.send(msgPacket);
 
-			
 		} catch(IOException ex){
 			ex.printStackTrace();
 
 		}
+	}
+
+	public byte[] receiveMessage() throws UnknownHostException, InterruptedException{
+
+		byte[] buf = new byte[65000];
+		byte[] received = new byte[65000];
+		openSocket();
+		
+		try{
+
+			DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
+			receiverSocket.receive(msgReceiverPacket);
+			received = Arrays.copyOfRange(buf, 0, buf.length-1);
+		}catch(IOException ex){
+			ex.printStackTrace();
+		}
+		return received;
 	}
 
     public static void openSocket(){
@@ -74,13 +89,20 @@ public class AuthenticationChannel implements Runnable{
 				DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
 				receiverSocket.receive(msgReceiverPacket);
 
+				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
 
-				byte[] toSend = Arrays.copyOfRange(buf, 0, buf.length-1);
-				MessageTreatment message = new MessageTreatment(toSend);
-			
+				MessageTreatment message = new MessageTreatment(received);
+				Thread.sleep(50);
+				if(message.getIsToSendMessage())
+					sendMessage(message.getSendMessage());
+				
+
+				buf = new byte[65000];
+				received = new byte[65000];
+
 			}
 
-		}catch(IOException ex){
+		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		

@@ -9,11 +9,11 @@ import java.io.*;
 public class Client {
 
     private static AuthenticationChannel authChannel;
-    private String ip_authentication = "224.0.0.3";
-    private Integer port_authentication = 4444;
+    private static String ip_authentication = "224.0.0.3";
+    private static Integer port_authentication = 4444;
     public Client(){}
 
-    public void setAuthenticationChannel() {
+    public static void setAuthenticationChannel() {
         try{
             authChannel = new AuthenticationChannel(ip_authentication, port_authentication);
         }
@@ -27,6 +27,8 @@ public class Client {
 
     public static void main(String[] args){
 
+        System.setProperty("java.net.preferIPv4Stack", "true");
+
         if(args.length < 3)
             return;
 
@@ -34,18 +36,33 @@ public class Client {
         String email = args[1];
         String password = args[2];
         String message="";
+      
+        boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
 
-        //Bernardo faz verificação email agora
-
-        if(action.equals("Register")){
-            message =  Messages.userRegister(email,password);
+        if(!setEmail){
+            System.out.println("Invalid Email");
+            return;
         }
+        else{
 
-        else if(action.equals("Login")){
-            message=  Messages.userLogin(email,password);
+            if(action.equals("Register")){
+                message =  Messages.userRegister(email,password);
+            }
+
+            else if(action.equals("Login")){
+                message=  Messages.userLogin(email,password);
+            }
+        
+            System.out.println(message);
+            SendMessageToChannel sendMessageToChannel = new SendMessageToChannel("authentication", message.getBytes());
+            sendMessageToChannel.run();
         }
-
-        System.out.println(message);
-        SendMessageToChannel sendMessageToChannel = new SendMessageToChannel("authentication", message.getBytes());
+        try{
+        byte[] receive = authChannel.receiveMessage();
+        System.out.println(new String(receive));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
