@@ -6,7 +6,7 @@ public class SendMessageToChannel implements Runnable{
 	public SendMessageToChannel(String nameChannel, byte[] message){
 		this.nameChannel= nameChannel;
 		this.message = message;
-        Client.setAuthenticationChannel();
+    Client.setAuthenticationChannel();
 	}
 
 	@Override

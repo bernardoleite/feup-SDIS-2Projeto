@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class AuthenticationChannel implements Runnable{
+public class ListChannel implements Runnable{
 
     private static InetAddress address;
     private static Integer port;
@@ -21,7 +21,7 @@ public class AuthenticationChannel implements Runnable{
     private static ExecutorService exec;
 
 
-	public AuthenticationChannel(String address, int port) throws UnknownHostException{
+	public ListChannel(String address, int port) throws UnknownHostException{
 
         exec = Executors.newFixedThreadPool(1000);
 

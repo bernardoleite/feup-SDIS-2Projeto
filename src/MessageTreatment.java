@@ -10,19 +10,19 @@ public class MessageTreatment {
     private byte[] sendMessage;
     private boolean isToSendMessage = false;
 	public MessageTreatment(byte[] messageToBeTreated){
-      
+
         this.messageToBeTreated = messageToBeTreated;
         treatMessage();
     }
-    
+
     private void treatMessage() {
 
         String answer = new String(this.messageToBeTreated, 0, this.messageToBeTreated.length);
         String[] splitMessage = answer.split(" ");
-        String action= splitMessage[0]; 
+        String action= splitMessage[0];
         String email = splitMessage[1];
         String password = splitMessage[2].trim();
-     
+
         switch(action){
             case "Register":
                 Register register = new Register(email,password);
@@ -34,7 +34,7 @@ public class MessageTreatment {
                     sendMessage = Messages.unsuccessRegister(email).getBytes();
                 }
                 break;
-            case "Login":  
+            case "Login":
                 isToSendMessage = true;
 
                 Login login = new Login(email,password);
@@ -45,6 +45,10 @@ public class MessageTreatment {
                     sendMessage = Messages.unsuccessLogin(email).getBytes();
                 }
                 break;
+						case "Create":
+							break;
+						case "Delete":
+							break;
         }
     }
 
