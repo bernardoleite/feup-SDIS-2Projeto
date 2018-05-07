@@ -55,11 +55,11 @@ public class MessageTreatment {
                 break;
             case "Create":
 
-                String dateform = splitMessage[1] + " " + splitMessage[2];
-                String startPoint = splitMessage[3];
-                String endPoint = splitMessage[4];
-                String nrSeats = splitMessage[5];
-                String creator = splitMessage[6].trim();
+                String creator = splitMessage[1].trim();
+                String dateform = splitMessage[2] + " " + splitMessage[3];
+                String startPoint = splitMessage[4];
+                String endPoint = splitMessage[5];
+                String nrSeats = splitMessage[6].trim();
             
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
                 Date date = format.parse(dateform);
@@ -73,7 +73,7 @@ public class MessageTreatment {
                     }
                 }
 
-                String code = "travelIdentifier";
+                String code = creator;
                 isToSendMessage = true;
                 sendMessage = Messages.successCreateTravel(code).getBytes();
                 break;
