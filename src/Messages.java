@@ -1,5 +1,3 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.io.*;
 
@@ -48,6 +46,10 @@ public class Messages {
 
     public static String joinTravel(String personIdentifier,String travelIdentifier){
         return "Join " + personIdentifier+  " Travel number " + travelIdentifier;
+    }
+
+    public static String exitTravel(String personIdentifier,String travelIdentifier){
+        return "Exit " + personIdentifier+  " Travel number " + travelIdentifier;
     }
 
 

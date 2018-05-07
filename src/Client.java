@@ -1,6 +1,3 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.RemoteException;
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -24,9 +21,9 @@ public class Client {
 
 
     //Join and Exit Travel
-    private static JoinTravelChannel testChannel;
-    private static String ip_test = "224.0.0.5";
-    private static Integer port_test = 6666;
+    private static JoinTravelChannel joinTravelChannel;
+    private static String ip_joinTravel = "224.0.0.5";
+    private static Integer port_joinTravel = 6666;
 
     //List Travels
     private static ListChannel listChannel;
@@ -66,7 +63,7 @@ public class Client {
 
     public static void setJoinTravelChannel() {
         try{
-            testChannel = new JoinTravelChannel(ip_test, port_test);
+            joinTravelChannel = new JoinTravelChannel(ip_joinTravel, port_joinTravel);
         }
         catch (UnknownHostException e) {
             e.printStackTrace();
@@ -83,12 +80,16 @@ public class Client {
     }
 
 
-    public static void sendAuthentication(byte[] message) throws RemoteException, UnknownHostException, InterruptedException {
+    public static void sendAuthentication(byte[] message) throws UnknownHostException, InterruptedException {
         authChannel.sendMessage(message);
 	  }
 
-    public static void sendOwner(byte[] message) throws RemoteException, UnknownHostException, InterruptedException {
+    public static void sendOwner(byte[] message) throws UnknownHostException, InterruptedException {
         ownerChannel.sendMessage(message);
+    }
+
+    public static void sendJoinTravel(byte[] message) throws UnknownHostException, InterruptedException {
+        joinTravelChannel.sendMessage(message);
     }
 
     public static boolean isValidFormat(String format, String value) {
@@ -238,6 +239,18 @@ public boolean menuOptions(){
 
         message= Messages.joinTravel(email, travelID);
         System.out.println(message);
+        String receive = new String(sendCLientMessage("joinTravel", message));
+      }
+      else if(n==7){
+        System.out.println("Please, select the ID of the Travel: ");
+        String travelID= System.console().readLine();
+
+        message= Messages.exitTravel(email, travelID);
+        System.out.println(message);
+        String receive = new String(sendCLientMessage("joinTravel", message));
+      }
+      else if(n==8){
+         return true;
       }
 
   }
@@ -264,7 +277,10 @@ public boolean menuOptions(){
             receive = authChannel.receiveMessage();
           else if(channel.equals("owner"))
             receive = ownerChannel.receiveMessage();
+          else if(channel.equals("joinTravel"))
+            receive = joinTravelChannel.receiveMessage();
           System.out.println("Message Received: " + new String(receive));
+        
         }
         catch (Exception e) {
           e.printStackTrace();

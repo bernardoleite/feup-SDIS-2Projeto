@@ -1,5 +1,3 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Date;
@@ -77,6 +75,15 @@ public class MessageTreatment {
                 isToSendMessage = true;
                 sendMessage = Messages.successCreateTravel(code).getBytes();
                 break;
+            case "Join":
+                email = splitMessage[1];
+                String travelID = splitMessage[4];
+                if(Server.alreadyAnUser(email)){
+
+                }
+                else{
+
+                }
         }
 
     }

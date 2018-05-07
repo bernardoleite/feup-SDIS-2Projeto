@@ -1,5 +1,3 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -90,7 +88,7 @@ public class JoinTravelChannel implements Runnable{
 				receiverSocket.receive(msgReceiverPacket);
 
 				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
-        System.out.println(new String(received));
+        		System.out.println(new String(received));
 				MessageTreatment message = new MessageTreatment(received);
 				Thread.sleep(100);
 				if(message.getIsToSendMessage())

@@ -1,5 +1,3 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
@@ -8,6 +6,7 @@ import java.io.*;
 
 public class Travel {
 
+    private Integer ID;
     private Date date;
     private String startPoint;
     private String endPoint;
@@ -15,7 +14,8 @@ public class Travel {
     private User creator;
     private ArrayList<User> passengers = new ArrayList<User>();
 
-    public Travel(Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
+    public Travel(Integer ID, Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
+        this.ID=ID;
         this.date=date;
         this.startPoint=startPoint;
         this.endPoint=endPoint;
@@ -27,6 +27,12 @@ public class Travel {
         if(passengers.size() >= numberOfSeats)
             return false;
         
+        for(int i = 0; i < passengers.size(); i++) {
+            for(int j = 0; j < passengers.get(i).getJoinTravels().size(); j++) {
+                if(ID = passengers.get(i).getJoinTravels().get(j).getID())
+                    passengers.get(i).getJoinTravels().get(j).add(passenger);
+            }
+        }
         passengers.add(passenger);
         return true;
     }
@@ -44,6 +50,10 @@ public class Travel {
 
     public User getCreator(){
         return creator;
+    }
+
+    public Integer getID(){
+        return ID;
     }
 
 }

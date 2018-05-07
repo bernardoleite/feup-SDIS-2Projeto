@@ -1,11 +1,6 @@
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.RemoteException;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-
-
 
 public class Server {
 
@@ -21,18 +16,17 @@ public class Server {
     private static String ip_owner = "224.0.0.4";
     private static Integer port_owner = 5555;
 
-
     //Join and Exit Travel
-    private static JoinTravelChannel testChannel;
-    private static String ip_test = "224.0.0.5";
-    private static Integer port_test = 6666;
+    private static String ip_joinTravel = "224.0.0.5";
+    private static Integer port_joinTravel = 6666;
 
     //List Travels
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
 
 
-    private static Integer counter = 0;
+    private static Integer counterUsers = 4;
+    private static Integer counterTravels = 1;
 
     public Server() {
 
@@ -45,8 +39,8 @@ public class Server {
             Thread ownerChannel = new Thread(new OwnerChannel(ip_owner, port_owner));
             ownerChannel.start();
 
-            Thread testChannel = new Thread(new JoinTravelChannel(ip_test, port_test));
-            testChannel.start();
+            Thread joinTravelChannel = new Thread(new JoinTravelChannel(ip_joinTravel, port_joinTravel));
+            joinTravelChannel.start();
 
             Thread listChannel = new Thread(new ListChannel(ip_list, port_list));
             listChannel.start();
@@ -95,17 +89,64 @@ public class Server {
         return false;
     }
 
+    public static User getUser(String email){
+
+        for(int i=0; i < users.size();i++){
+            if(users.get(i).getEmail().equals(email))
+                return users.get(i);
+        }
+        for(int i=0; i < admins.size();i++){
+            if(admins.get(i).getEmail().equals(email))
+                return admins.get(i);
+        }
+
+        return null;
+    }
+    
+
+    public static boolean joinTravel(String travelID, String email){
+        Integer idTravel = Integer.parseInt(travelID);
+        User user = User.getUser(email);
+        
+        if(user!=null){
+        for(int i=0; i < admins.size();i++){
+            if(admins.get(i).getEmail().equals(email))
+                user = admins.get(i);
+        }
+
+        for(int i=0; i < users.size();i++){
+            if(users.get(i).getEmail().equals(email))
+                user = users.get(i);
+        }
+
+        for(int i=0; i < admins.size();i++){
+            if(email.equals(admins.get(i).getEmail()))
+                return false;
+            for(int j=0; j < admins.get(i).getMyTravels().size();j++){
+                if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
+                    admins.get(i).getMyTravels().get(j).addPassenger(user);
+                }
+            }
+        }
+
+        return true;
+    }
+    return false;
+    }
+
     public static ArrayList<User> getUsers(){
         return users;
     }
 
     public static boolean createNewTravel(Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
         
-        Travel newTravel = new Travel(date, startPoint, endPoint, numberOfSeats, creator);
+        Travel newTravel = new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, creator);
 
         for(int i = 0 ; i < users.size(); i++){
-            if(users.get(i).getEmail().equals(creator.getEmail()))
+            if(users.get(i).getEmail().equals(creator.getEmail())){
                 users.get(i).addMyTravel(newTravel);
+                counterTravels++;
+            }
         }
 
         System.out.println("Travel added!");
@@ -114,9 +155,9 @@ public class Server {
     }
 
     public static boolean register(Register register){
-        counter++;
+        counterUsers++;
 
-        users.add(new User(register.getEmail(),register.getPassword(),false,counter));
+        users.add(new User(register.getEmail(),register.getPassword(),false,counterUsers));
         System.out.println("New Registration");
         return true;
     }
