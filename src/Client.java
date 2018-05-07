@@ -227,8 +227,8 @@ public boolean menuOptions(){
             System.out.println("Message to be Sended: " + message);
             String receive = new String(sendCLientMessage("owner", message));
             String[] splitstr = receive.split(" ");
-            String action = splitstr[0]+" "+splitstr[1].trim();
-            if(action.equals("Created travelIdentifier"))
+            String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
+            if(action.equals("Success" + " " + currentUser + "travel created"))
               quit = true;
         //}
 

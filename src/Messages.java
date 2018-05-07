@@ -37,11 +37,11 @@ public class Messages {
     }
 
     public static String createTravel(String date, String startPoint, String endPoint, String numberOfSeats, String creator){
-        return "Create" + " " + date + " " + startPoint + " " + endPoint + " " + numberOfSeats + " " + creator;
+        return "Create" + " " + creator + " " + date + " " + startPoint + " " + endPoint + " " + numberOfSeats;
     }
 
-    public static String successCreateTravel(String travelIdentifier){
-        return "Created" +  " " + travelIdentifier;
+    public static String successCreateTravel(String creator){
+        return "Success" +  " " + creator + " " + "travel created" ;
     }
 
     public static String joinTravel(String personIdentifier,String travelIdentifier){
