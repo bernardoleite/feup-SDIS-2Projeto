@@ -106,7 +106,7 @@ public class Server {
 
     public static boolean joinTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
-        User user = User.getUser(email);
+        User user = getUser(email);
         
         if(user!=null){
         for(int i=0; i < admins.size();i++){

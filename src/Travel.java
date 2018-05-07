@@ -29,8 +29,8 @@ public class Travel {
         
         for(int i = 0; i < passengers.size(); i++) {
             for(int j = 0; j < passengers.get(i).getJoinTravels().size(); j++) {
-                if(ID = passengers.get(i).getJoinTravels().get(j).getID())
-                    passengers.get(i).getJoinTravels().get(j).add(passenger);
+                if(ID == passengers.get(i).getJoinTravels().get(j).getID())
+                    passengers.get(i).getJoinTravels().get(j).addUser(passenger);
             }
         }
         passengers.add(passenger);
@@ -54,6 +54,10 @@ public class Travel {
 
     public Integer getID(){
         return ID;
+    }
+
+    public void addUser(User user){
+        passengers.add(user);
     }
 
 }
