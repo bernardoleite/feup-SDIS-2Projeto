@@ -28,12 +28,13 @@ public class Travel {
             return false;
         
         for(int i = 0; i < passengers.size(); i++) {
-            for(int j = 0; j < passengers.get(i).getJoinTravels().size(); j++) {
-                if(ID == passengers.get(i).getJoinTravels().get(j).getID())
-                    passengers.get(i).getJoinTravels().get(j).addUser(passenger);
-            }
+            if(passengers.get(i).getEmail().equals(passenger.getEmail()))
+                return false;
         }
         passengers.add(passenger);
+
+        
+        passenger.addJoinTravel(this);
         return true;
     }
 

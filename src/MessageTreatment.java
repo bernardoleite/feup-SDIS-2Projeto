@@ -3,6 +3,9 @@ import java.io.*;
 import java.util.Date;
 import java.text.DateFormat;
 import java.util.Locale;
+
+import javax.lang.model.util.ElementScanner6;
+
 import java.text.SimpleDateFormat;
 
 public class MessageTreatment {
@@ -53,7 +56,7 @@ public class MessageTreatment {
                 break;
             case "Create":
 
-                String creator = splitMessage[1].trim();
+                String creator = splitMessage[1];
                 String dateform = splitMessage[2] + " " + splitMessage[3];
                 String startPoint = splitMessage[4];
                 String endPoint = splitMessage[5];
@@ -62,28 +65,22 @@ public class MessageTreatment {
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
                 Date date = format.parse(dateform);
                 System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
-                
-          
-                for(int i = 0 ; i < Server.getUsers().size(); i++){
-
-                    if(Server.getUsers().get(i).getEmail().equals(creator)){
-                        Server.createNewTravel(date, startPoint, endPoint, Integer.parseInt(nrSeats), Server.getUsers().get(i) );
-                    }
-                }
-
-                String code = creator;
+              
+                Server.createNewTravel(date, startPoint, endPoint, Integer.parseInt(nrSeats), creator);
+              
+                String code = "travelIdentifier";
                 isToSendMessage = true;
                 sendMessage = Messages.successCreateTravel(code).getBytes();
                 break;
             case "Join":
                 email = splitMessage[1];
-                String travelID = splitMessage[4];
-                if(Server.alreadyAnUser(email)){
-
-                }
-                else{
-
-                }
+                String travelID = splitMessage[4].trim();
+                isToSendMessage = true;
+                if(Server.joinTravel(travelID, email))
+                    sendMessage = Messages.successJoinTravel(email).getBytes();
+                else 
+                    sendMessage = Messages.unsuccessJoinTravel(email).getBytes();
+                break;
         }
 
     }

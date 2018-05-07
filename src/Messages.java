@@ -52,5 +52,12 @@ public class Messages {
         return "Exit " + personIdentifier+  " Travel number " + travelIdentifier;
     }
 
+    public static String successJoinTravel(String email){
+        return "Success "+ email  + " join travel.";
+    }
+
+    public static String unsuccessJoinTravel(String email){
+        return "Failed "+ email + " join travel.";
+    }
 
 }

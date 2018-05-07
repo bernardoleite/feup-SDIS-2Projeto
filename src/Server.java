@@ -109,42 +109,51 @@ public class Server {
         User user = getUser(email);
         
         if(user!=null){
-        for(int i=0; i < admins.size();i++){
-            if(admins.get(i).getEmail().equals(email))
-                user = admins.get(i);
-        }
+        
 
-        for(int i=0; i < users.size();i++){
-            if(users.get(i).getEmail().equals(email))
-                user = users.get(i);
-        }
-
-        for(int i=0; i < admins.size();i++){
-            if(email.equals(admins.get(i).getEmail()))
-                return false;
-            for(int j=0; j < admins.get(i).getMyTravels().size();j++){
-                if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
-                    admins.get(i).getMyTravels().get(j).addPassenger(user);
+            for(int i=0; i < admins.size();i++){
+                if(email.equals(admins.get(i).getEmail()))
+                    return false;
+                for(int j=0; j < admins.get(i).getMyTravels().size();j++){
+                    if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
+                        return admins.get(i).getMyTravels().get(j).addPassenger(user);
+                    }
                 }
             }
-        }
 
-        return true;
-    }
-    return false;
+            for(int i=0; i < users.size();i++){
+                //Can't do join of my Travel
+                if(email.equals(users.get(i).getEmail()))
+                    return false;
+                for(int j=0; j < users.get(i).getMyTravels().size();j++){
+                    if(users.get(i).getMyTravels().get(j).getID()==idTravel){
+                        users.get(i).getMyTravels().get(j).addPassenger(user);
+                    }
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
     public static ArrayList<User> getUsers(){
         return users;
     }
 
-    public static boolean createNewTravel(Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
+    public static boolean createNewTravel(Date date, String startPoint, String endPoint,Integer numberOfSeats,String email){
         
-        Travel newTravel = new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, creator);
-
         for(int i = 0 ; i < users.size(); i++){
-            if(users.get(i).getEmail().equals(creator.getEmail())){
-                users.get(i).addMyTravel(newTravel);
+            if(users.get(i).getEmail().equals(email)){
+                users.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, users.get(i)));
+                System.out.println(counterTravels);
+                counterTravels++;
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                admins.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, admins.get(i)));
+                System.out.println(counterTravels);
                 counterTravels++;
             }
         }
