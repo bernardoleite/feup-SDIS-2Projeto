@@ -34,9 +34,17 @@ public class Client {
     private static Integer port_list = 7777;
 
     private static String currentUser="";
+    private String email; 
 
+    public Client(){
 
-    public Client(){}
+        if(!menuAuthentication())
+        return;
+
+      if(menuOptions())
+        return;
+
+    }
 
     public static void setAuthenticationChannel() {
         try{
@@ -97,7 +105,7 @@ public class Client {
         return date != null;
     }
 
-    public static boolean menuAuthentication(){
+    public boolean menuAuthentication(){
 
       boolean quit = false;
 
@@ -158,8 +166,11 @@ public class Client {
               System.out.println(receive +"!");
               String[] splitstr = receive.split(" ");
               String action = splitstr[0];
-              if(action.equals("Success"))
+              if(action.equals("Success")) {
                 quit = true;
+                this.email=email;
+              }
+            
             }
           }
           else if (n == 3) {
@@ -175,8 +186,9 @@ public class Client {
       return true;      
   }
 
-public static boolean menuOptions(){
+public boolean menuOptions(){
   boolean quit = false;
+  String message="";
 
   while(!quit) {
       System.out.println();
@@ -185,7 +197,9 @@ public static boolean menuOptions(){
       System.out.println("Manage your Travels - 3");
       System.out.println("Search for a Travel - 4");
       System.out.println("Show your notifications - 5");
-      System.out.println("Go Back - 6");
+      System.out.println("Join Travel - 6");
+      System.out.println("Exit Travel - 7");
+      System.out.println("Go Back - 8");
       System.out.println();
       int n = Integer.parseInt(System.console().readLine());
 
@@ -208,7 +222,6 @@ public static boolean menuOptions(){
           System.out.println("Invalid Date");
         }*/
         //else{
-            String message="";
             message =  Messages.createTravel(date,startPoint,endPoint,nrSeats,currentUser);
             System.out.println("Message to be Sended: " + message);
             String receive = new String(sendCLientMessage("owner", message));
@@ -218,6 +231,13 @@ public static boolean menuOptions(){
               quit = true;
         //}
 
+      }
+      else if(n==6){
+        System.out.println("Please, select the ID of the Travel: ");
+        String travelID= System.console().readLine();
+
+        message= Messages.joinTravel(email, travelID);
+        System.out.println(message);
       }
 
   }
@@ -229,12 +249,7 @@ public static boolean menuOptions(){
 
         System.setProperty("java.net.preferIPv4Stack", "true");
 
-        if(!menuAuthentication())
-          return;
-
-        if(menuOptions())
-          return;
-
+        Client client = new Client();
     }
 
     private static byte[] sendCLientMessage(String channel, String clientmessage) {

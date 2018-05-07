@@ -31,7 +31,7 @@ public class Messages {
     }
     
     public static String successLogin(String email){
-        return "Success "+ email + " login.";
+        return "Success "+ email  + " login.";
     }
 
     public static String unsuccessLogin(String email){
@@ -44,6 +44,10 @@ public class Messages {
 
     public static String successCreateTravel(String travelIdentifier){
         return "Created" +  " " + travelIdentifier;
+    }
+
+    public static String joinTravel(String personIdentifier,String travelIdentifier){
+        return "Join " + personIdentifier+  " Travel number " + travelIdentifier;
     }
 
 
