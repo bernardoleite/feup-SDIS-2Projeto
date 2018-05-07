@@ -23,6 +23,7 @@ public class AuthenticationChannel implements Runnable{
 
 	public AuthenticationChannel(String address, int port) throws UnknownHostException{
 
+
         exec = Executors.newFixedThreadPool(1000);
 
 		try {
@@ -79,7 +80,6 @@ public class AuthenticationChannel implements Runnable{
 	@Override
 	public void run(){
 
-
 		byte[] buf = new byte[65000];
 		openSocket();
 
@@ -90,9 +90,12 @@ public class AuthenticationChannel implements Runnable{
 				receiverSocket.receive(msgReceiverPacket);
 
 				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
-        System.out.println(new String(received));
+        		System.out.println(new String(received));
+
 				MessageTreatment message = new MessageTreatment(received);
+
 				Thread.sleep(100);
+
 				if(message.getIsToSendMessage())
 					sendMessage(message.getSendMessage());
 

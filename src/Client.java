@@ -4,6 +4,9 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Client {
@@ -29,6 +32,8 @@ public class Client {
     private static ListChannel listChannel;
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
+
+    private static String currentUser="";
 
 
     public Client(){}
@@ -78,95 +83,173 @@ public class Client {
         ownerChannel.sendMessage(message);
     }
 
+    public static boolean isValidFormat(String format, String value) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            date = sdf.parse(value);
+            if (!value.equals(sdf.format(date))) {
+                date = null;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return date != null;
+    }
+
+    public static boolean menuAuthentication(){
+
+      boolean quit = false;
+
+      while(!quit) {
+          System.out.println();
+          System.out.println("Log In - 1");
+          System.out.println("Register - 2");
+          System.out.println("Exit - 3");
+          System.out.println();
+          int n = Integer.parseInt(System.console().readLine());
+
+          if(n == 2) {
+            System.out.println("Email: ");
+            String email = System.console().readLine();
+            System.out.println();
+            char passwordArray[] = System.console().readPassword("Enter your password: ");
+            System.out.println();
+            String password = new String(passwordArray);
+            System.out.println();
+
+
+            String message="";
+
+
+            boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
+            if(!setEmail){
+              System.out.println("Invalid Email");
+            }
+            else{
+              message =  Messages.userRegister(email,Integer.toString(password.hashCode()));
+              byte[] receive = sendCLientMessage("authentication", message);
+              System.out.println(new String(receive));
+
+            }
+
+          }
+          else if (n == 1) {
+            System.out.println("Email: ");
+            String email = System.console().readLine();
+            currentUser=email;
+            System.out.println();
+            char passwordArray[] = System.console().readPassword("Enter your password: ");
+            System.out.println();
+            String password = new String(passwordArray);
+            System.out.println();
+
+
+            String message="";
+
+
+            boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
+            if(!setEmail){
+              System.out.println("Invalid Email");
+            }
+            else{
+              message =  Messages.userLogin(email,Integer.toString(password.hashCode()));
+              String receive = new String(sendCLientMessage("authentication", message));
+              System.out.println(receive +"!");
+              String[] splitstr = receive.split(" ");
+              String action = splitstr[0];
+              if(action.equals("Success"))
+                quit = true;
+            }
+          }
+          else if (n == 3) {
+            return false;
+          }
+          else {
+            System.out.println("Invalid Argument");
+            System.out.println();
+          }
+
+      }
+      System.out.println("You're Logged in");
+      return true;      
+  }
+
+public static boolean menuOptions(){
+  boolean quit = false;
+
+  while(!quit) {
+      System.out.println();
+      System.out.println("Create Travel - 1");
+      System.out.println("Delete Travel - 2");
+      System.out.println("Manage your Travels - 3");
+      System.out.println("Search for a Travel - 4");
+      System.out.println("Show your notifications - 5");
+      System.out.println("Go Back - 6");
+      System.out.println();
+      int n = Integer.parseInt(System.console().readLine());
+
+      if(n == 1) {
+        System.out.println("Please, select the date of the Travel (dd/mm/yyyy HH:mm): ");
+        String date = System.console().readLine();
+        System.out.println();
+        System.out.println("Please, select the Start Point of the Travel: ");
+        String startPoint = System.console().readLine();
+        System.out.println();
+        System.out.println("Please, select the Destination of the Travel: ");
+        String endPoint = System.console().readLine();
+        System.out.println();
+        System.out.println("Please, select the maximum number of Seats of the Travel: ");
+        String nrSeats = System.console().readLine();
+        System.out.println();
+/*
+        boolean confirmDate = date.matches("([0-9]{2})/([0-9]{2})/([0-9]{4}/s/d{2}:/d{2})");
+        if(!confirmDate){
+          System.out.println("Invalid Date");
+        }*/
+        //else{
+            String message="";
+            message =  Messages.createTravel(date,startPoint,endPoint,nrSeats,currentUser);
+            System.out.println("Message to be Sended: " + message);
+            String receive = new String(sendCLientMessage("owner", message));
+            String[] splitstr = receive.split(" ");
+            String action = splitstr[0]+" "+splitstr[1].trim();
+            if(action.equals("Created travelIdentifier"))
+              quit = true;
+        //}
+
+      }
+
+  }
+
+  return true;      
+}
+
     public static void main(String[] args){
 
         System.setProperty("java.net.preferIPv4Stack", "true");
 
-        boolean quit = false;
+        if(!menuAuthentication())
+          return;
 
-        while(!quit) {
-            System.out.println();
-            System.out.println("Log In - 1");
-            System.out.println("Register - 2");
-            System.out.println("Exit - 3");
-            System.out.println();
-            int n = Integer.parseInt(System.console().readLine());
-
-            if(n == 2) {
-              System.out.println("Email: ");
-              String email = System.console().readLine();
-              System.out.println();
-              char passwordArray[] = System.console().readPassword("Enter your password: ");
-              System.out.println();
-              String password = new String(passwordArray);
-              System.out.println();
-
-
-              String message="";
-
-
-              boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
-              if(!setEmail){
-                System.out.println("Invalid Email");
-              }
-              else{
-                message =  Messages.userRegister(email,Integer.toString(password.hashCode()));
-                byte[] receive = sendCLientMessage(message);
-                System.out.println(new String(receive));
-
-              }
-
-            }
-            else if (n == 1) {
-              System.out.println("Email: ");
-              String email = System.console().readLine();
-              System.out.println();
-              char passwordArray[] = System.console().readPassword("Enter your password: ");
-              System.out.println();
-              String password = new String(passwordArray);
-              System.out.println();
-
-
-              String message="";
-
-
-              boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
-              if(!setEmail){
-                System.out.println("Invalid Email");
-              }
-              else{
-                message =  Messages.userLogin(email,Integer.toString(password.hashCode()));
-                String receive = new String(sendCLientMessage(message));
-                System.out.println(receive +"!");
-                String[] splitstr = receive.split(" ");
-                String action = splitstr[0];
-                if(action.equals("Success"))
-                  quit = true;
-              }
-            }
-            else if (n == 3) {
-              return;
-            }
-            else {
-              System.out.println("Invalid Argument");
-              System.out.println();
-            }
-
-        }
-        System.out.println("You're Logged in");
+        if(menuOptions())
+          return;
 
     }
 
-    private static byte[] sendCLientMessage(String clientmessage) {
-        System.out.println(clientmessage + " HERE");
+    private static byte[] sendCLientMessage(String channel, String clientmessage) {
 
-        SendMessageToChannel sendMessageToChannel = new SendMessageToChannel("authentication", clientmessage.getBytes());
+
+        SendMessageToChannel sendMessageToChannel = new SendMessageToChannel(channel, clientmessage.getBytes());
         sendMessageToChannel.run();
 
         byte[] receive = new byte[65000];
         try{
-          receive = authChannel.receiveMessage();
-          System.out.println(new String(receive));
+          if(channel.equals("authentication"))
+            receive = authChannel.receiveMessage();
+          else if(channel.equals("owner"))
+            receive = ownerChannel.receiveMessage();
+          System.out.println("Message Received: " + new String(receive));
         }
         catch (Exception e) {
           e.printStackTrace();

@@ -12,15 +12,12 @@ public class Server {
     private static ArrayList<User> users = new ArrayList<User>();
     private static ArrayList<User> admins = new ArrayList<User>();
 
-
     //Registration and Log In
-    private static AuthenticationChannel authChannel;
     private static String ip_authentication = "224.0.0.3";
     private static Integer port_authentication = 4444;
 
 
     //Create and Delete Travel
-    private static OwnerChannel ownerChannel;
     private static String ip_owner = "224.0.0.4";
     private static Integer port_owner = 5555;
 
@@ -31,60 +28,36 @@ public class Server {
     private static Integer port_test = 6666;
 
     //List Travels
-    private static ListChannel listChannel;
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
 
 
     private static Integer counter = 0;
 
-    public Server(){
-        createAdministration();
-        setAuthenticationChannel();
-        setOwnerChannel();
-        setJoinTravelChannel();
-        setListChannel();
-        authChannel.run();
-        ownerChannel.run();
-        testChannel.run();
-        listChannel.run();
-    }
+    public Server() {
 
-    public static void setAuthenticationChannel() {
         try{
-            authChannel = new AuthenticationChannel(ip_authentication, port_authentication);
+            createAdministration();
+
+            Thread authChannel = new Thread(new AuthenticationChannel(ip_authentication, port_authentication));
+            authChannel.start();
+
+            Thread ownerChannel = new Thread(new OwnerChannel(ip_owner, port_owner));
+            ownerChannel.start();
+
+            Thread testChannel = new Thread(new JoinTravelChannel(ip_test, port_test));
+            testChannel.start();
+
+            Thread listChannel = new Thread(new ListChannel(ip_list, port_list));
+            listChannel.start();
         }
-        catch (UnknownHostException e) {
+
+        catch(Exception e){
             e.printStackTrace();
         }
+
     }
 
-    public static void setOwnerChannel() {
-        try{
-            ownerChannel = new OwnerChannel(ip_owner, port_owner);
-        }
-        catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void setJoinTravelChannel() {
-        try{
-            testChannel = new JoinTravelChannel(ip_test, port_test);
-        }
-        catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void setListChannel() {
-        try{
-            listChannel = new ListChannel(ip_list, port_list);
-        }
-        catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String[] args){
 
@@ -122,6 +95,24 @@ public class Server {
         return false;
     }
 
+    public static ArrayList<User> getUsers(){
+        return users;
+    }
+
+    public static boolean createNewTravel(Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
+        
+        Travel newTravel = new Travel(date, startPoint, endPoint, numberOfSeats, creator);
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(creator.getEmail()))
+                users.get(i).addMyTravel(newTravel);
+        }
+
+        System.out.println("Travel added!");
+
+        return true;
+    }
+
     public static boolean register(Register register){
         counter++;
 
@@ -132,7 +123,6 @@ public class Server {
 
     public void createAdministration(){
         String password = "123456";
-        System.out.println(Integer.toString(password.hashCode()));
 
         admins.add(new User("up201505791@fe.up.pt",Integer.toString(password.hashCode()),true,1));
         admins.add(new User("up201404464@fe.up.pt",Integer.toString(password.hashCode()),true,2));

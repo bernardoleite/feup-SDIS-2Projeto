@@ -79,7 +79,6 @@ public class OwnerChannel implements Runnable{
 	@Override
 	public void run(){
 
-
 		byte[] buf = new byte[65000];
 		openSocket();
 
@@ -90,11 +89,14 @@ public class OwnerChannel implements Runnable{
 				receiverSocket.receive(msgReceiverPacket);
 
 				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
-        System.out.println(new String(received));
+
+        		System.out.println("Message received " + new String(received));
+
 				MessageTreatment message = new MessageTreatment(received);
 				Thread.sleep(100);
-				if(message.getIsToSendMessage())
+				if(message.getIsToSendMessage()){
 					sendMessage(message.getSendMessage());
+				}
 
 
 				buf = new byte[65000];

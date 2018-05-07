@@ -5,6 +5,7 @@ import java.util.Date;
 import java.io.*;
 
 
+
 public class Travel {
 
     private Date date;

@@ -6,7 +6,6 @@ public class SendMessageToChannel implements Runnable{
 	public SendMessageToChannel(String nameChannel, byte[] message){
 		this.nameChannel= nameChannel;
 		this.message = message;
-    Client.setAuthenticationChannel();
 	}
 
 	@Override
@@ -15,7 +14,13 @@ public class SendMessageToChannel implements Runnable{
 		switch(nameChannel){
 
 			case "authentication":
+				Client.setAuthenticationChannel();
 				Client.sendAuthentication(message);
+			break;
+
+			case "owner":
+				Client.setOwnerChannel();
+				Client.sendOwner(message);
 			break;
 
 			default:
@@ -25,8 +30,8 @@ public class SendMessageToChannel implements Runnable{
 
 
 		}catch(Exception ex){
-				ex.printStackTrace();
-				}
+			ex.printStackTrace();
+		}
 
 
 	}

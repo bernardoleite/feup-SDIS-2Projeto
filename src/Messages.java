@@ -38,4 +38,13 @@ public class Messages {
         return "Failed "+ email + " login.";
     }
 
+    public static String createTravel(String date, String startPoint, String endPoint, String numberOfSeats, String creator){
+        return "Create" + " " + date + " " + startPoint + " " + endPoint + " " + numberOfSeats + " " + creator;
+    }
+
+    public static String successCreateTravel(String travelIdentifier){
+        return "Created" +  " " + travelIdentifier;
+    }
+
+
 }

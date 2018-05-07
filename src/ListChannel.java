@@ -79,7 +79,6 @@ public class ListChannel implements Runnable{
 	@Override
 	public void run(){
 
-
 		byte[] buf = new byte[65000];
 		openSocket();
 
