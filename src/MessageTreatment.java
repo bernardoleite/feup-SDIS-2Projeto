@@ -27,6 +27,7 @@ public class MessageTreatment {
         String answer = new String(this.messageToBeTreated, 0, this.messageToBeTreated.length);
         String[] splitMessage = answer.split(" ");
         String action= splitMessage[0];
+        String travelID="";
 
         switch(action){
             case "Register":
@@ -74,12 +75,21 @@ public class MessageTreatment {
                 break;
             case "Join":
                 email = splitMessage[1];
-                String travelID = splitMessage[4].trim();
+                travelID = splitMessage[4].trim();
                 isToSendMessage = true;
                 if(Server.joinTravel(travelID, email))
                     sendMessage = Messages.successJoinTravel(email).getBytes();
                 else 
                     sendMessage = Messages.unsuccessJoinTravel(email).getBytes();
+                break;
+            case "Exit":
+                email = splitMessage[1];
+                travelID = splitMessage[4].trim();
+                isToSendMessage = true;
+                if(Server.exitTravel(travelID, email))
+                    sendMessage = Messages.successExitTravel(email).getBytes();
+                else 
+                    sendMessage = Messages.unsuccessExitTravel(email).getBytes();
                 break;
         }
 

@@ -60,4 +60,12 @@ public class Messages {
         return "Failed "+ email + " join travel.";
     }
 
+    public static String successExitTravel(String email){
+        return "Success "+ email  + " exit travel.";
+    }
+
+    public static String unsuccessExitTravel(String email){
+        return "Failed "+ email + " exit travel.";
+    }
+
 }

@@ -127,7 +127,43 @@ public class Server {
                     return false;
                 for(int j=0; j < users.get(i).getMyTravels().size();j++){
                     if(users.get(i).getMyTravels().get(j).getID()==idTravel){
-                        users.get(i).getMyTravels().get(j).addPassenger(user);
+                        return users.get(i).getMyTravels().get(j).addPassenger(user);
+                    }
+                }
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static boolean exitTravel(String travelID, String email){
+        Integer idTravel = Integer.parseInt(travelID);
+        User user = getUser(email);
+        
+        if(user!=null){
+        
+
+            for(int i=0; i < admins.size();i++){
+                if(email.equals(admins.get(i).getEmail()))
+                    return false;
+                for(int j=0; j < admins.get(i).getMyTravels().size();j++){
+                    if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
+                        boolean b = admins.get(i).getMyTravels().get(j).removePassenger(user);
+                        System.out.println(admins.get(i).getMyTravels().get(j).getPassengers().size());
+                        return b;
+                    }
+                }
+            }
+
+            for(int i=0; i < users.size();i++){
+                //Can't do exit of my Travel
+                if(email.equals(users.get(i).getEmail()))
+                    return false;
+                for(int j=0; j < users.get(i).getMyTravels().size();j++){
+                    if(users.get(i).getMyTravels().get(j).getID()==idTravel){
+                        boolean b = users.get(i).getMyTravels().get(j).removePassenger(user);
+                        System.out.println(users.get(i).getMyTravels().get(j).getPassengers().size());
+                        return b;
                     }
                 }
             }

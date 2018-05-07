@@ -45,8 +45,10 @@ public class Travel {
     public boolean removePassenger(User passenger){
         if(passengers.size() == 0)
             return false;
+        boolean b = passengers.remove(passenger);
 
-        return  passengers.remove(passenger);
+        passenger.deleteJoinTravel(this);
+        return  b;
     }
 
     public User getCreator(){
