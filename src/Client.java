@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.naming.NoInitialContextException;
+
 
 public class Client {
 
@@ -30,8 +32,10 @@ public class Client {
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
 
+    
     private static String currentUser="";
     private String email; 
+
 
     public Client(){
 
@@ -78,6 +82,8 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+
 
 
     public static void sendAuthentication(byte[] message) throws UnknownHostException, InterruptedException {
@@ -196,9 +202,13 @@ public class Client {
       return true;      
     }
 
+
     public boolean menuOptions(){
         boolean quit = false;
         String message="";
+
+        Thread notificationThread = new Thread(new NotificationThread(email));
+        notificationThread.start();
 
         while(!quit) {
             System.out.println();
@@ -341,20 +351,32 @@ public class Client {
             System.out.println("Go Back - 3");
             System.out.println();
             int n = Integer.parseInt(System.console().readLine());
+            boolean setEmail=false;
 
             if(n == 1) {
-                System.out.println("Choose the passenger email that you want to join: ");
-                passengerEmail = System.console().readLine();
+                
+                do{
+                    System.out.println("Choose the passenger email that you want to join: ");
+                    passengerEmail = System.console().readLine();
+                    setEmail = passengerEmail.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
+                }while(!setEmail);
+
                 message= Messages.addPassenger(email, passengerEmail, travelID);
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
                 System.out.println(receive);
                 
+                
 
             }
             if(n == 2) {
-                System.out.println("Choose the passenger email that you want to remove: ");
-                passengerEmail = System.console().readLine();
+
+                do{
+                    System.out.println("Choose the passenger email that you want to remove: ");
+                    passengerEmail = System.console().readLine();
+                    setEmail = passengerEmail.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
+                }while(!setEmail);
+                
                 message= Messages.removePassenger(email, passengerEmail, travelID);
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));

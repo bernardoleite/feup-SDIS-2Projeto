@@ -180,4 +180,13 @@ public class Messages {
         
         return string;
     }
+
+
+    public static String sendNotificationJoinTravel(String emailCreator, String travelID, String email){
+        return "NotificationJoinTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
+    }
+
+    public static String sendACKJoinTravel(String email){
+        return "ListenedJoinTravel "+ email;
+    }
 }

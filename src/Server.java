@@ -24,6 +24,10 @@ public class Server {
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
 
+    //Notification Join Channel
+    private static NotificationJoinChannel notificationJoinChannel;
+    private static String ip_not_join = "224.0.0.7";
+    private static Integer port_not_join = 8888;
 
     private static Integer counterUsers = 4;
     private static Integer counterTravels = 1;
@@ -44,6 +48,8 @@ public class Server {
 
             Thread listChannel = new Thread(new ListChannel(ip_list, port_list));
             listChannel.start();
+
+
         }
 
         catch(Exception e){
@@ -51,7 +57,6 @@ public class Server {
         }
 
     }
-
 
     public static void main(String[] args){
 
@@ -76,7 +81,7 @@ public class Server {
 
 
     public static boolean existUser(String email,String password){
-        System.out.println(password);
+     
         for(int i=0; i < users.size();i++){
             if(users.get(i).getEmail().equals(email) && users.get(i).getPassword().equals(password))
                 return true;
@@ -107,14 +112,16 @@ public class Server {
     public static boolean joinTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
         User user = getUser(email);
-        
+        boolean returnBoolean = false;
+        String emailCreator = "";
         if(user!=null){
             for(int i=0; i < admins.size();i++){
                 for(int j=0; j < admins.get(i).getMyTravels().size();j++){
                     if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
                         if(email.equals(admins.get(i).getEmail()))
-                            return false;
-                        return admins.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                            returnBoolean = false;
+                        returnBoolean = admins.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                        emailCreator = admins.get(i).getEmail();
                     }
                 }
             }
@@ -123,14 +130,24 @@ public class Server {
                 for(int j=0; j < users.get(i).getMyTravels().size();j++){
                     if(users.get(i).getMyTravels().get(j).getID()==idTravel){
                         if(email.equals(users.get(i).getEmail()))
-                            return false;
-                        return users.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                            returnBoolean = false;
+                        returnBoolean = users.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                        emailCreator = users.get(i).getEmail();
+
                     }
                 }
             }
-            return false;
         }
-        return false;
+        if (returnBoolean) {
+            System.out.println("Send Notification to User!!!");
+            try {
+                Thread notificationJoinChannel = new Thread(new NotificationJoinChannel(ip_not_join, port_not_join, emailCreator, Messages.sendNotificationJoinTravel(emailCreator, travelID, email)));
+                notificationJoinChannel.start();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return returnBoolean;
     }
 
     public static boolean leaveTravel(String travelID, String email){
