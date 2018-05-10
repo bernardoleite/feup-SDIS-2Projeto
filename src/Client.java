@@ -226,8 +226,11 @@ public class Client {
             int n = Integer.parseInt(System.console().readLine());
 
             if(n == 1) {
-                System.out.println("Please, select the date of the Travel (dd/mm/yyyy HH:mm): ");
+                System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
                 String date = System.console().readLine();
+                System.out.println();
+                System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                String hour = System.console().readLine();
                 System.out.println();
                 System.out.println("Please, select the Start Point of the Travel: ");
                 String startPoint = System.console().readLine();
@@ -244,7 +247,7 @@ public class Client {
                 System.out.println("Invalid Date");
                 }*/
                 //else{
-                    message =  Messages.createTravel(date,startPoint,endPoint,nrSeats,currentUser);
+                    message =  Messages.createTravel(date+" "+hour,startPoint,endPoint,nrSeats,currentUser);
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("owner", message));
                     String[] splitstr = receive.split(" ");
@@ -258,7 +261,6 @@ public class Client {
 
             if(n == 2) {
                 message = Messages.listMyTravels(email);
-                //System.out.println(message);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the travels you created: ");
                 System.out.println();
@@ -272,7 +274,12 @@ public class Client {
                 System.out.println("Message to be Sended: " + message);
                 System.out.println();
                 receive = new String(sendCLientMessage("owner", message));
-                System.out.println("Message Received: " + receive);
+                String[] splitstr = receive.split(" ");
+                String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
+                if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
+                    System.out.println("Message Received: " + receive);
+                else 
+                    System.out.println("No success!");
 
             }
             else if(n==3){
