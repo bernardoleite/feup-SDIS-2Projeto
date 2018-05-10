@@ -109,25 +109,22 @@ public class Server {
         User user = getUser(email);
         
         if(user!=null){
-        
-
             for(int i=0; i < admins.size();i++){
-                if(email.equals(admins.get(i).getEmail()))
-                    return false;
                 for(int j=0; j < admins.get(i).getMyTravels().size();j++){
                     if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
-                        return admins.get(i).getMyTravels().get(j).addPassenger(user);
+                        if(email.equals(admins.get(i).getEmail()))
+                            return false;
+                        return admins.get(i).getMyTravels().get(j).addPassengerRequest(user);
                     }
                 }
             }
 
             for(int i=0; i < users.size();i++){
-                //Can't do join of my Travel
-                if(email.equals(users.get(i).getEmail()))
-                    return false;
                 for(int j=0; j < users.get(i).getMyTravels().size();j++){
                     if(users.get(i).getMyTravels().get(j).getID()==idTravel){
-                        return users.get(i).getMyTravels().get(j).addPassenger(user);
+                        if(email.equals(users.get(i).getEmail()))
+                            return false;
+                        return users.get(i).getMyTravels().get(j).addPassengerRequest(user);
                     }
                 }
             }
@@ -136,7 +133,7 @@ public class Server {
         return false;
     }
 
-    public static boolean exitTravel(String travelID, String email){
+    public static boolean leaveTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
         User user = getUser(email);
         
@@ -144,11 +141,11 @@ public class Server {
         
 
             for(int i=0; i < admins.size();i++){
-                if(email.equals(admins.get(i).getEmail()))
-                    return false;
                 for(int j=0; j < admins.get(i).getMyTravels().size();j++){
                     if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
-                        boolean b = admins.get(i).getMyTravels().get(j).removePassenger(user);
+                        if(email.equals(admins.get(i).getEmail()))
+                            return false;
+                        boolean b = admins.get(i).getMyTravels().get(j).removePassengersRequest(user);
                         System.out.println(admins.get(i).getMyTravels().get(j).getPassengers().size());
                         return b;
                     }
@@ -161,7 +158,7 @@ public class Server {
                     return false;
                 for(int j=0; j < users.get(i).getMyTravels().size();j++){
                     if(users.get(i).getMyTravels().get(j).getID()==idTravel){
-                        boolean b = users.get(i).getMyTravels().get(j).removePassenger(user);
+                        boolean b = users.get(i).getMyTravels().get(j).removePassengersRequest(user);
                         System.out.println(users.get(i).getMyTravels().get(j).getPassengers().size());
                         return b;
                     }
@@ -197,6 +194,97 @@ public class Server {
         System.out.println("Travel added!");
 
         return true;
+    }
+
+    public static ArrayList<User> getTravelPassengers(String email, Integer travelId){
+        ArrayList<User> arrayToReturn= new ArrayList<User>();
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                arrayToReturn = users.get(i).getMyTravel(travelId).getPassengers();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                arrayToReturn = admins.get(i).getMyTravel(travelId).getPassengers();
+            }
+        }
+        
+        return arrayToReturn;
+    }
+
+    public static ArrayList<User> getTravelPassengersRequest(String email, Integer travelId){
+        ArrayList<User> arrayToReturn= new ArrayList<User>();
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                arrayToReturn = users.get(i).getMyTravel(travelId).getPassengersRequest();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                arrayToReturn = admins.get(i).getMyTravel(travelId).getPassengersRequest();
+            }
+        }
+        
+        return arrayToReturn;
+    }
+
+    public static boolean checkUserTravel(String email, Integer travelId){
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                return users.get(i).checkMyTravel(travelId);
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                return admins.get(i).checkMyTravel(travelId);
+            }
+        }
+        
+        return false;
+    }
+
+    public static boolean addPassenger(String email, Integer travelID, String emailPassenger){
+        
+        User user = getUser(emailPassenger);
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                return users.get(i).getMyTravel(travelID).addPassenger(user);
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                return admins.get(i).getMyTravel(travelID).addPassenger(user);
+            }
+        }
+        
+        return false;
+    }
+
+    public static boolean removePassenger(String email, Integer travelID, String emailPassenger){
+    
+        User user = getUser(emailPassenger);
+
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                return users.get(i).getMyTravel(travelID).removePassenger(user);
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                return admins.get(i).getMyTravel(travelID).removePassenger(user);
+            }
+        }
+        
+        return false;
     }
 
     public static boolean register(Register register){

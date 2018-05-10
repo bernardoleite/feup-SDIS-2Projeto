@@ -28,6 +28,7 @@ public class MessageTreatment {
         String[] splitMessage = answer.split(" ");
         String action= splitMessage[0];
         String travelID="";
+        String emailPassenger="";
 
         switch(action){
             case "Register":
@@ -82,15 +83,55 @@ public class MessageTreatment {
                 else 
                     sendMessage = Messages.unsuccessJoinTravel(email).getBytes();
                 break;
-            case "Exit":
+            case "Leave":
                 email = splitMessage[1];
                 travelID = splitMessage[4].trim();
                 isToSendMessage = true;
-                if(Server.exitTravel(travelID, email))
-                    sendMessage = Messages.successExitTravel(email).getBytes();
+                if(Server.leaveTravel(travelID, email))
+                    sendMessage = Messages.successLeaveTravel(email).getBytes();
                 else 
-                    sendMessage = Messages.unsuccessExitTravel(email).getBytes();
+                    sendMessage = Messages.unsuccessLeaveTravel(email).getBytes();
                 break;
+            case "Passengers":
+                email = splitMessage[1];
+                travelID = splitMessage[4].trim();
+                isToSendMessage = true;
+                if(Server.checkUserTravel(email, Integer.parseInt(travelID)))
+                    sendMessage = Messages.sendPassengers(email, Server.getTravelPassengers(email, Integer.parseInt(travelID))).getBytes();
+                else
+                    sendMessage = Messages.sendFailedPassengers(email).getBytes();
+                break;
+            case "PassengersRequest":
+                email = splitMessage[1];
+                travelID = splitMessage[4].trim();
+                isToSendMessage = true;
+                if(Server.checkUserTravel(email, Integer.parseInt(travelID)))
+                    sendMessage = Messages.sendPassengersRequest(email, Server.getTravelPassengersRequest(email, Integer.parseInt(travelID))).getBytes();
+                else
+                    sendMessage = Messages.sendFailedPassengersRequest(email).getBytes();
+                break;
+                
+            case "AddPassenger":
+                email = splitMessage[1];
+                travelID = splitMessage[4].trim();
+                emailPassenger = splitMessage[6].trim();
+                isToSendMessage = true;
+                if(Server.checkUserTravel(email, Integer.parseInt(travelID)) && Server.addPassenger(email, Integer.parseInt(travelID), emailPassenger))
+                    sendMessage = Messages.successAddPassenger(email).getBytes();
+                else
+                    sendMessage = Messages.unsuccessAddPassenger(email).getBytes();
+                break;
+                
+            case "RemovePassenger":
+            email = splitMessage[1];
+            travelID = splitMessage[4].trim();
+            emailPassenger = splitMessage[6].trim();
+            isToSendMessage = true;
+            if(Server.checkUserTravel(email, Integer.parseInt(travelID)) && Server.removePassenger(email, Integer.parseInt(travelID), emailPassenger))
+                sendMessage = Messages.successRemovePassenger(email).getBytes();
+            else
+                sendMessage = Messages.unsuccessRemovePassenger(email).getBytes();
+            break;
         }
 
     }

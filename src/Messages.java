@@ -48,8 +48,8 @@ public class Messages {
         return "Join " + personIdentifier+  " Travel number " + travelIdentifier;
     }
 
-    public static String exitTravel(String personIdentifier,String travelIdentifier){
-        return "Exit " + personIdentifier+  " Travel number " + travelIdentifier;
+    public static String leaveTravel(String personIdentifier,String travelIdentifier){
+        return "Leave " + personIdentifier+  " Travel number " + travelIdentifier;
     }
 
     public static String successJoinTravel(String email){
@@ -60,12 +60,77 @@ public class Messages {
         return "Failed "+ email + " join travel.";
     }
 
-    public static String successExitTravel(String email){
-        return "Success "+ email  + " exit travel.";
+    public static String successLeaveTravel(String email){
+        return "Success "+ email  + " leave travel.";
     }
 
-    public static String unsuccessExitTravel(String email){
-        return "Failed "+ email + " exit travel.";
+    public static String unsuccessLeaveTravel(String email){
+        return "Failed "+ email + " leave travel.";
     }
+
+    public static String listPassengers(String email,String travelIdentifier){
+        return "Passengers "+ email + " Travel number " + travelIdentifier;
+    }
+
+    public static String listPassengersRequest(String email,String travelIdentifier){
+        return "PassengersRequest "+ email + " Travel number " + travelIdentifier;
+    }
+
+    public static String sendPassengers(String email, ArrayList<User> passengers){
+        String string = "SendPassengers "+ email + " Travel number\n";
+        String aux;
+
+        for(int i=0; i < passengers.size();i++){
+            aux= passengers.get(i).getEmail() + "\n";
+            string= string+aux;
+        }
+
+        return string;
+    }
+
+    public static String sendPassengersRequest(String email, ArrayList<User> passengers){
+        String string = "SendPassengersRequest "+ email + " Travel number\n";
+        String aux;
+
+        for(int i=0; i < passengers.size();i++){
+            aux= " " + passengers.get(i).getEmail() + "\n";
+            string= string+aux;
+        }
+
+        return string;
+    }
+
+    public static String sendFailedPassengers(String email){
+        return "FailedPassengers "+ email;
+    }
+
+    public static String sendFailedPassengersRequest(String email){
+        return "FailedPassengersRequest "+ email;
+    }
+
+    public static String addPassenger(String email, String emailPassenger, String travelID){
+        return "AddPassenger "+ email + " travel number " + travelID + " passenger " + emailPassenger;
+    }
+
+    public static String removePassenger(String email, String emailPassenger, String travelID){
+        return "RemovePassenger "+ email + " travel number " + travelID + " passenger " + emailPassenger;
+    }
+
+    public static String successAddPassenger(String email){
+        return "SuccessAddPassenger "+ email;
+    }
+
+    public static String unsuccessAddPassenger(String email){
+        return "UnsuccessAddPassenger "+ email;
+    }
+
+    public static String successRemovePassenger(String email){
+        return "SuccessRemovePassenger "+ email;
+    }
+
+    public static String unsuccessRemovePassenger(String email){
+        return "UnsuccessRemovePassenger "+ email;
+    }
+
 
 }

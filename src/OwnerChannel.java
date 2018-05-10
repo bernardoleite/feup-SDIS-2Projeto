@@ -46,17 +46,20 @@ public class OwnerChannel implements Runnable{
 		}
 	}
 
-	public byte[] receiveMessage() throws UnknownHostException, InterruptedException{
+	public byte[] receiveMessage(String email) throws UnknownHostException, InterruptedException{
 
 		byte[] buf = new byte[65000];
 		byte[] received = new byte[65000];
 		openSocket();
-
+		String receivedEmail = "";
 		try{
-
+			do {
 			DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
 			receiverSocket.receive(msgReceiverPacket);
 			received = Arrays.copyOfRange(buf, 0, buf.length-1);
+			String[] receivedStr = new String(received).split(" ");
+			receivedEmail = receivedStr[1].trim();
+			} while(email.equals(receivedEmail));
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}

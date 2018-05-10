@@ -13,6 +13,7 @@ public class Travel {
     private Integer numberOfSeats;
     private User creator;
     private ArrayList<User> passengers = new ArrayList<User>();
+    private ArrayList<User> passengersRequest = new ArrayList<User>();
 
     public Travel(Integer ID, Date date, String startPoint, String endPoint,Integer numberOfSeats,User creator){
         this.ID=ID;
@@ -31,24 +32,57 @@ public class Travel {
             if(passengers.get(i).getEmail().equals(passenger.getEmail()))
                 return false;
         }
-        passengers.add(passenger);
-
+        boolean b = false;
+        for(int i = 0; i < passengersRequest.size(); i++) {
+            if(passengersRequest.get(i).getEmail().equals(passenger.getEmail())) {
+                passengers.add(passenger);
+                passengersRequest.remove(passenger);
+                passenger.addJoinTravel(this);
+                passenger.deleteRequestTravel(this);
+                return true;
+            }
+        }
         
-        passenger.addJoinTravel(this);
-        return true;
+        return false;
     }
 
     public ArrayList<User> getPassengers(){
         return passengers;
     }
 
+    public ArrayList<User> getPassengersRequest(){
+        return passengersRequest;
+    }
+
     public boolean removePassenger(User passenger){
         if(passengers.size() == 0)
             return false;
         boolean b = passengers.remove(passenger);
-
-        passenger.deleteJoinTravel(this);
+        if(b) {
+            passenger.deleteJoinTravel(this);
+            passengersRequest.add(passenger);
+            passenger.addRequestTravel(this);
+        }
         return  b;
+    }
+
+    public boolean removePassengersRequest(User passenger){
+        
+        for(int i = 0; i < passengersRequest.size(); i++) {
+            if(passengersRequest.get(i).getEmail().equals(passenger.getEmail())) {
+                passengersRequest.remove(passenger);
+                passenger.deleteRequestTravel(this);
+                return true;
+            }
+        }
+        for(int i = 0; i < passengers.size(); i++) {
+            if(passengers.get(i).getEmail().equals(passenger.getEmail())) {
+                passengers.remove(passenger);
+                passenger.deleteJoinTravel(this);
+                return true;
+            }
+        }
+        return false;
     }
 
     public User getCreator(){
@@ -59,8 +93,20 @@ public class Travel {
         return ID;
     }
 
-    public void addUser(User user){
-        passengers.add(user);
+    public boolean addPassengerRequest(User user){
+
+        for(int i = 0; i < passengersRequest.size(); i++) {
+            if(passengersRequest.get(i).getEmail().equals(user.getEmail()))
+                return false;
+        }
+        for(int i = 0; i < passengers.size(); i++) {
+            if(passengers.get(i).getEmail().equals(user.getEmail()))
+                return false;
+        }
+        passengersRequest.add(user);
+        user.addRequestTravel(this);
+
+        return true;
     }
 
 }

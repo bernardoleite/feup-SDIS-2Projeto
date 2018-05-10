@@ -92,6 +92,10 @@ public class Client {
         joinTravelChannel.sendMessage(message);
     }
 
+    public static void sendList(byte[] message) throws UnknownHostException, InterruptedException {
+        listChannel.sendMessage(message);
+    }
+
     public static boolean isValidFormat(String format, String value) {
         Date date = null;
         try {
@@ -129,7 +133,7 @@ public class Client {
 
 
             String message="";
-
+            this.email = email;
 
             boolean setEmail = email.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
             if(!setEmail){
@@ -138,8 +142,11 @@ public class Client {
             else{
               message =  Messages.userRegister(email,Integer.toString(password.hashCode()));
               byte[] receive = sendCLientMessage("authentication", message);
-              System.out.println(new String(receive));
+              String[] string = new String(receive).split(" ");
 
+              if(string[1].equals(email))
+                System.out.println(new String(receive));
+            
             }
 
           }
@@ -153,7 +160,7 @@ public class Client {
             String password = new String(passwordArray);
             System.out.println();
 
-
+            this.email = email;
             String message="";
 
 
@@ -162,15 +169,17 @@ public class Client {
               System.out.println("Invalid Email");
             }
             else{
-              message =  Messages.userLogin(email,Integer.toString(password.hashCode()));
-              String receive = new String(sendCLientMessage("authentication", message));
-              System.out.println(receive +"!");
-              String[] splitstr = receive.split(" ");
-              String action = splitstr[0];
-              if(action.equals("Success")) {
-                quit = true;
-                this.email=email;
-              }
+                message =  Messages.userLogin(email,Integer.toString(password.hashCode()));
+                String receive = new String(sendCLientMessage("authentication", message));
+                String[] splitstr = receive.split(" ");
+                String action = splitstr[0];
+                if(splitstr[1].equals(email)) {
+                    System.out.println(receive);
+                    if(action.equals("Success")) {
+                        quit = true;
+                        this.email=email;
+                    }
+                }
             
             }
           }
@@ -185,79 +194,152 @@ public class Client {
       }
       System.out.println("You're Logged in");
       return true;      
-  }
+    }
 
-public boolean menuOptions(){
-  boolean quit = false;
-  String message="";
+    public boolean menuOptions(){
+        boolean quit = false;
+        String message="";
 
-  while(!quit) {
-      System.out.println();
-      System.out.println("Create Travel - 1");
-      System.out.println("Delete Travel - 2");
-      System.out.println("Manage your Travels - 3");
-      System.out.println("Search for a Travel - 4");
-      System.out.println("Show your notifications - 5");
-      System.out.println("Join Travel - 6");
-      System.out.println("Exit Travel - 7");
-      System.out.println("Go Back - 8");
-      System.out.println();
-      int n = Integer.parseInt(System.console().readLine());
+        while(!quit) {
+            System.out.println();
+            System.out.println("Create Travel - 1");
+            System.out.println("Delete Travel - 2");
+            System.out.println("Manage your Travels - 3");
+            System.out.println("Search for a Travel - 4");
+            System.out.println("Show your notifications - 5");
+            System.out.println("Join Travel - 6");
+            System.out.println("Leave Travel - 7");
+            System.out.println("Go Back - 8");
+            System.out.println();
+            int n = Integer.parseInt(System.console().readLine());
 
-      if(n == 1) {
-        System.out.println("Please, select the date of the Travel (dd/mm/yyyy HH:mm): ");
-        String date = System.console().readLine();
-        System.out.println();
-        System.out.println("Please, select the Start Point of the Travel: ");
-        String startPoint = System.console().readLine();
-        System.out.println();
-        System.out.println("Please, select the Destination of the Travel: ");
-        String endPoint = System.console().readLine();
-        System.out.println();
-        System.out.println("Please, select the maximum number of Seats of the Travel: ");
-        String nrSeats = System.console().readLine();
-        System.out.println();
-/*
-        boolean confirmDate = date.matches("([0-9]{2})/([0-9]{2})/([0-9]{4}/s/d{2}:/d{2})");
-        if(!confirmDate){
-          System.out.println("Invalid Date");
-        }*/
-        //else{
-            message =  Messages.createTravel(date,startPoint,endPoint,nrSeats,currentUser);
-            System.out.println("Message to be Sended: " + message);
-            String receive = new String(sendCLientMessage("owner", message));
-            String[] splitstr = receive.split(" ");
-            String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
-            if(action.equals("Success" + " " + currentUser + "travel created"))
-              quit = true;
-        //}
+            if(n == 1) {
+                System.out.println("Please, select the date of the Travel (dd/mm/yyyy HH:mm): ");
+                String date = System.console().readLine();
+                System.out.println();
+                System.out.println("Please, select the Start Point of the Travel: ");
+                String startPoint = System.console().readLine();
+                System.out.println();
+                System.out.println("Please, select the Destination of the Travel: ");
+                String endPoint = System.console().readLine();
+                System.out.println();
+                System.out.println("Please, select the maximum number of Seats of the Travel: ");
+                String nrSeats = System.console().readLine();
+                System.out.println();
+        /*
+                boolean confirmDate = date.matches("([0-9]{2})/([0-9]{2})/([0-9]{4}/s/d{2}:/d{2})");
+                if(!confirmDate){
+                System.out.println("Invalid Date");
+                }*/
+                //else{
+                    message =  Messages.createTravel(date,startPoint,endPoint,nrSeats,currentUser);
+                    System.out.println("Message to be Sended: " + message);
+                    String receive = new String(sendCLientMessage("owner", message));
+                    String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
+                    if(action.equals("Success" + " " + currentUser + "travel created"))
+                    quit = true;
+                //}
 
-      }
-      else if(n==6){
-        System.out.println("Please, select the ID of the Travel: ");
-        String travelID= System.console().readLine();
+            }
+            else if(n==3){
+                System.out.println("Please, select the ID of the Travel that you want to manage: ");
+                String travelID= System.console().readLine();
 
-        message= Messages.joinTravel(email, travelID);
-        System.out.println(message);
-        String receive = new String(sendCLientMessage("joinTravel", message));
-      }
-      else if(n==7){
-        System.out.println("Please, select the ID of the Travel: ");
-        String travelID= System.console().readLine();
+                message= Messages.listPassengers(email, travelID);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("list", message));
+                String[] splitstr = receive.split(" ");
+                System.out.println("Receivedmsg: " +receive);
+                if(!splitstr[0].equals("FailedPassengers")) {
+                    System.out.println("Travel Passengers:\n");
+                    System.out.println(receive);
+                    
+                    message= Messages.listPassengersRequest(email, travelID);
+                    splitstr = receive.split(" ");
 
-        message= Messages.exitTravel(email, travelID);
-        System.out.println(message);
-        String receive = new String(sendCLientMessage("joinTravel", message));
-      }
-      else if(n==8){
-         return true;
-      }
+                    if(!splitstr[0].equals("FailedPassengersRequest")) {
 
-  }
+                        System.out.println(message);
+                        receive = new String(sendCLientMessage("list", message));
+                        System.out.println("Travel Passengers Request:\n");
+                        System.out.println(receive);
 
-  return true;      
-}
+                        menuManageTravel(travelID);
+                    }
+                }
+            }
+            else if(n==6){
+                System.out.println("Please, select the ID of the Travel: ");
+                String travelID= System.console().readLine();
 
+                message= Messages.joinTravel(email, travelID);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("joinTravel", message));
+                String[] splitstr = receive.split(" ");
+                if(splitstr[1].equals(email)) {
+                    System.out.println(receive);
+                }
+            }
+            else if(n==7){
+                System.out.println("Please, select the ID of the Travel: ");
+                String travelID= System.console().readLine();
+
+                message= Messages.leaveTravel(email, travelID);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("joinTravel", message));
+                String[] splitstr = receive.split(" ");
+                if(splitstr[1].equals(email)) {
+                    System.out.println(receive);
+                }
+            }
+            else if(n==8){
+                return true;
+            }
+
+        }
+
+        return true;      
+    }
+
+    public boolean menuManageTravel(String travelID){
+        boolean quit = false;
+        String message="";
+        String passengerEmail;
+
+        while(!quit) {
+            System.out.println();
+            System.out.println("Join Passenger - 1");
+            System.out.println("Remove Passenger - 2");
+            System.out.println("Go Back - 3");
+            System.out.println();
+            int n = Integer.parseInt(System.console().readLine());
+
+            if(n == 1) {
+                System.out.println("Choose the passenger email that you want to join: ");
+                passengerEmail = System.console().readLine();
+                message= Messages.addPassenger(email, passengerEmail, travelID);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("joinTravel", message));
+                System.out.println(receive);
+                
+
+            }
+            if(n == 2) {
+                System.out.println("Choose the passenger email that you want to remove: ");
+                passengerEmail = System.console().readLine();
+                message= Messages.removePassenger(email, passengerEmail, travelID);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("joinTravel", message));
+                System.out.println(receive);
+            }
+            if(n == 3) {
+                quit=true;
+            }
+        }
+        return true;
+    }
+    
     public static void main(String[] args){
 
         System.setProperty("java.net.preferIPv4Stack", "true");
@@ -265,7 +347,7 @@ public boolean menuOptions(){
         Client client = new Client();
     }
 
-    private static byte[] sendCLientMessage(String channel, String clientmessage) {
+    private byte[] sendCLientMessage(String channel, String clientmessage) {
 
 
         SendMessageToChannel sendMessageToChannel = new SendMessageToChannel(channel, clientmessage.getBytes());
@@ -274,11 +356,13 @@ public boolean menuOptions(){
         byte[] receive = new byte[65000];
         try{
           if(channel.equals("authentication"))
-            receive = authChannel.receiveMessage();
+            receive = authChannel.receiveMessage(this.email);
           else if(channel.equals("owner"))
-            receive = ownerChannel.receiveMessage();
+            receive = ownerChannel.receiveMessage(this.email);
           else if(channel.equals("joinTravel"))
-            receive = joinTravelChannel.receiveMessage();
+            receive = joinTravelChannel.receiveMessage(this.email);
+          else if(channel.equals("list"))
+            receive = listChannel.receiveMessage(this.email);
           System.out.println("Message Received: " + new String(receive));
         
         }

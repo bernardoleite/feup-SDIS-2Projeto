@@ -46,17 +46,20 @@ public class ListChannel implements Runnable{
 		}
 	}
 
-	public byte[] receiveMessage() throws UnknownHostException, InterruptedException{
+	public byte[] receiveMessage(String email) throws UnknownHostException, InterruptedException{
 
 		byte[] buf = new byte[65000];
 		byte[] received = new byte[65000];
 		openSocket();
-
+		String receivedEmail = "";
 		try{
-
-			DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
-			receiverSocket.receive(msgReceiverPacket);
-			received = Arrays.copyOfRange(buf, 0, buf.length-1);
+			do {
+				DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
+				receiverSocket.receive(msgReceiverPacket);
+				received = Arrays.copyOfRange(buf, 0, buf.length-1);
+				String[] receivedStr = new String(received).split(" ");
+				receivedEmail = receivedStr[1].trim();
+			} while(!email.equals(receivedEmail));
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}
@@ -87,7 +90,7 @@ public class ListChannel implements Runnable{
 				receiverSocket.receive(msgReceiverPacket);
 
 				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
-        System.out.println(new String(received));
+        		System.out.println(new String(received));
 				MessageTreatment message = new MessageTreatment(received);
 				Thread.sleep(100);
 				if(message.getIsToSendMessage())

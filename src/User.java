@@ -10,6 +10,7 @@ public class User {
     private Integer id;
     private ArrayList<Travel> myTravels = new ArrayList<Travel>();
     private ArrayList<Travel> joinTravels= new ArrayList<Travel>();
+    private ArrayList<Travel> requestTravels= new ArrayList<Travel>();
 
     public User(String email, String password, Boolean isAdmin,Integer id){
         this.email=email;
@@ -22,9 +23,28 @@ public class User {
         return myTravels;
     }
 
+    public Travel getMyTravel(int travelID){
+        for(int i = 0; i < myTravels.size(); i++) {
+            if(myTravels.get(i).getID() == travelID)
+                return myTravels.get(i);
+        }
+        return null;
+    }
+
+    public boolean checkMyTravel(int travelID){
+        for(int i = 0; i < myTravels.size(); i++) {
+            if(myTravels.get(i).getID() == travelID)
+                return true;
+        }
+        return false;
+    }
 
     public ArrayList<Travel> getJoinTravels(){
         return joinTravels;
+    }
+    
+    public ArrayList<Travel> getRequestTravels(){
+        return requestTravels;
     }
 
     public void addMyTravel(Travel travel){
@@ -33,6 +53,10 @@ public class User {
 
     public void addJoinTravel(Travel travel){
         joinTravels.add(travel);
+    }
+
+    public void addRequestTravel(Travel travel){
+        requestTravels.add(travel);
     }
 
     public Integer getId(){
@@ -50,6 +74,11 @@ public class User {
     public boolean deleteJoinTravel(Travel travel){
 
         return joinTravels.remove(travel);
+    }
+
+    public boolean deleteRequestTravel(Travel travel){
+
+        return requestTravels.remove(travel);
     }
 
     public String getEmail(){

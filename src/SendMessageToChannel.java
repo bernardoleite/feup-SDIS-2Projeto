@@ -28,6 +28,11 @@ public class SendMessageToChannel implements Runnable{
 				Client.sendJoinTravel(message);
 			break;
 
+			case "list":
+				Client.setListChannel();
+				Client.sendList(message);
+			break;
+
 			default:
 			System.out.println("Invalid channel.");
 			break;
