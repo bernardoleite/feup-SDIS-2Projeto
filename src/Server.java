@@ -287,6 +287,40 @@ public class Server {
         return false;
     }
 
+    public static ArrayList<Travel> getUserJoinTravels(String email){
+    
+        ArrayList<Travel> joinTravel = new ArrayList<Travel>();
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                joinTravel = users.get(i).getJoinTravels();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                joinTravel = admins.get(i).getJoinTravels();
+            }
+        }
+        return joinTravel;
+    }
+
+    public static ArrayList<Travel> getUserRequestTravels(String email){
+    
+        ArrayList<Travel> joinTravel = new ArrayList<Travel>();
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                joinTravel = users.get(i).getRequestTravels();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                joinTravel = admins.get(i).getRequestTravels();
+            }
+        }
+        return joinTravel;
+    }
+
     public static boolean register(Register register){
         counterUsers++;
 

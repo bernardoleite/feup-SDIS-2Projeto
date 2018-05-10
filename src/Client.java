@@ -276,22 +276,30 @@ public class Client {
                 message= Messages.joinTravel(email, travelID);
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
-                String[] splitstr = receive.split(" ");
-                if(splitstr[1].equals(email)) {
-                    System.out.println(receive);
-                }
+                System.out.println(receive);
+                
             }
             else if(n==7){
+
+                message = Messages.listJoinTravels(email);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println(receive);
+
+
+                message = Messages.listRequestTravels(email);
+                System.out.println(message);
+                receive = new String(sendCLientMessage("list", message));
+                System.out.println(receive);
+
                 System.out.println("Please, select the ID of the Travel: ");
                 String travelID= System.console().readLine();
 
                 message= Messages.leaveTravel(email, travelID);
                 System.out.println(message);
-                String receive = new String(sendCLientMessage("joinTravel", message));
-                String[] splitstr = receive.split(" ");
-                if(splitstr[1].equals(email)) {
-                    System.out.println(receive);
-                }
+                receive = new String(sendCLientMessage("joinTravel", message));
+                System.out.println(receive);
+                
             }
             else if(n==8){
                 return true;
@@ -363,7 +371,6 @@ public class Client {
             receive = joinTravelChannel.receiveMessage(this.email);
           else if(channel.equals("list"))
             receive = listChannel.receiveMessage(this.email);
-          System.out.println("Message Received: " + new String(receive));
         
         }
         catch (Exception e) {

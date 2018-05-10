@@ -132,5 +132,36 @@ public class Messages {
         return "UnsuccessRemovePassenger "+ email;
     }
 
+    public static String listJoinTravels(String email){
+        return "ListJoinTravels "+ email;
+    }
 
+    public static String sendJoinTravels(String email, ArrayList<Travel> travels){
+        String string = "SendJoinTravels "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
+            string= string+aux;
+        }
+        
+        return string;
+    }
+
+
+    public static String listRequestTravels(String email){
+        return "ListRequestTravels "+ email;
+    }
+
+    public static String sendRequestTravels(String email, ArrayList<Travel> travels){
+        String string = "SendJoinTravels "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
+            string= string+aux;
+        }
+        
+        return string;
+    }
 }

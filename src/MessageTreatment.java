@@ -123,15 +123,28 @@ public class MessageTreatment {
                 break;
                 
             case "RemovePassenger":
-            email = splitMessage[1];
-            travelID = splitMessage[4].trim();
-            emailPassenger = splitMessage[6].trim();
-            isToSendMessage = true;
-            if(Server.checkUserTravel(email, Integer.parseInt(travelID)) && Server.removePassenger(email, Integer.parseInt(travelID), emailPassenger))
-                sendMessage = Messages.successRemovePassenger(email).getBytes();
-            else
-                sendMessage = Messages.unsuccessRemovePassenger(email).getBytes();
+                email = splitMessage[1];
+                travelID = splitMessage[4].trim();
+                emailPassenger = splitMessage[6].trim();
+                isToSendMessage = true;
+                if(Server.checkUserTravel(email, Integer.parseInt(travelID)) && Server.removePassenger(email, Integer.parseInt(travelID), emailPassenger))
+                    sendMessage = Messages.successRemovePassenger(email).getBytes();
+                else
+                    sendMessage = Messages.unsuccessRemovePassenger(email).getBytes();
             break;
+
+                            
+            case "ListJoinTravels":
+                email = splitMessage[1].trim();
+                isToSendMessage = true;
+                sendMessage = Messages.sendJoinTravels(email, Server.getUserJoinTravels(email)).getBytes();
+            break;
+
+            case "ListRequestTravels":
+                email = splitMessage[1].trim();
+                isToSendMessage = true;
+                sendMessage = Messages.sendRequestTravels(email, Server.getUserRequestTravels(email)).getBytes();
+        break;
         }
 
     }

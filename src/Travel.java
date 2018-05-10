@@ -54,6 +54,18 @@ public class Travel {
         return passengersRequest;
     }
 
+    public String getStartPoint(){
+        return startPoint;
+    }
+
+    public String getEndPoint(){
+        return endPoint;
+    }
+
+    public Date getDate(){
+        return date;
+    }
+
     public boolean removePassenger(User passenger){
         if(passengers.size() == 0)
             return false;
