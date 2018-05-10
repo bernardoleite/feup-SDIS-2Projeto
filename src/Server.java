@@ -321,6 +321,24 @@ public class Server {
         return joinTravel;
     }
 
+
+    public static ArrayList<Travel> getUserMyTravels(String email){
+    
+        ArrayList<Travel> joinTravel = new ArrayList<Travel>();
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                joinTravel = users.get(i).getMyTravels();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                joinTravel = admins.get(i).getMyTravels();
+            }
+        }
+        return joinTravel;
+    }
+
     public static boolean register(Register register){
         counterUsers++;
 

@@ -164,4 +164,20 @@ public class Messages {
         
         return string;
     }
+
+    public static String listMyTravels(String email){
+        return "ListMyTravels "+ email;
+    }
+
+    public static String sendMyTravels(String email, ArrayList<Travel> travels){
+        String string = "SendMyTravels "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
+            string= string+aux;
+        }
+        
+        return string;
+    }
 }

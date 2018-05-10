@@ -209,7 +209,9 @@ public class Client {
             System.out.println("Show your notifications - 5");
             System.out.println("Join Travel - 6");
             System.out.println("Leave Travel - 7");
-            System.out.println("Go Back - 8");
+            System.out.println("My Travels - 8");
+            System.out.println("My Join Travels - 9");
+            System.out.println("Go Back - 10");
             System.out.println();
             int n = Integer.parseInt(System.console().readLine());
 
@@ -302,7 +304,24 @@ public class Client {
                 
             }
             else if(n==8){
-                return true;
+                message = Messages.listMyTravels(email);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println(receive);
+            }
+            else if(n==9){
+                message = Messages.listJoinTravels(email);
+                System.out.println(message);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println(receive);
+                
+                message = Messages.listRequestTravels(email);
+                System.out.println(message);
+                receive = new String(sendCLientMessage("list", message));
+                System.out.println(receive);
+            }
+            else if(n==10){
+                quit=true;
             }
 
         }

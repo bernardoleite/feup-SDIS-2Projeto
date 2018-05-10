@@ -144,7 +144,12 @@ public class MessageTreatment {
                 email = splitMessage[1].trim();
                 isToSendMessage = true;
                 sendMessage = Messages.sendRequestTravels(email, Server.getUserRequestTravels(email)).getBytes();
-        break;
+            break;
+            case "ListMyTravels":
+                email = splitMessage[1].trim();
+                isToSendMessage = true;
+                sendMessage = Messages.sendMyTravels(email, Server.getUserMyTravels(email)).getBytes();
+            break;
         }
 
     }
