@@ -70,9 +70,19 @@ public class MessageTreatment {
               
                 Server.createNewTravel(date, startPoint, endPoint, Integer.parseInt(nrSeats), creator);
               
-                String code = "travelIdentifier";
                 isToSendMessage = true;
-                sendMessage = Messages.successCreateTravel(code).getBytes();
+                sendMessage = Messages.successCreateTravel(creator).getBytes();
+                break;
+            case "Delete":
+
+                creator = splitMessage[1];
+                String travelIdstring = splitMessage[3].trim();
+                int travelIdentifier = Integer.parseInt(travelIdstring);
+              
+                Server.deleteTravel(creator, travelIdentifier);
+              
+                isToSendMessage = true;
+                sendMessage = Messages.successDeleteTravel(travelIdstring, creator).getBytes();
                 break;
             case "Join":
                 email = splitMessage[1];

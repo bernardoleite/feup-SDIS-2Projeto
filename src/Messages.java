@@ -39,6 +39,14 @@ public class Messages {
     public static String createTravel(String date, String startPoint, String endPoint, String numberOfSeats, String creator){
         return "Create" + " " + creator + " " + date + " " + startPoint + " " + endPoint + " " + numberOfSeats;
     }
+    
+    public static String deleteTravel(String travelIdentifier, String creator){
+        return "Delete" + " " + creator + " " + "travel" + " " + travelIdentifier;
+    }
+
+    public static String successDeleteTravel(String travelIdentifier, String creator){
+        return "Success" + " " + creator + " " + "delete travel" + " " + travelIdentifier;
+    }
 
     public static String successCreateTravel(String creator){
         return "Success" +  " " + creator + " " + "travel created" ;

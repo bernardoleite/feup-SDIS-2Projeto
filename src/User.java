@@ -63,12 +63,17 @@ public class User {
         return id;
     }
     
-    public boolean deleteMyTravel(Travel travel){
+    public boolean deleteMyTravel(int travelID){
 
-        if(travel.getCreator().getId()!=id)
-            return false;
+         for(int i = 0 ; i < myTravels.size(); i++){
+            if(myTravels.get(i).getID()==travelID){
+                if(myTravels.get(i).getCreator().getId()!=id)
+                    return false;
+                return myTravels.remove(myTravels.get(i));
+            }
+        }       
 
-        return myTravels.remove(travel);      
+        return false;
     }
 
     public boolean deleteJoinTravel(Travel travel){
@@ -76,9 +81,30 @@ public class User {
         return joinTravels.remove(travel);
     }
 
+    public boolean deleteJoinTravel(int travelID){
+
+         for(int i = 0 ; i < joinTravels.size(); i++){
+            if(joinTravels.get(i).getID()==travelID){
+                return joinTravels.remove(joinTravels.get(i));
+            }
+        }       
+        return false;
+    }
+
+
     public boolean deleteRequestTravel(Travel travel){
 
         return requestTravels.remove(travel);
+    }
+
+    public boolean deleteRequestTravel(int travelID){
+
+         for(int i = 0 ; i < requestTravels.size(); i++){
+            if(requestTravels.get(i).getID()==travelID){
+                return requestTravels.remove(requestTravels.get(i));
+            }
+        }       
+        return false;
     }
 
     public String getEmail(){

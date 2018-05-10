@@ -59,7 +59,7 @@ public class OwnerChannel implements Runnable{
 			received = Arrays.copyOfRange(buf, 0, buf.length-1);
 			String[] receivedStr = new String(received).split(" ");
 			receivedEmail = receivedStr[1].trim();
-			} while(email.equals(receivedEmail));
+			} while(!email.equals(receivedEmail));
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}

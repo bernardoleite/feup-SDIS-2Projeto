@@ -213,6 +213,39 @@ public class Server {
         return true;
     }
 
+    public static boolean deleteTravel(String creator, int travelIdentifier){
+
+        //remove travel from user request travels
+        for(int i = 0 ; i < users.size(); i++){
+            for(int j = 0 ; j < users.get(i).getRequestTravels().size(); j++){
+                if(users.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
+                    users.get(i).deleteRequestTravel(travelIdentifier);
+                }
+            }
+        }
+
+        //remove travel from users joined
+        for(int i = 0 ; i < users.size(); i++){
+            for(int j = 0 ; j < users.get(i).getJoinTravels().size(); j++){
+                if(users.get(i).getJoinTravels().get(j).getID() == travelIdentifier){
+                    users.get(i).deleteJoinTravel(travelIdentifier);
+                }
+            }
+        }
+
+        //remove travel from the user creator
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(creator)){
+                users.get(i).deleteMyTravel(travelIdentifier);
+                counterTravels--;
+            }
+        }
+
+        System.out.println("Travel deleted!");
+
+        return true;
+    }
+
     public static ArrayList<User> getTravelPassengers(String email, Integer travelId){
         ArrayList<User> arrayToReturn= new ArrayList<User>();
 

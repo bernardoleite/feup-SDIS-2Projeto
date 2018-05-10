@@ -250,8 +250,29 @@ public class Client {
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
                     if(action.equals("Success" + " " + currentUser + "travel created"))
-                    quit = true;
+                        System.out.println("Message Received: " + receive);
+
                 //}
+
+            }
+
+            if(n == 2) {
+                message = Messages.listMyTravels(email);
+                //System.out.println(message);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println("These are the travels you created: ");
+                System.out.println();
+                System.out.println(receive);
+                System.out.println();
+                System.out.println("Please, select the (Id) of the one you want to delete: ");
+                String travelIdentifier = System.console().readLine();
+
+                message =  Messages.deleteTravel(travelIdentifier, currentUser);
+                System.out.println();
+                System.out.println("Message to be Sended: " + message);
+                System.out.println();
+                receive = new String(sendCLientMessage("owner", message));
+                System.out.println("Message Received: " + receive);
 
             }
             else if(n==3){
