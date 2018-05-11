@@ -241,6 +241,14 @@ public class Server {
             }
         }
 
+        //remove travel from admins
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(creator)){
+                admins.get(i).deleteMyTravel(travelIdentifier);
+                counterTravels--; //?
+            }
+        }
+
         System.out.println("Travel deleted!");
 
         return true;
