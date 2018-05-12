@@ -228,9 +228,22 @@ public class Client {
             if(n == 1) {
                 System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
                 String date = System.console().readLine();
+                boolean isDateCorrect = confirmDay(date);
+                while(!isDateCorrect){
+                    System.out.println("The date format is incorrect!");
+                    System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                    date = System.console().readLine();
+                    isDateCorrect = confirmDay(date);
+                }
                 System.out.println();
                 System.out.println("Please, select the hour of the Travel (HH:mm): ");
                 String hour = System.console().readLine();
+                while(!confirmHour(hour)){
+                    System.out.println("The hour format is incorrect!");
+                    System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                    hour = System.console().readLine();
+                    isDateCorrect = confirmHour(hour);
+                }
                 System.out.println();
                 System.out.println("Please, select the Start Point of the Travel: ");
                 String startPoint = System.console().readLine();
@@ -447,6 +460,71 @@ public class Client {
         }
 
         return receive;
+    }
+
+    boolean confirmDay(String date){
+
+        String[] dateArray = date.split("/");
+
+        int day = Integer.parseInt(dateArray[0]);
+        int month = Integer.parseInt(dateArray[1]);
+        int year = Integer.parseInt(dateArray[2].trim());
+
+        if(day <= 0 || month <= 0 || year <= 0){
+            return false;
+        }
+
+        //check leap year
+        boolean isLeapYear = false;
+        if((year%4) == 0){
+            isLeapYear = true;
+        }
+
+        //check february
+        if(month == 2){
+            if(isLeapYear) {
+                if (day > 29) {
+                    return false;
+                }
+            }
+            else{
+                if (day > 28){
+                    return false;
+                }
+            }
+        }
+
+        if(month > 12){
+            return false;
+        }
+
+        //check months with 31 days
+        if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12){
+            if(day > 31){return false;}
+        }
+        //check months with 30 days
+        else if(day > 30){return false;}
+
+        return true;
+
+    }
+
+    boolean confirmHour(String hourMins){
+
+        String[] hoursArray = hourMins.split(":");
+
+        int hour = Integer.parseInt(hoursArray[0]);
+        int mins = Integer.parseInt(hoursArray[1].trim());
+
+        if(hour < 0 || hour  > 24){
+            return false;
+        }
+
+        if(mins < 0 || mins  > 60) {
+            return false;
+        }
+
+        return true;
     }
 
 }
