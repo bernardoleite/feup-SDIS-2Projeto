@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="32f66c8a-2692-4f9c-ac2f-1d5f9275c401" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/feup-SDIS-2Projeto.iml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/Client.class" afterPath="$PROJECT_DIR$/src/Client.class" />
       <change beforePath="$PROJECT_DIR$/src/Client.java" afterPath="$PROJECT_DIR$/src/Client.java" />
-      <change beforePath="$PROJECT_DIR$/src/MessageTreatment.class" afterPath="$PROJECT_DIR$/src/MessageTreatment.class" />
-      <change beforePath="$PROJECT_DIR$/src/Messages.class" afterPath="$PROJECT_DIR$/src/Messages.class" />
-      <change beforePath="$PROJECT_DIR$/src/OwnerChannel.class" afterPath="$PROJECT_DIR$/src/OwnerChannel.class" />
-      <change beforePath="$PROJECT_DIR$/src/Server.class" afterPath="$PROJECT_DIR$/src/Server.class" />
-      <change beforePath="$PROJECT_DIR$/src/User.class" afterPath="$PROJECT_DIR$/src/User.class" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +18,8 @@
       <file leaf-file-name="Client.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-213">
-              <caret line="492" column="17" lean-forward="true" selection-start-line="492" selection-start-column="17" selection-end-line="492" selection-end-column="17" />
+            <state relative-caret-position="241">
+              <caret line="514" column="0" lean-forward="false" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -41,6 +35,7 @@
       <find>.trim</find>
       <find>dd/mm</find>
       <find>parseInt</find>
+      <find>matches</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -65,6 +60,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="683" />
     <option name="width" value="683" />
     <option name="height" value="728" />
   </component>
@@ -222,12 +218,12 @@
       <workItem from="1526052222687" duration="1540000" />
       <workItem from="1526054273804" duration="61000" />
       <workItem from="1526055191770" duration="5273000" />
-      <workItem from="1526124323571" duration="1381000" />
+      <workItem from="1526124323571" duration="4868000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8255000" />
+    <option name="totallyTimeSpent" value="11742000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -291,8 +287,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-213">
-          <caret line="492" column="17" lean-forward="true" selection-start-line="492" selection-start-column="17" selection-end-line="492" selection-end-column="17" />
+        <state relative-caret-position="241">
+          <caret line="514" column="0" lean-forward="false" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

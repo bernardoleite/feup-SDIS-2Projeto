@@ -464,6 +464,10 @@ public class Client {
 
     boolean confirmDay(String date){
 
+        if(!date.matches("([0-9]{2})/([0-9]{2})/([0-9]{4})")){
+            return false;
+        }
+
         String[] dateArray = date.split("/");
 
         int day = Integer.parseInt(dateArray[0]);
@@ -510,6 +514,10 @@ public class Client {
     }
 
     boolean confirmHour(String hourMins){
+
+        if(!hourMins.matches("(([0-9]{2}):([0-9]{2}))")){
+            return false;
+        }
 
         String[] hoursArray = hourMins.split(":");
 
