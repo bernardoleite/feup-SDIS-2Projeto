@@ -4,6 +4,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.DateFormat;
 
 import javax.naming.NoInitialContextException;
 
@@ -226,24 +227,39 @@ public class Client {
             int n = Integer.parseInt(System.console().readLine());
 
             if(n == 1) {
-                System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
-                String date = System.console().readLine();
-                boolean isDateCorrect = confirmDay(date);
-                while(!isDateCorrect){
-                    System.out.println("The date format is incorrect!");
+                boolean isDateAfter;
+                String hour;
+                String date;
+                do {
                     System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
                     date = System.console().readLine();
-                    isDateCorrect = confirmDay(date);
-                }
-                System.out.println();
-                System.out.println("Please, select the hour of the Travel (HH:mm): ");
-                String hour = System.console().readLine();
-                while(!confirmHour(hour)){
-                    System.out.println("The hour format is incorrect!");
+                    boolean isDateCorrect = confirmDay(date);
+                    while (!isDateCorrect) {
+                        System.out.println("The date format is incorrect!");
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        date = System.console().readLine();
+                        isDateCorrect = confirmDay(date);
+                    }
+
+                    System.out.println();
                     System.out.println("Please, select the hour of the Travel (HH:mm): ");
                     hour = System.console().readLine();
-                    isDateCorrect = confirmHour(hour);
-                }
+                    boolean isHourCorrect = confirmHour(hour);
+                    while (!isHourCorrect) {
+                        System.out.println("The hour format is incorrect!");
+                        System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                        hour = System.console().readLine();
+                        isHourCorrect = confirmHour(hour);
+                    }
+
+                    String completeDate = date + " " + hour;
+                    Date newDate = new Date(completeDate);
+                    isDateAfter = confirmSuperiorDate(newDate);
+                    if (!isDateAfter) {
+                        System.out.println("The date you choose is after de date of today!");
+                    }
+                }while(!isDateAfter);
+
                 System.out.println();
                 System.out.println("Please, select the Start Point of the Travel: ");
                 String startPoint = System.console().readLine();
@@ -254,12 +270,7 @@ public class Client {
                 System.out.println("Please, select the maximum number of Seats of the Travel: ");
                 String nrSeats = System.console().readLine();
                 System.out.println();
-        /*
-                boolean confirmDate = date.matches("([0-9]{2})/([0-9]{2})/([0-9]{4}/s/d{2}:/d{2})");
-                if(!confirmDate){
-                System.out.println("Invalid Date");
-                }*/
-                //else{
+
                     message =  Messages.createTravel(date+" "+hour,startPoint,endPoint,nrSeats,currentUser);
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("owner", message));
@@ -267,8 +278,6 @@ public class Client {
                     String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
                     if(action.equals("Success" + " " + currentUser + "travel created"))
                         System.out.println("Message Received: " + receive);
-
-                //}
 
             }
 
@@ -524,7 +533,7 @@ public class Client {
         int hour = Integer.parseInt(hoursArray[0]);
         int mins = Integer.parseInt(hoursArray[1].trim());
 
-        if(hour < 0 || hour  > 24){
+        if(hour < 0 || hour  > 23){
             return false;
         }
 
@@ -535,4 +544,20 @@ public class Client {
         return true;
     }
 
+
+    boolean confirmSuperiorDate(Date travelDate){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date actualDate = new Date();
+        System.out.println(dateFormat.format(actualDate));
+
+        if(travelDate.after(actualDate)) {
+            //System.out.println("Sou superior");
+            return true;
+        }else {
+            //System.out.println("Sou inferior");
+            return false;
+        }
+    }
+
 }
+
