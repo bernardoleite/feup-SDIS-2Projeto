@@ -228,8 +228,7 @@ public class Client {
 
             if(n == 1) {
                 boolean isDateAfter;
-                String hour;
-                String date;
+                String hour, date, startPoint, endPoint, nrSeats;
                 do {
                     System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
                     date = System.console().readLine();
@@ -246,6 +245,7 @@ public class Client {
                     hour = System.console().readLine();
                     boolean isHourCorrect = confirmHour(hour);
                     while (!isHourCorrect) {
+                        System.out.println();
                         System.out.println("The hour format is incorrect!");
                         System.out.println("Please, select the hour of the Travel (HH:mm): ");
                         hour = System.console().readLine();
@@ -260,15 +260,23 @@ public class Client {
                     }
                 }while(!isDateAfter);
 
-                System.out.println();
-                System.out.println("Please, select the Start Point of the Travel: ");
-                String startPoint = System.console().readLine();
-                System.out.println();
-                System.out.println("Please, select the Destination of the Travel: ");
-                String endPoint = System.console().readLine();
-                System.out.println();
-                System.out.println("Please, select the maximum number of Seats of the Travel: ");
-                String nrSeats = System.console().readLine();
+                do {
+                    System.out.println();
+                    System.out.println("Please, select the Start Point of the Travel: ");
+                    startPoint = System.console().readLine();
+                }while(!checkInputWords(startPoint));
+
+                do {
+                    System.out.println();
+                    System.out.println("Please, select the Destination of the Travel: ");
+                    endPoint = System.console().readLine();
+                }while(!checkInputWords(endPoint));
+
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the maximum number of Seats of the Travel: ");
+                    nrSeats = System.console().readLine();
+                }while(!checkInputInteger(nrSeats));
                 System.out.println();
 
                     message =  Messages.createTravel(date+" "+hour,startPoint,endPoint,nrSeats,currentUser);
@@ -548,7 +556,7 @@ public class Client {
     boolean confirmSuperiorDate(Date travelDate){
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date actualDate = new Date();
-        System.out.println(dateFormat.format(actualDate));
+        //System.out.println(dateFormat.format(actualDate));
 
         if(travelDate.after(actualDate)) {
             //System.out.println("Sou superior");
@@ -556,6 +564,24 @@ public class Client {
         }else {
             //System.out.println("Sou inferior");
             return false;
+        }
+    }
+
+    boolean checkInputWords(String word){
+        if(!word.matches("([A-Za-z]*)")){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    boolean checkInputInteger(String integerToCheck){
+        if(!integerToCheck.matches("([1-9]*)")){
+            return false;
+        }
+        else{
+            return true;
         }
     }
 
