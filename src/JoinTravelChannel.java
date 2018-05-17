@@ -12,8 +12,8 @@ import java.util.*;
 
 public class JoinTravelChannel implements Runnable{
 
-    private static InetAddress address;
-    private static Integer port;
+    private InetAddress address;
+    private Integer port;
     private static MulticastSocket receiverSocket;
 
     private static ExecutorService exec;
@@ -66,7 +66,7 @@ public class JoinTravelChannel implements Runnable{
 		return received;
 	}
 
-    public static void openSocket(){
+    public void openSocket(){
 		try{
 			receiverSocket = new MulticastSocket(port);
 

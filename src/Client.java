@@ -251,9 +251,17 @@ public class Client {
                         hour = System.console().readLine();
                         isHourCorrect = confirmHour(hour);
                     }
-
                     String completeDate = date + " " + hour;
-                    Date newDate = new Date(completeDate);
+                    Date newDate;
+                    try {
+                        SimpleDateFormat format =
+                            new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            newDate = format.parse(completeDate);
+                    }
+                    catch(ParseException pe) {
+                        throw new IllegalArgumentException(pe);
+                    }
+    
                     isDateAfter = confirmSuperiorDate(newDate);
                     if (!isDateAfter) {
                         System.out.println("The date you choose is after de date of today!");

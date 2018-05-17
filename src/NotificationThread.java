@@ -15,7 +15,7 @@ public class NotificationThread implements Runnable {
     private static String ip_not_join = "224.0.0.7";
     private static Integer port_not_join = 8888;
     
-    private static String email;
+    private String email;
 
     public NotificationThread(String email){
         this.email = email;
