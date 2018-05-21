@@ -422,9 +422,9 @@ public class Client implements Serializable{
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("list", message));
                    
-                   /* String[] splitstr = receive.split(" ");
-                    String action = splitstr[0]+" "+splitstr[1].trim() + "travel searched";
-                    if(action.equals("Success" + " " + currentUser + "travel searched"))*/
+                    String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim();
+                    if(action.equals("SendSpecificTravels" + " " + currentUser))
                         System.out.println("Message Received: " + receive);
                 }
                 else if(optionSelected == 2){
