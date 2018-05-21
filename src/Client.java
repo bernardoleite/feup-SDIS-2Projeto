@@ -264,6 +264,7 @@ public class Client {
     
                     isDateAfter = confirmSuperiorDate(newDate);
                     if (!isDateAfter) {
+                        System.out.println();
                         System.out.println("The date you choose is after de date of today!");
                     }
                 }while(!isDateAfter);
@@ -346,6 +347,110 @@ public class Client {
                         menuManageTravel(travelID);
                     }
                 }
+            }
+            else if(n==4){
+                System.out.println();
+                System.out.println("Search Menu");
+                System.out.println("1. Select Day, Hour, Start Point and Destination");
+                System.out.println("2. Select Day, Start Point and Destination");
+                System.out.println("3. Go Back");
+                int optionSelected = Integer.parseInt(System.console().readLine());
+
+                if(optionSelected == 1){
+                    boolean isDateAfter;
+                    String searchHour, searchDate, searchStartPoint, searchEndPoint;
+                    do {
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        searchDate = System.console().readLine();
+                        boolean isDateCorrect = confirmDay(searchDate);
+                        while (!isDateCorrect) {
+                            System.out.println("The date format is incorrect!");
+                            System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                            searchDate = System.console().readLine();
+                            isDateCorrect = confirmDay(searchDate);
+                        }
+
+                        System.out.println();
+                        System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                        searchHour = System.console().readLine();
+                        boolean isHourCorrect = confirmHour(searchHour);
+                        while (!isHourCorrect) {
+                            System.out.println();
+                            System.out.println("The hour format is incorrect!");
+                            System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                            searchHour = System.console().readLine();
+                            isHourCorrect = confirmHour(searchHour);
+                        }
+                        String completeSearchDate = searchDate + " " + searchHour;
+                        Date newDate;
+                        try {
+                            SimpleDateFormat format =
+                                    new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            newDate = format.parse(completeSearchDate);
+                        }
+                        catch(ParseException pe) {
+                            throw new IllegalArgumentException(pe);
+                        }
+
+                        isDateAfter = confirmSuperiorDate(newDate);
+                        if (!isDateAfter) {
+                            System.out.println();
+                            System.out.println("The date you choose is after de date of today!");
+                        }
+                    }while(!isDateAfter);
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Start Point of the Travel: ");
+                        searchStartPoint = System.console().readLine();
+                    }while(!checkInputWords(searchStartPoint));
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Destination of the Travel: ");
+                        searchEndPoint = System.console().readLine();
+                    }while(!checkInputWords(searchEndPoint));
+
+                    message =  Messages.searchCompleteTravel(searchDate+" "+searchHour,searchStartPoint,searchEndPoint,currentUser);
+                    System.out.println("Message to be Sended: " + message);
+                    String receive = new String(sendCLientMessage("owner", message));
+                    String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim() + "travel searched";
+                    if(action.equals("Success" + " " + currentUser + "travel searched"))
+                        System.out.println("Message Received: " + receive);
+                }
+                else if(optionSelected == 2){
+
+                    boolean isDateAfter;
+                    String date, startPoint, endPoint;
+
+                    System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                    date = System.console().readLine();
+                    boolean isDateCorrect = confirmDay(date);
+                    while (!isDateCorrect) {
+                        System.out.println("The date format is incorrect!");
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        date = System.console().readLine();
+                        isDateCorrect = confirmDay(date);
+                    }
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Start Point of the Travel: ");
+                        startPoint = System.console().readLine();
+                    }while(!checkInputWords(startPoint));
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Destination of the Travel: ");
+                        endPoint = System.console().readLine();
+                    }while(!checkInputWords(endPoint));
+
+                }
+                else if(n==3){
+                    quit = true;
+                }
+
             }
             else if(n==6){
                 System.out.println("Please, select the ID of the Travel: ");

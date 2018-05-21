@@ -144,6 +144,18 @@ public class Messages {
         return "ListJoinTravels "+ email;
     }
 
+    public static String searchCompleteTravel(String date, String startPoint, String endPoint, String creator){
+        return "Search Complete " + creator + " " + date + " " + startPoint + " " + endPoint;
+    }
+
+    public static String searchPartialTravel(String day, String startPoint, String endPoint, String creator){
+        return "Search Partial " + creator + " " + day + " " + startPoint + " " + endPoint;
+    }
+
+    //public static String successSearchTravel(String travelIdentifier, String creator){
+      //  return "Success" + " " + creator + " " + "search travel" + " " + travelIdentifier;
+    //}
+
     public static String sendJoinTravels(String email, ArrayList<Travel> travels){
         String string = "SendJoinTravels "+ email + " " + "\n";
         String aux;
