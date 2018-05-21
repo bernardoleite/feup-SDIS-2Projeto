@@ -4,7 +4,7 @@ import java.io.*;
 
 
 
-public class Travel {
+public class Travel implements Serializable{
 
     private Integer ID;
     private Date date;

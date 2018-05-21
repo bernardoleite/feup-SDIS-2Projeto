@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 
-public class Messages {
+public class Messages implements Serializable{
 
     private String action;
     private Integer id;
@@ -28,8 +28,8 @@ public class Messages {
         return "User "+ email + " already exists.";
     }
     
-    public static String successLogin(String email){
-        return "Success "+ email  + " login.";
+    public static String successLogin(String email, int admin){
+        return "Success "+ email  + " login " + admin;
     }
 
     public static String unsuccessLogin(String email){
@@ -82,6 +82,22 @@ public class Messages {
 
     public static String listPassengersRequest(String email,String travelIdentifier){
         return "PassengersRequest "+ email + " Travel number " + travelIdentifier;
+    }
+
+    public static String listAllTravels(String email){
+        return "ListAllTravels "+ email;
+    }
+
+    public static String sendAllTravels(String email, ArrayList<Travel> travels){
+        String string = "SendAllTravels "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
+            string= string+aux;
+        }
+        
+        return string;
     }
 
     public static String sendPassengers(String email, ArrayList<User> passengers){

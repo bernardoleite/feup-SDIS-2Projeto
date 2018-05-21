@@ -2,7 +2,7 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-public class Server {
+public class Server implements Serializable{
 
     private static ArrayList<User> users = new ArrayList<User>();
     private static ArrayList<User> admins = new ArrayList<User>();
@@ -32,10 +32,54 @@ public class Server {
     private static Integer counterUsers = 4;
     private static Integer counterTravels = 1;
 
+    //store information
+    private static ArrayOfFiles currentFiles = new ArrayOfFiles();
+
+    private static String filebin = "data.bin";
+
+    public static void deserialize_Object(){
+
+      try{
+          ObjectInputStream is = new ObjectInputStream(new FileInputStream(filebin));
+          currentFiles = (ArrayOfFiles)is.readObject();
+          is.close();
+          users.addAll(currentFiles.users);
+          admins.addAll(currentFiles.admins);
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+
+    }
+    public static void serialize_Object(){
+
+      filebin = "data.bin";
+      try{
+        currentFiles.users.addAll(users);
+        currentFiles.admins.addAll(admins);
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filebin));
+        os.writeObject(currentFiles);
+        os.close();
+      }
+      catch(Exception e)
+      {
+          e.printStackTrace();
+      }
+
+    }
+
     public Server() {
 
         try{
-            createAdministration();
+                createAdministration();
+
+              File f = new File("data.bin");
+              if(f.exists() && !f.isDirectory()) {
+                deserialize_Object();
+              }
+              else {
+                currentFiles = new ArrayOfFiles();
+              }
 
             Thread authChannel = new Thread(new AuthenticationChannel(ip_authentication, port_authentication));
             authChannel.start();
@@ -108,6 +152,9 @@ public class Server {
         return null;
     }
     
+    public static ArrayList<User> getAdmins(){
+        return admins;
+    }
 
     public static boolean joinTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
@@ -209,11 +256,18 @@ public class Server {
         }
 
         System.out.println("Travel added!");
-
+        serialize_Object();
         return true;
     }
 
-    public static boolean deleteTravel(String creator, int travelIdentifier){
+public static boolean deleteTravel(String creator, int travelIdentifier){
+
+        Boolean isthisAdmin = false;
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(creator)){
+                isthisAdmin = true;
+            }
+        }        
 
         //remove travel from user request travels
         for(int i = 0 ; i < users.size(); i++){
@@ -235,7 +289,7 @@ public class Server {
 
         //remove travel from the user creator
         for(int i = 0 ; i < users.size(); i++){
-            if(users.get(i).getEmail().equals(creator)){
+            if(users.get(i).getEmail().equals(creator) || isthisAdmin){
                 users.get(i).deleteMyTravel(travelIdentifier);
                 counterTravels--;
             }
@@ -243,14 +297,14 @@ public class Server {
 
         //remove travel from admins
         for(int i = 0 ; i < admins.size(); i++){
-            if(admins.get(i).getEmail().equals(creator)){
+            if(admins.get(i).getEmail().equals(creator) || isthisAdmin){
                 admins.get(i).deleteMyTravel(travelIdentifier);
                 counterTravels--; //?
             }
         }
 
         System.out.println("Travel deleted!");
-
+        serialize_Object();
         return true;
     }
 
@@ -405,13 +459,59 @@ public class Server {
         return true;
     }
 
+    public static boolean checkAdmin(String email){
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public static ArrayList<Travel> getAllTravels(){
+
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+
+        for(int i = 0 ; i < users.size(); i++){
+            for( int j = 0 ; j < users.get(i).getMyTravels().size(); j++){
+                if(!allTravels.contains(users.get(i).getMyTravels().get(j)))
+                    allTravels.add(users.get(i).getMyTravels().get(j));
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            for( int j = 0 ; j < admins.get(i).getMyTravels().size(); j++){
+                if(!allTravels.contains(admins.get(i).getMyTravels().get(j)))
+                    allTravels.add(admins.get(i).getMyTravels().get(j));
+            }
+        }
+
+        return allTravels;
+    }
+
+    public Boolean adminExists(String email){
+         for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email))
+                return true;
+        }
+        return false;       
+    }
+
+
     public void createAdministration(){
         String password = "123456";
 
-        admins.add(new User("up201505791@fe.up.pt",Integer.toString(password.hashCode()),true,1));
-        admins.add(new User("up201404464@fe.up.pt",Integer.toString(password.hashCode()),true,2));
-        admins.add(new User("up201506440@fe.up.pt",Integer.toString(password.hashCode()),true,3));
-        admins.add(new User("up201404302@fe.up.pt",Integer.toString(password.hashCode()),true,4));
+        if(!adminExists("up201505791@fe.up.pt"))
+            admins.add(new User("up201505791@fe.up.pt",Integer.toString(password.hashCode()),true,1));
+        if(!adminExists("up201404464@fe.up.pt"))
+            admins.add(new User("up201404464@fe.up.pt",Integer.toString(password.hashCode()),true,2));
+        if(!adminExists("up201506440@fe.up.pt"))
+            admins.add(new User("up201506440@fe.up.pt",Integer.toString(password.hashCode()),true,3));
+        if(!adminExists("up201404302@fe.up.pt"))
+            admins.add(new User("up201404302@fe.up.pt",Integer.toString(password.hashCode()),true,4));
     }
 
 

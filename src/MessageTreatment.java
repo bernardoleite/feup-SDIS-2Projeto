@@ -47,10 +47,15 @@ public class MessageTreatment {
                 email = splitMessage[1];
                 password = splitMessage[2].trim();
                 isToSendMessage = true;
+                int isAdmin = 0;
+
+                if (Server.checkAdmin(email)){
+                    isAdmin = 1;
+                }
 
                 Login login = new Login(email,password);
                 if(login.existUser()){
-                    sendMessage = Messages.successLogin(email).getBytes();
+                    sendMessage = Messages.successLogin(email, isAdmin).getBytes();
                 }
                 else{
                     sendMessage = Messages.unsuccessLogin(email).getBytes();
@@ -159,6 +164,11 @@ public class MessageTreatment {
                 email = splitMessage[1].trim();
                 isToSendMessage = true;
                 sendMessage = Messages.sendMyTravels(email, Server.getUserMyTravels(email)).getBytes();
+            break;
+            case "ListAllTravels":
+                email = splitMessage[1].trim();
+                isToSendMessage = true;
+                sendMessage = Messages.sendAllTravels(email, Server.getAllTravels()).getBytes();
             break;
         }
 

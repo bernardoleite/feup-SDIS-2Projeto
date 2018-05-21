@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import javax.naming.NoInitialContextException;
 
 
-public class Client {
+public class Client implements Serializable{
 
     //Registration and Log In
     private static AuthenticationChannel authChannel;
@@ -36,6 +36,8 @@ public class Client {
     
     private static String currentUser="";
     private String email; 
+
+    private static int isAdmin = 0;
 
 
     public Client(){
@@ -180,6 +182,8 @@ public class Client {
                 String receive = new String(sendCLientMessage("authentication", message));
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0];
+                isAdmin = Integer.parseInt(splitstr[3].trim());
+
                 if(splitstr[1].equals(email)) {
                     System.out.println(receive);
                     if(action.equals("Success")) {
@@ -223,7 +227,10 @@ public class Client {
             System.out.println("My Travels - 8");
             System.out.println("My Join Travels - 9");
             System.out.println("Go Back - 10");
-            System.out.println();
+            if (isAdmin==1){
+                System.out.println("[Admin] See all Travels - 11");
+                System.out.println("[Admin] Delete a Travel - 12");
+            }
             int n = Integer.parseInt(System.console().readLine());
 
             if(n == 1) {
@@ -503,6 +510,37 @@ public class Client {
             }
             else if(n==10){
                 quit=true;
+            }
+
+            else if(n == 11) {
+                message = Messages.listAllTravels(email);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println("These are the Travels of the Server: ");
+                System.out.println();
+                System.out.println(receive);
+                System.out.println();
+            }
+            else if(n == 12) {
+                message = Messages.listAllTravels(email);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println("These are the Travels of the Server: ");
+                System.out.println();
+                System.out.println(receive);
+                System.out.println();
+                System.out.println("Please, select the (Id) of the one you want to delete: ");
+                String travelIdentifier = System.console().readLine();
+
+                message =  Messages.deleteTravel(travelIdentifier, currentUser);
+                System.out.println();
+                System.out.println("Message to be Sended: " + message);
+                System.out.println();
+                receive = new String(sendCLientMessage("owner", message));
+                String[] splitstr = receive.split(" ");
+                String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
+                if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
+                    System.out.println("Message Received: " + receive);
+                else 
+                    System.out.println("No success!");
             }
 
         }

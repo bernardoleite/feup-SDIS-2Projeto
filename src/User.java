@@ -1,8 +1,8 @@
-import java.util.ArrayList;
 import java.io.*;
+import java.util.*;
+import java.net.*;
 
-
-public class User {
+public class User implements Serializable{
 
     private String email="";
     private String password="";
@@ -67,8 +67,6 @@ public class User {
 
          for(int i = 0 ; i < myTravels.size(); i++){
             if(myTravels.get(i).getID()==travelID){
-                if(myTravels.get(i).getCreator().getId()!=id)
-                    return false;
                 return myTravels.remove(myTravels.get(i));
             }
         }       
