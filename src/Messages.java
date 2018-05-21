@@ -100,6 +100,19 @@ public class Messages implements Serializable{
         return string;
     }
 
+
+    public static String sendSpecificTravels(String email, ArrayList<Travel> travels){
+        String string = "SendSpecificTravels "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
+            string= string+aux;
+        }
+        
+        return string;
+    }
+
     public static String sendPassengers(String email, ArrayList<User> passengers){
         String string = "SendPassengers "+ email + " Travel number\n";
         String aux;
@@ -161,11 +174,11 @@ public class Messages implements Serializable{
     }
 
     public static String searchCompleteTravel(String date, String startPoint, String endPoint, String creator){
-        return "Search Complete " + creator + " " + date + " " + startPoint + " " + endPoint;
+        return "SearchComplete " + creator + " " + date + " " + startPoint + " " + endPoint;
     }
 
     public static String searchPartialTravel(String day, String startPoint, String endPoint, String creator){
-        return "Search Partial " + creator + " " + day + " " + startPoint + " " + endPoint;
+        return "SearchPartial " + creator + " " + day + " " + startPoint + " " + endPoint;
     }
 
     //public static String successSearchTravel(String travelIdentifier, String creator){

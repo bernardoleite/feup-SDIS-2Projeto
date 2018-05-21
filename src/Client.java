@@ -420,10 +420,11 @@ public class Client implements Serializable{
 
                     message =  Messages.searchCompleteTravel(searchDate+" "+searchHour,searchStartPoint,searchEndPoint,currentUser);
                     System.out.println("Message to be Sended: " + message);
-                    String receive = new String(sendCLientMessage("owner", message));
-                    String[] splitstr = receive.split(" ");
+                    String receive = new String(sendCLientMessage("list", message));
+                   
+                   /* String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim() + "travel searched";
-                    if(action.equals("Success" + " " + currentUser + "travel searched"))
+                    if(action.equals("Success" + " " + currentUser + "travel searched"))*/
                         System.out.println("Message Received: " + receive);
                 }
                 else if(optionSelected == 2){

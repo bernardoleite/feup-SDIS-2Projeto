@@ -170,6 +170,17 @@ public class MessageTreatment {
                 isToSendMessage = true;
                 sendMessage = Messages.sendAllTravels(email, Server.getAllTravels()).getBytes();
             break;
+            case "SearchComplete":
+
+                email = splitMessage[1].trim();
+                dateform = splitMessage[2] + " " + splitMessage[3];
+                startPoint = splitMessage[4];
+                endPoint = splitMessage[5].trim();
+                format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+                date = format.parse(dateform);
+                isToSendMessage = true;
+                sendMessage = Messages.sendSpecificTravels(email, Server.getSpecificTravels(date, startPoint, endPoint)).getBytes();
+            break;
         }
 
     }

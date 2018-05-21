@@ -492,6 +492,22 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         return allTravels;
     }
 
+    public static ArrayList<Travel> getSpecificTravels(Date dateform, String startPoint, String endPoint){
+
+        ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+        allTravels.addAll(getAllTravels());
+
+        for(int i = 0; i < allTravels.size(); i++){
+            if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
+                selectedTravels.add(allTravels.get(i));
+            }
+        }
+
+
+        return selectedTravels;
+    }
+
     public Boolean adminExists(String email){
          for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email))
