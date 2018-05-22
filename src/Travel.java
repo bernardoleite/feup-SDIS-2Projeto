@@ -39,6 +39,7 @@ public class Travel implements Serializable{
                 passengersRequest.remove(passenger);
                 passenger.addJoinTravel(this);
                 passenger.deleteRequestTravel(this);
+                Server.serialize_Object();
                 return true;
             }
         }
@@ -75,6 +76,7 @@ public class Travel implements Serializable{
             passengersRequest.add(passenger);
             passenger.addRequestTravel(this);
         }
+        Server.serialize_Object();
         return  b;
     }
 
@@ -84,6 +86,7 @@ public class Travel implements Serializable{
             if(passengersRequest.get(i).getEmail().equals(passenger.getEmail())) {
                 passengersRequest.remove(passenger);
                 passenger.deleteRequestTravel(this);
+                Server.serialize_Object();
                 return true;
             }
         }
@@ -91,6 +94,7 @@ public class Travel implements Serializable{
             if(passengers.get(i).getEmail().equals(passenger.getEmail())) {
                 passengers.remove(passenger);
                 passenger.deleteJoinTravel(this);
+                Server.serialize_Object();
                 return true;
             }
         }
@@ -117,7 +121,7 @@ public class Travel implements Serializable{
         }
         passengersRequest.add(user);
         user.addRequestTravel(this);
-
+        Server.serialize_Object();
         return true;
     }
 

@@ -182,11 +182,11 @@ public class Client implements Serializable{
                 String receive = new String(sendCLientMessage("authentication", message));
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0];
-                isAdmin = Integer.parseInt(splitstr[3].trim());
 
                 if(splitstr[1].equals(email)) {
                     System.out.println(receive);
                     if(action.equals("Success")) {
+                        isAdmin = Integer.parseInt(splitstr[3].trim());
                         quit = true;
                         this.email=email;
                     }
@@ -513,7 +513,7 @@ public class Client implements Serializable{
                 quit=true;
             }
 
-            else if(n == 11) {
+            else if(n == 11 && isAdmin==1) {
                 message = Messages.listAllTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");
@@ -521,7 +521,7 @@ public class Client implements Serializable{
                 System.out.println(receive);
                 System.out.println();
             }
-            else if(n == 12) {
+            else if(n == 12 && isAdmin==1) {
                 message = Messages.listAllTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");

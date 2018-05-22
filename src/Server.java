@@ -45,6 +45,8 @@ public class Server implements Serializable{
           is.close();
           users.addAll(currentFiles.users);
           admins.addAll(currentFiles.admins);
+          counterUsers = currentFiles.counterUsers;
+          counterTravels = currentFiles.counterTravels;
       }
       catch(Exception e){
           e.printStackTrace();
@@ -55,8 +57,12 @@ public class Server implements Serializable{
 
       filebin = "data.bin";
       try{
+        currentFiles.users.clear();
+        currentFiles.admins.clear();
         currentFiles.users.addAll(users);
         currentFiles.admins.addAll(admins);
+        currentFiles.counterUsers = counterUsers;
+        currentFiles.counterTravels = counterTravels;
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filebin));
         os.writeObject(currentFiles);
         os.close();
@@ -71,7 +77,7 @@ public class Server implements Serializable{
     public Server() {
 
         try{
-                createAdministration();
+              createAdministration();
 
               File f = new File("data.bin");
               if(f.exists() && !f.isDirectory()) {
@@ -291,7 +297,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(creator) || isthisAdmin){
                 users.get(i).deleteMyTravel(travelIdentifier);
-                counterTravels--;
+                //counterTravels--;????
             }
         }
 
@@ -299,7 +305,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(creator) || isthisAdmin){
                 admins.get(i).deleteMyTravel(travelIdentifier);
-                counterTravels--; //?
+                //counterTravels--; ????
             }
         }
 
@@ -367,13 +373,19 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
-                return users.get(i).getMyTravel(travelID).addPassenger(user);
+                if(users.get(i).getMyTravel(travelID).addPassenger(user)){
+                    Server.serialize_Object();
+                    return true;
+                }
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
-                return admins.get(i).getMyTravel(travelID).addPassenger(user);
+                if(admins.get(i).getMyTravel(travelID).addPassenger(user)){
+                    Server.serialize_Object();   
+                    return true;                 
+                }
             }
         }
         
@@ -386,13 +398,19 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
-                return users.get(i).getMyTravel(travelID).removePassenger(user);
+                if(users.get(i).getMyTravel(travelID).removePassenger(user)){
+                    Server.serialize_Object();   
+                    return true; 
+                }
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
-                return admins.get(i).getMyTravel(travelID).removePassenger(user);
+                if(admins.get(i).getMyTravel(travelID).removePassenger(user)){
+                    Server.serialize_Object();   
+                    return true; 
+                }
             }
         }
         

@@ -49,14 +49,17 @@ public class User implements Serializable{
 
     public void addMyTravel(Travel travel){
         myTravels.add(travel);
+        Server.serialize_Object();
     }
 
     public void addJoinTravel(Travel travel){
         joinTravels.add(travel);
+        Server.serialize_Object();
     }
 
     public void addRequestTravel(Travel travel){
         requestTravels.add(travel);
+        Server.serialize_Object();
     }
 
     public Integer getId(){
@@ -67,7 +70,10 @@ public class User implements Serializable{
 
          for(int i = 0 ; i < myTravels.size(); i++){
             if(myTravels.get(i).getID()==travelID){
-                return myTravels.remove(myTravels.get(i));
+                if(myTravels.remove(myTravels.get(i))){
+                     Server.serialize_Object();
+                     return true;  
+                }
             }
         }       
 
@@ -76,14 +82,22 @@ public class User implements Serializable{
 
     public boolean deleteJoinTravel(Travel travel){
 
-        return joinTravels.remove(travel);
+        if(joinTravels.remove(travel)){
+             Server.serialize_Object();
+             return true;  
+        }
+
+        return false;
     }
 
     public boolean deleteJoinTravel(int travelID){
 
          for(int i = 0 ; i < joinTravels.size(); i++){
             if(joinTravels.get(i).getID()==travelID){
-                return joinTravels.remove(joinTravels.get(i));
+                if(joinTravels.remove(joinTravels.get(i))){
+                     Server.serialize_Object();
+                     return true;                     
+                }
             }
         }       
         return false;
@@ -92,14 +106,23 @@ public class User implements Serializable{
 
     public boolean deleteRequestTravel(Travel travel){
 
-        return requestTravels.remove(travel);
+        if(requestTravels.remove(travel)){
+            Server.serialize_Object();
+            return true;
+        }
+
+        return false;
+
     }
 
     public boolean deleteRequestTravel(int travelID){
 
          for(int i = 0 ; i < requestTravels.size(); i++){
             if(requestTravels.get(i).getID()==travelID){
-                return requestTravels.remove(requestTravels.get(i));
+                if(requestTravels.remove(requestTravels.get(i))){
+                     Server.serialize_Object();
+                     return true;                   
+                }
             }
         }       
         return false;
