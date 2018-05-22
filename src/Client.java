@@ -430,30 +430,38 @@ public class Client implements Serializable{
                 else if(optionSelected == 2){
 
                     boolean isDateAfter;
-                    String date, startPoint, endPoint;
+                    String searchDay, searchStartPoint, searchEndPoint;
 
                     System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
-                    date = System.console().readLine();
-                    boolean isDateCorrect = confirmDay(date);
+                    searchDay = System.console().readLine();
+                    boolean isDateCorrect = confirmDay(searchDay);
                     while (!isDateCorrect) {
                         System.out.println("The date format is incorrect!");
                         System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
-                        date = System.console().readLine();
-                        isDateCorrect = confirmDay(date);
+                        searchDay = System.console().readLine();
+                        isDateCorrect = confirmDay(searchDay);
                     }
 
                     do {
                         System.out.println();
                         System.out.println("Please, select the Start Point of the Travel: ");
-                        startPoint = System.console().readLine();
-                    }while(!checkInputWords(startPoint));
+                        searchStartPoint = System.console().readLine();
+                    }while(!checkInputWords(searchStartPoint));
 
                     do {
                         System.out.println();
                         System.out.println("Please, select the Destination of the Travel: ");
-                        endPoint = System.console().readLine();
-                    }while(!checkInputWords(endPoint));
+                        searchEndPoint = System.console().readLine();
+                    }while(!checkInputWords(searchEndPoint));
 
+                    message =  Messages.searchPartialTravel(searchDay,searchStartPoint,searchEndPoint,currentUser);
+                    System.out.println("Message to be Sended: " + message);
+                    String receive = new String(sendCLientMessage("list", message));
+/*
+                    String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim();
+                    if(action.equals("SendSpecificTravels" + " " + currentUser))
+                        System.out.println("Message Received: " + receive);*/
                 }
                 else if(n==3){
                     quit = true;

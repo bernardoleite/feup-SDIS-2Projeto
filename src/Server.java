@@ -509,8 +509,24 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         return allTravels;
     }
-
+    /* Falta a verificação da data*/
     public static ArrayList<Travel> getSpecificTravels(Date dateform, String startPoint, String endPoint){
+
+        ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+        allTravels.addAll(getAllTravels());
+
+        for(int i = 0; i < allTravels.size(); i++){
+            if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
+                selectedTravels.add(allTravels.get(i));
+            }
+        }
+
+
+        return selectedTravels;
+    }
+/* Falta a verificação da data*/
+    public static ArrayList<Travel> getSpecificTravels(String day, String startPoint, String endPoint){
 
         ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
         ArrayList<Travel> allTravels = new ArrayList<Travel>();

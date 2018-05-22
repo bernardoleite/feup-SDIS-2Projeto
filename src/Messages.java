@@ -173,17 +173,13 @@ public class Messages implements Serializable{
         return "ListJoinTravels "+ email;
     }
 
-    public static String searchCompleteTravel(String date, String startPoint, String endPoint, String creator){
-        return "SearchComplete " + creator + " " + date + " " + startPoint + " " + endPoint;
+    public static String searchCompleteTravel(String day, String startPoint, String endPoint, String creator){
+        return "SearchComplete " + creator + " " + day + " " + startPoint + " " + endPoint;
     }
 
     public static String searchPartialTravel(String day, String startPoint, String endPoint, String creator){
         return "SearchPartial " + creator + " " + day + " " + startPoint + " " + endPoint;
     }
-
-    //public static String successSearchTravel(String travelIdentifier, String creator){
-      //  return "Success" + " " + creator + " " + "search travel" + " " + travelIdentifier;
-    //}
 
     public static String sendJoinTravels(String email, ArrayList<Travel> travels){
         String string = "SendJoinTravels "+ email + " " + "\n";
