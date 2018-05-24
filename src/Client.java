@@ -358,7 +358,7 @@ public class Client implements Serializable{
             else if(n==4){
                 System.out.println();
                 System.out.println("Search Menu");
-                System.out.println("1. Select Day, Hour, Start Point and Destination");
+                System.out.println("1. Select Day, Hour, Start Point and Destination (+-1h)");
                 System.out.println("2. Select Day, Start Point and Destination");
                 System.out.println("3. Go Back");
                 int optionSelected = Integer.parseInt(System.console().readLine());
@@ -457,11 +457,11 @@ public class Client implements Serializable{
                     message =  Messages.searchPartialTravel(searchDay,searchStartPoint,searchEndPoint,currentUser);
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("list", message));
-/*
-                    String[] splitstr = receive.split(" ");
+
+                   /* String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
-                    if(action.equals("SendSpecificTravels" + " " + currentUser))
-                        System.out.println("Message Received: " + receive);*/
+                    if(action.equals("SendSpecificTravels" + " " + currentUser))*/
+                        System.out.println("Message Received: " + receive);
                 }
                 else if(n==3){
                     quit = true;

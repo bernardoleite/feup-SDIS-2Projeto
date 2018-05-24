@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 
 
@@ -65,6 +68,42 @@ public class Travel implements Serializable{
 
     public Date getDate(){
         return date;
+    }
+
+    /**
+    Make an int Month from a date
+    */
+    public int getHourInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Month from a date
+    */
+    public int getDayInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Month from a date
+    */
+    public int getMonthInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Year from a date
+    */
+    public int getYearInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+        return Integer.parseInt(dateFormat.format(date));
     }
 
     public boolean removePassenger(User passenger){

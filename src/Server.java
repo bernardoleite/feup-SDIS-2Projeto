@@ -1,6 +1,10 @@
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
 
 public class Server implements Serializable{
 
@@ -509,8 +513,21 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         return allTravels;
     }
-    /* Falta a verificação da data*/
+
     public static ArrayList<Travel> getSpecificTravels(Date dateform, String startPoint, String endPoint){
+
+
+        SimpleDateFormat dateHour = new SimpleDateFormat("HH");
+        SimpleDateFormat dateDay = new SimpleDateFormat("dd");
+        SimpleDateFormat dateMonth = new SimpleDateFormat("MM");
+        SimpleDateFormat dateYear = new SimpleDateFormat("yyyy");
+
+        int hour = Integer.parseInt(dateHour.format(dateform));
+        int dayint = Integer.parseInt(dateDay.format(dateform));
+        int month = Integer.parseInt(dateMonth.format(dateform));
+        int year = Integer.parseInt(dateYear.format(dateform));
+
+        String day = Integer.toString(dayint)+"/"+Integer.toString(month)+"/"+year;
 
         ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
         ArrayList<Travel> allTravels = new ArrayList<Travel>();
@@ -518,15 +535,20 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0; i < allTravels.size(); i++){
             if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
-                selectedTravels.add(allTravels.get(i));
+                String dayOnly = Integer.toString(allTravels.get(i).getDayInt())+"/"+Integer.toString(allTravels.get(i).getMonthInt()) +"/"+ Integer.toString(allTravels.get(i).getYearInt());
+                int hourOnly = allTravels.get(i).getHourInt();
+                if(dayOnly.equals(day) && Math.abs(hour-hourOnly)<=1){
+                    selectedTravels.add(allTravels.get(i));
+                }
             }
         }
 
 
         return selectedTravels;
     }
-/* Falta a verificação da data*/
-    public static ArrayList<Travel> getSpecificTravels(String day, String startPoint, String endPoint){
+
+
+    public static ArrayList<Travel> getSpecificTravels(String day, String startPoint, String endPoint) throws Exception{
 
         ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
         ArrayList<Travel> allTravels = new ArrayList<Travel>();
@@ -534,7 +556,9 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0; i < allTravels.size(); i++){
             if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
-                selectedTravels.add(allTravels.get(i));
+                String dayOnly = Integer.toString(allTravels.get(i).getDayInt())+"/"+Integer.toString(allTravels.get(i).getMonthInt()) +"/"+ Integer.toString(allTravels.get(i).getYearInt());
+                if(dayOnly.equals(day))
+                    selectedTravels.add(allTravels.get(i));
             }
         }
 

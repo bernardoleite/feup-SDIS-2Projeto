@@ -182,14 +182,10 @@ public class MessageTreatment {
                 sendMessage = Messages.sendSpecificTravels(email, Server.getSpecificTravels(date, startPoint, endPoint)).getBytes();
             break;
             case "SearchPartial":
-
                 email = splitMessage[1].trim();
                 String day = splitMessage[2];
                 startPoint = splitMessage[3];
                 endPoint = splitMessage[4].trim();
-                System.out.println("Entrei aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-                //format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
-                //date = format.parse(dateform);
                 isToSendMessage = true;
                 sendMessage = Messages.sendSpecificTravels(email, Server.getSpecificTravels(day, startPoint, endPoint)).getBytes();
                 break;
