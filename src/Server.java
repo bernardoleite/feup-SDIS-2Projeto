@@ -29,6 +29,16 @@ public class Server {
     private static String ip_not_join = "224.0.0.7";
     private static Integer port_not_join = 8888;
 
+    //Notification Exit Channel
+    private static NotificationExitChannel notificationExitChannel;
+    private static String ip_not_exit = "224.0.0.8";
+    private static Integer port_not_exit = 9999;
+
+    //Notification Delete Channel
+    private static NotificationDeleteChannel notificationDeleteChannel;
+    private static String ip_not_delete = "224.0.0.9";
+    private static Integer port_not_delete = 9999;
+
     private static Integer counterUsers = 4;
     private static Integer counterTravels = 1;
 
@@ -120,8 +130,10 @@ public class Server {
                     if(admins.get(i).getMyTravels().get(j).getID()==idTravel){
                         if(email.equals(admins.get(i).getEmail()))
                             returnBoolean = false;
-                        returnBoolean = admins.get(i).getMyTravels().get(j).addPassengerRequest(user);
-                        emailCreator = admins.get(i).getEmail();
+                        else{
+                            returnBoolean = admins.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                            emailCreator = admins.get(i).getEmail();
+                        }
                     }
                 }
             }
@@ -131,9 +143,10 @@ public class Server {
                     if(users.get(i).getMyTravels().get(j).getID()==idTravel){
                         if(email.equals(users.get(i).getEmail()))
                             returnBoolean = false;
-                        returnBoolean = users.get(i).getMyTravels().get(j).addPassengerRequest(user);
-                        emailCreator = users.get(i).getEmail();
-
+                        else{
+                            returnBoolean = users.get(i).getMyTravels().get(j).addPassengerRequest(user);
+                            emailCreator = users.get(i).getEmail();
+                        }
                     }
                 }
             }
@@ -149,6 +162,27 @@ public class Server {
         }
         return returnBoolean;
     }
+
+    public static void sendNotificationExitTravel(String emailCreator, String message) {
+        System.out.println("Send Notification to User!!!");
+        try {
+            Thread notificationExitChannel = new Thread(new NotificationExitChannel(ip_not_exit, port_not_exit, emailCreator, message));
+            notificationExitChannel.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendNotificationDeleteTravel(String emailCreator, String message) {
+        System.out.println("Send Notification to User!!!");
+        try {
+            Thread notificationDeleteChannel = new Thread(new NotificationDeleteChannel(ip_not_delete, port_not_delete, emailCreator, message));
+            notificationDeleteChannel.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static boolean leaveTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
@@ -220,6 +254,8 @@ public class Server {
             for(int j = 0 ; j < users.get(i).getRequestTravels().size(); j++){
                 if(users.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
                     users.get(i).deleteRequestTravel(travelIdentifier);
+                    System.out.println("HERE!!!!");
+                    sendNotificationDeleteTravel(users.get(i).getEmail(), Messages.sendNotificationDeleteTravel(users.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
                 }
             }
         }
@@ -229,6 +265,31 @@ public class Server {
             for(int j = 0 ; j < users.get(i).getJoinTravels().size(); j++){
                 if(users.get(i).getJoinTravels().get(j).getID() == travelIdentifier){
                     users.get(i).deleteJoinTravel(travelIdentifier);
+                    System.out.println("HERE!!!!");
+                    sendNotificationDeleteTravel(users.get(i).getEmail(), Messages.sendNotificationDeleteTravel(users.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                }
+            }
+        }
+
+
+        //remove travel from user request travels
+        for(int i = 0 ; i < admins.size(); i++){
+            for(int j = 0 ; j < admins.get(i).getRequestTravels().size(); j++){
+                if(admins.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
+                    admins.get(i).deleteRequestTravel(travelIdentifier);
+                    System.out.println("HERE!!!!");
+                    sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                }
+            }
+        }
+
+        //remove travel from users joined
+        for(int i = 0 ; i < admins.size(); i++){
+            for(int j = 0 ; j < admins.get(i).getJoinTravels().size(); j++){
+                if(admins.get(i).getJoinTravels().get(j).getID() == travelIdentifier){
+                    admins.get(i).deleteJoinTravel(travelIdentifier);
+                    System.out.println("HERE!!!!");
+                    sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
                 }
             }
         }
@@ -237,7 +298,6 @@ public class Server {
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(creator)){
                 users.get(i).deleteMyTravel(travelIdentifier);
-                counterTravels--;
             }
         }
 
@@ -245,7 +305,6 @@ public class Server {
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(creator)){
                 admins.get(i).deleteMyTravel(travelIdentifier);
-                counterTravels--; //?
             }
         }
 

@@ -91,6 +91,12 @@ public class Travel {
             if(passengers.get(i).getEmail().equals(passenger.getEmail())) {
                 passengers.remove(passenger);
                 passenger.deleteJoinTravel(this);
+
+                //Notification
+                System.out.println("Send Notification to User!!!");
+                Server.sendNotificationExitTravel(creator.getEmail(), Messages.sendNotificationExitTravel(creator.getEmail(), this.ID.toString(), passenger.getEmail()));
+
+
                 return true;
             }
         }

@@ -208,8 +208,14 @@ public class Client {
         boolean quit = false;
         String message="";
 
-        Thread notificationThread = new Thread(new NotificationThread(email));
-        notificationThread.start();
+        Thread notificationJoinThread = new Thread(new NotificationJoinThread(email));
+        notificationJoinThread.start();
+
+        Thread notificationExitThread = new Thread(new NotificationExitThread(email));
+        notificationExitThread.start();
+
+        Thread notificationDeleteThread = new Thread(new NotificationDeleteThread(email));
+        notificationDeleteThread.start();
 
         while(!quit) {
             System.out.println();

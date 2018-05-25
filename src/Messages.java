@@ -197,4 +197,20 @@ public class Messages {
     public static String sendACKJoinTravel(String email){
         return "ListenedJoinTravel "+ email;
     }
+
+    public static String sendNotificationExitTravel(String emailCreator, String travelID, String email){
+        return "NotificationExitTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
+    }
+
+    public static String sendACKExitTravel(String email){
+        return "ListenedExitTravel "+ email;
+    }
+
+    public static String sendNotificationDeleteTravel(String email, String travelID, String emailCreator){
+        return "NotificationDeleteTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
+    }
+
+    public static String sendACKDeleteTravel(String email){
+        return "ListenedDeleteTravel "+ email;
+    }
 }
