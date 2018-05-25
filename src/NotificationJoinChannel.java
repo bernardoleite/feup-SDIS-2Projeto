@@ -127,7 +127,7 @@ public class NotificationJoinChannel implements Runnable{
 				buf = new byte[65000];
 				received = new byte[65000];
 
-				Thread.sleep(60 * 1000 * 2);
+				Thread.sleep(30 * 1000);
 			}
 
 		}catch(Exception ex){

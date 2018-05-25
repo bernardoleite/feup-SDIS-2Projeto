@@ -149,8 +149,8 @@ public class Messages implements Serializable{
         return "AddPassenger "+ email + " travel number " + travelID + " passenger " + emailPassenger;
     }
 
-    public static String removePassenger(String email, String emailPassenger, String travelID){
-        return "RemovePassenger "+ email + " travel number " + travelID + " passenger " + emailPassenger;
+    public static String removePassenger(String emailCreator, String emailPassenger, String travelID){
+        return "RemovePassenger "+ emailCreator + " travel number " + travelID + " passenger " + emailPassenger;
     }
 
     public static String successAddPassenger(String email){
@@ -235,8 +235,8 @@ public class Messages implements Serializable{
         return "ListenedJoinTravel "+ email;
     }
 
-    public static String sendNotificationExitTravel(String emailCreator, String travelID, String email){
-        return "NotificationExitTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
+    public static String sendNotificationExitTravel(String email, String travelID, String emailCreator){
+        return "NotificationExitTravel "+ email + " travel number " + travelID +" by " + emailCreator;
     }
 
     public static String sendACKExitTravel(String email){
@@ -244,10 +244,27 @@ public class Messages implements Serializable{
     }
 
     public static String sendNotificationDeleteTravel(String email, String travelID, String emailCreator){
-        return "NotificationDeleteTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
+        return "NotificationDeleteTravel "+ email + " travel number " + travelID + " by " + emailCreator;
     }
 
     public static String sendACKDeleteTravel(String email){
         return "ListenedDeleteTravel "+ email;
+    }
+
+
+    public static String sendNotificationAddPassenger(String email, String travelID, String emailCreator){
+        return "NotificationAddPassenger "+ email + " travel number " + travelID + " by " + emailCreator;
+    }
+
+    public static String sendACKAddPassenger(String email){
+        return "ListenedAddPassenger "+ email;
+    }
+
+    public static String sendNotificationLeaveTravel(String emailCreator, String travelID, String email){
+        return "NotificationLeaveTravel "+ emailCreator + " travel number " + travelID + " passenger " + email;
+    }
+
+    public static String sendACKLeaveTravel(String email){
+        return "ListenedLeaveTravel "+ email;
     }
 }

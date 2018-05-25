@@ -37,6 +37,8 @@ public class Travel implements Serializable{
         }
         boolean b = false;
         for(int i = 0; i < passengersRequest.size(); i++) {
+            System.out.println("Passenger " + passenger.getEmail());
+            System.out.println("Request " + passengersRequest.get(i).getEmail());
             if(passengersRequest.get(i).getEmail().equals(passenger.getEmail())) {
                 passengers.add(passenger);
                 passengersRequest.remove(passenger);
@@ -114,6 +116,9 @@ public class Travel implements Serializable{
             passenger.deleteJoinTravel(this);
             passengersRequest.add(passenger);
             passenger.addRequestTravel(this);
+            System.out.println("Send Notification to User!!!");
+            Server.sendNotificationExitTravel(passenger.getEmail(), Messages.sendNotificationExitTravel(passenger.getEmail(), this.ID.toString(), creator.getEmail()));
+
         }
         Server.serialize_Object();
         return  b;
@@ -131,18 +136,12 @@ public class Travel implements Serializable{
         }
         for(int i = 0; i < passengers.size(); i++) {
             if(passengers.get(i).getEmail().equals(passenger.getEmail())) {
+                Server.sendNotificationLeaveTravel(creator.getEmail(), Messages.sendNotificationLeaveTravel(creator.getEmail(), Integer.toString(ID), passengers.get(i).getEmail()));
                 passengers.remove(passenger);
                 passenger.deleteJoinTravel(this);
-<<<<<<< HEAD
 
-                //Notification
-                System.out.println("Send Notification to User!!!");
-                Server.sendNotificationExitTravel(creator.getEmail(), Messages.sendNotificationExitTravel(creator.getEmail(), this.ID.toString(), passenger.getEmail()));
-
-
-=======
                 Server.serialize_Object();
->>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
+
                 return true;
             }
         }

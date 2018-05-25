@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class NotificationDeleteChannel implements Runnable{
+public class NotificationCreateTravelChannel implements Runnable{
 
     private InetAddress address;
     private Integer port;
@@ -19,7 +19,7 @@ public class NotificationDeleteChannel implements Runnable{
     private static ExecutorService exec;
 
 
-	public NotificationDeleteChannel(String address, int port, String email, String message) throws UnknownHostException{
+	public NotificationCreateTravelChannel(String address, int port, String email, String message) throws UnknownHostException{
 
 		this.message = message;
 		this.email = email;
@@ -36,7 +36,7 @@ public class NotificationDeleteChannel implements Runnable{
 		}
 	}
 	
-	public NotificationDeleteChannel(String address, int port) throws UnknownHostException{
+	public NotificationCreateTravelChannel(String address, int port) throws UnknownHostException{
 
         exec = Executors.newFixedThreadPool(1000);
 
@@ -77,7 +77,7 @@ public class NotificationDeleteChannel implements Runnable{
 				receivedEmail = receivedStr[1].trim();
 				} while(!email.equals(receivedEmail));
 				System.out.println(new String(received));
-				sendMessage(Messages.sendACKDeleteTravel(email).getBytes());
+				sendMessage(Messages.sendACKCreateTravel(email).getBytes());
 				System.out.println("ACK Sended");
 
 			}catch(IOException ex){
@@ -119,7 +119,7 @@ public class NotificationDeleteChannel implements Runnable{
 				String receivedEmail = splitStr[1].trim();
 				String receivedAction = splitStr[0];
 				System.out.println("ACK: " + receivedStr);
-				if(receivedAction.equals("ListenedDeleteTravel") && receivedEmail.equals(email)) {
+				if(receivedAction.equals("ListenedCreateTravel") && receivedEmail.equals(email)) {
 					System.out.println("ACK Received!!!");
 					return;
 				}

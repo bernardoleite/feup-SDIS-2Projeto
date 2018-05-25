@@ -15,7 +15,6 @@ public class Server implements Serializable{
     private static String ip_authentication = "224.0.0.3";
     private static Integer port_authentication = 4444;
 
-
     //Create and Delete Travel
     private static String ip_owner = "224.0.0.4";
     private static Integer port_owner = 5555;
@@ -29,19 +28,28 @@ public class Server implements Serializable{
     private static Integer port_list = 7777;
 
     //Notification Join Channel
-    private static NotificationJoinChannel notificationJoinChannel;
     private static String ip_not_join = "224.0.0.7";
     private static Integer port_not_join = 8888;
 
     //Notification Exit Channel
-    private static NotificationExitChannel notificationExitChannel;
     private static String ip_not_exit = "224.0.0.8";
     private static Integer port_not_exit = 9999;
 
     //Notification Delete Channel
-    private static NotificationDeleteChannel notificationDeleteChannel;
     private static String ip_not_delete = "224.0.0.9";
     private static Integer port_not_delete = 9999;
+
+    //Notification Add Channel
+    private static String ip_not_add = "224.0.0.10";
+    private static Integer port_not_add = 9999;
+    
+    //Notification Leave Channel
+    private static String ip_not_leave = "224.0.0.11";
+    private static Integer port_not_leave = 8888;
+
+    //Notification Create Travel Channel
+    private static String ip_not_create = "224.0.0.12";
+    private static Integer port_not_create = 8888;
 
     private static Integer counterUsers = 4;
     private static Integer counterTravels = 1;
@@ -211,8 +219,8 @@ public class Server implements Serializable{
         if (returnBoolean) {
             System.out.println("Send Notification to User!!!");
             try {
-                Thread notificationJoinChannel = new Thread(new NotificationJoinChannel(ip_not_join, port_not_join, emailCreator, Messages.sendNotificationJoinTravel(emailCreator, travelID, email)));
-                notificationJoinChannel.start();
+                Thread notificationJoinThread = new Thread(new NotificationJoinChannel(ip_not_join, port_not_join, emailCreator, Messages.sendNotificationJoinTravel(emailCreator, travelID, email)));
+                notificationJoinThread.start();
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -223,8 +231,8 @@ public class Server implements Serializable{
     public static void sendNotificationExitTravel(String emailCreator, String message) {
         System.out.println("Send Notification to User!!!");
         try {
-            Thread notificationExitChannel = new Thread(new NotificationExitChannel(ip_not_exit, port_not_exit, emailCreator, message));
-            notificationExitChannel.start();
+            Thread notificationExitThread = new Thread(new NotificationExitChannel(ip_not_exit, port_not_exit, emailCreator, message));
+            notificationExitThread.start();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -233,8 +241,29 @@ public class Server implements Serializable{
     public static void sendNotificationDeleteTravel(String emailCreator, String message) {
         System.out.println("Send Notification to User!!!");
         try {
-            Thread notificationDeleteChannel = new Thread(new NotificationDeleteChannel(ip_not_delete, port_not_delete, emailCreator, message));
-            notificationDeleteChannel.start();
+            Thread notificationDeleteThread = new Thread(new NotificationDeleteChannel(ip_not_delete, port_not_delete, emailCreator, message));
+            notificationDeleteThread.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendNotificationAddPassenger(String emailCreator, String message) {
+        System.out.println("Send Notification to User!!!");
+        try {
+            Thread notificationAddThread= new Thread(new NotificationAddChannel(ip_not_add, port_not_add, emailCreator, message));
+            notificationAddThread.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void sendNotificationLeaveTravel(String emailCreator, String message) {
+        System.out.println("Send Notification to User!!!");
+        try {
+            Thread notificationLeaveThread= new Thread(new NotificationLeaveChannel(ip_not_leave, port_not_leave, emailCreator, message));
+            notificationLeaveThread.start();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -318,7 +347,6 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             for(int j = 0 ; j < users.get(i).getRequestTravels().size(); j++){
                 if(users.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
                     users.get(i).deleteRequestTravel(travelIdentifier);
-                    System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(users.get(i).getEmail(), Messages.sendNotificationDeleteTravel(users.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
                 }
             }
@@ -362,10 +390,6 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(creator) || isthisAdmin){
                 users.get(i).deleteMyTravel(travelIdentifier);
-<<<<<<< HEAD
-=======
-                //counterTravels--;????
->>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
             }
         }
 
@@ -373,10 +397,6 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(creator) || isthisAdmin){
                 admins.get(i).deleteMyTravel(travelIdentifier);
-<<<<<<< HEAD
-=======
-                //counterTravels--; ????
->>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
             }
         }
 
@@ -445,6 +465,9 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
                 if(users.get(i).getMyTravel(travelID).addPassenger(user)){
+                    //Send Notification
+                    sendNotificationAddPassenger(emailPassenger, Messages.sendNotificationAddPassenger(emailPassenger, Integer.toString(travelID), users.get(i).getEmail()));
+
                     Server.serialize_Object();
                     return true;
                 }
@@ -454,6 +477,9 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
                 if(admins.get(i).getMyTravel(travelID).addPassenger(user)){
+                    //Send Notification
+                    sendNotificationAddPassenger(emailPassenger, Messages.sendNotificationAddPassenger(emailPassenger, Integer.toString(travelID), admins.get(i).getEmail()));
+
                     Server.serialize_Object();   
                     return true;                 
                 }

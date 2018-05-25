@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import javax.naming.NoInitialContextException;
 
 
-public class Client implements Serializable{
+public class Client {
 
     //Registration and Log In
     private static AuthenticationChannel authChannel;
@@ -220,6 +220,15 @@ public class Client implements Serializable{
 
         Thread notificationDeleteThread = new Thread(new NotificationDeleteThread(email));
         notificationDeleteThread.start();
+
+        Thread notificationAddPassengerThread = new Thread(new NotificationAddThread(email));
+        notificationAddPassengerThread.start();
+
+        Thread notificationLeaveThread = new Thread(new NotificationLeaveThread(email));
+        notificationLeaveThread.start();
+
+        Thread notificationCreateTravelThread = new Thread(new NotificationCreateTravelThread(email));
+        notificationCreateTravelThread.start();
 
         while(!quit) {
             System.out.println();
