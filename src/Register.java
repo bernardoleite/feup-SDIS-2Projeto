@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 
-public class Register {
+public class Register implements Serializable{
 
     private String email="";
     private String password="";

@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import javax.naming.NoInitialContextException;
 
 
-public class Client {
+public class Client implements Serializable{
 
     //Registration and Log In
     private static AuthenticationChannel authChannel;
@@ -36,6 +36,8 @@ public class Client {
     
     private static String currentUser="";
     private String email; 
+
+    private static int isAdmin = 0;
 
 
     public Client(){
@@ -180,9 +182,11 @@ public class Client {
                 String receive = new String(sendCLientMessage("authentication", message));
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0];
+
                 if(splitstr[1].equals(email)) {
                     System.out.println(receive);
                     if(action.equals("Success")) {
+                        isAdmin = Integer.parseInt(splitstr[3].trim());
                         quit = true;
                         this.email=email;
                     }
@@ -229,7 +233,10 @@ public class Client {
             System.out.println("My Travels - 8");
             System.out.println("My Join Travels - 9");
             System.out.println("Go Back - 10");
-            System.out.println();
+            if (isAdmin==1){
+                System.out.println("[Admin] See all Travels - 11");
+                System.out.println("[Admin] Delete a Travel - 12");
+            }
             int n = Integer.parseInt(System.console().readLine());
 
             if(n == 1) {
@@ -270,6 +277,7 @@ public class Client {
     
                     isDateAfter = confirmSuperiorDate(newDate);
                     if (!isDateAfter) {
+                        System.out.println();
                         System.out.println("The date you choose is after de date of today!");
                     }
                 }while(!isDateAfter);
@@ -353,6 +361,119 @@ public class Client {
                     }
                 }
             }
+            else if(n==4){
+                System.out.println();
+                System.out.println("Search Menu");
+                System.out.println("1. Select Day, Hour, Start Point and Destination (+-1h)");
+                System.out.println("2. Select Day, Start Point and Destination");
+                System.out.println("3. Go Back");
+                int optionSelected = Integer.parseInt(System.console().readLine());
+
+                if(optionSelected == 1){
+                    boolean isDateAfter;
+                    String searchHour, searchDate, searchStartPoint, searchEndPoint;
+                    do {
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        searchDate = System.console().readLine();
+                        boolean isDateCorrect = confirmDay(searchDate);
+                        while (!isDateCorrect) {
+                            System.out.println("The date format is incorrect!");
+                            System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                            searchDate = System.console().readLine();
+                            isDateCorrect = confirmDay(searchDate);
+                        }
+
+                        System.out.println();
+                        System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                        searchHour = System.console().readLine();
+                        boolean isHourCorrect = confirmHour(searchHour);
+                        while (!isHourCorrect) {
+                            System.out.println();
+                            System.out.println("The hour format is incorrect!");
+                            System.out.println("Please, select the hour of the Travel (HH:mm): ");
+                            searchHour = System.console().readLine();
+                            isHourCorrect = confirmHour(searchHour);
+                        }
+                        String completeSearchDate = searchDate + " " + searchHour;
+                        Date newDate;
+                        try {
+                            SimpleDateFormat format =
+                                    new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            newDate = format.parse(completeSearchDate);
+                        }
+                        catch(ParseException pe) {
+                            throw new IllegalArgumentException(pe);
+                        }
+
+                        isDateAfter = confirmSuperiorDate(newDate);
+                        if (!isDateAfter) {
+                            System.out.println();
+                            System.out.println("The date you choose is after de date of today!");
+                        }
+                    }while(!isDateAfter);
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Start Point of the Travel: ");
+                        searchStartPoint = System.console().readLine();
+                    }while(!checkInputWords(searchStartPoint));
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Destination of the Travel: ");
+                        searchEndPoint = System.console().readLine();
+                    }while(!checkInputWords(searchEndPoint));
+
+                    message =  Messages.searchCompleteTravel(searchDate+" "+searchHour,searchStartPoint,searchEndPoint,currentUser);
+                    System.out.println("Message to be Sended: " + message);
+                    String receive = new String(sendCLientMessage("list", message));
+                   
+                    String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim();
+                    if(action.equals("SendSpecificTravels" + " " + currentUser))
+                        System.out.println("Message Received: " + receive);
+                }
+                else if(optionSelected == 2){
+
+                    boolean isDateAfter;
+                    String searchDay, searchStartPoint, searchEndPoint;
+
+                    System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                    searchDay = System.console().readLine();
+                    boolean isDateCorrect = confirmDay(searchDay);
+                    while (!isDateCorrect) {
+                        System.out.println("The date format is incorrect!");
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        searchDay = System.console().readLine();
+                        isDateCorrect = confirmDay(searchDay);
+                    }
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Start Point of the Travel: ");
+                        searchStartPoint = System.console().readLine();
+                    }while(!checkInputWords(searchStartPoint));
+
+                    do {
+                        System.out.println();
+                        System.out.println("Please, select the Destination of the Travel: ");
+                        searchEndPoint = System.console().readLine();
+                    }while(!checkInputWords(searchEndPoint));
+
+                    message =  Messages.searchPartialTravel(searchDay,searchStartPoint,searchEndPoint,currentUser);
+                    System.out.println("Message to be Sended: " + message);
+                    String receive = new String(sendCLientMessage("list", message));
+
+                   /* String[] splitstr = receive.split(" ");
+                    String action = splitstr[0]+" "+splitstr[1].trim();
+                    if(action.equals("SendSpecificTravels" + " " + currentUser))*/
+                        System.out.println("Message Received: " + receive);
+                }
+                else if(n==3){
+                    quit = true;
+                }
+
+            }
             else if(n==6){
                 System.out.println("Please, select the ID of the Travel: ");
                 String travelID= System.console().readLine();
@@ -404,6 +525,37 @@ public class Client {
             }
             else if(n==10){
                 quit=true;
+            }
+
+            else if(n == 11 && isAdmin==1) {
+                message = Messages.listAllTravels(email);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println("These are the Travels of the Server: ");
+                System.out.println();
+                System.out.println(receive);
+                System.out.println();
+            }
+            else if(n == 12 && isAdmin==1) {
+                message = Messages.listAllTravels(email);
+                String receive = new String(sendCLientMessage("list", message));
+                System.out.println("These are the Travels of the Server: ");
+                System.out.println();
+                System.out.println(receive);
+                System.out.println();
+                System.out.println("Please, select the (Id) of the one you want to delete: ");
+                String travelIdentifier = System.console().readLine();
+
+                message =  Messages.deleteTravel(travelIdentifier, currentUser);
+                System.out.println();
+                System.out.println("Message to be Sended: " + message);
+                System.out.println();
+                receive = new String(sendCLientMessage("owner", message));
+                String[] splitstr = receive.split(" ");
+                String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
+                if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
+                    System.out.println("Message Received: " + receive);
+                else 
+                    System.out.println("No success!");
             }
 
         }

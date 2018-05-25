@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
 
-public class Login {
+public class Login implements Serializable{
 
     private String email="";
     private String password="";

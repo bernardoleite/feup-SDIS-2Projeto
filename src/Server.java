@@ -1,8 +1,12 @@
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
-public class Server {
+
+public class Server implements Serializable{
 
     private static ArrayList<User> users = new ArrayList<User>();
     private static ArrayList<User> admins = new ArrayList<User>();
@@ -42,10 +46,60 @@ public class Server {
     private static Integer counterUsers = 4;
     private static Integer counterTravels = 1;
 
+    //store information
+    private static ArrayOfFiles currentFiles = new ArrayOfFiles();
+
+    private static String filebin = "data.bin";
+
+    public static void deserialize_Object(){
+
+      try{
+          ObjectInputStream is = new ObjectInputStream(new FileInputStream(filebin));
+          currentFiles = (ArrayOfFiles)is.readObject();
+          is.close();
+          users.addAll(currentFiles.users);
+          admins.addAll(currentFiles.admins);
+          counterUsers = currentFiles.counterUsers;
+          counterTravels = currentFiles.counterTravels;
+      }
+      catch(Exception e){
+          e.printStackTrace();
+      }
+
+    }
+    public static void serialize_Object(){
+
+      filebin = "data.bin";
+      try{
+        currentFiles.users.clear();
+        currentFiles.admins.clear();
+        currentFiles.users.addAll(users);
+        currentFiles.admins.addAll(admins);
+        currentFiles.counterUsers = counterUsers;
+        currentFiles.counterTravels = counterTravels;
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(filebin));
+        os.writeObject(currentFiles);
+        os.close();
+      }
+      catch(Exception e)
+      {
+          e.printStackTrace();
+      }
+
+    }
+
     public Server() {
 
         try{
-            createAdministration();
+              createAdministration();
+
+              File f = new File("data.bin");
+              if(f.exists() && !f.isDirectory()) {
+                deserialize_Object();
+              }
+              else {
+                currentFiles = new ArrayOfFiles();
+              }
 
             Thread authChannel = new Thread(new AuthenticationChannel(ip_authentication, port_authentication));
             authChannel.start();
@@ -118,6 +172,9 @@ public class Server {
         return null;
     }
     
+    public static ArrayList<User> getAdmins(){
+        return admins;
+    }
 
     public static boolean joinTravel(String travelID, String email){
         Integer idTravel = Integer.parseInt(travelID);
@@ -243,11 +300,18 @@ public class Server {
         }
 
         System.out.println("Travel added!");
-
+        serialize_Object();
         return true;
     }
 
-    public static boolean deleteTravel(String creator, int travelIdentifier){
+public static boolean deleteTravel(String creator, int travelIdentifier){
+
+        Boolean isthisAdmin = false;
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(creator)){
+                isthisAdmin = true;
+            }
+        }        
 
         //remove travel from user request travels
         for(int i = 0 ; i < users.size(); i++){
@@ -296,20 +360,28 @@ public class Server {
 
         //remove travel from the user creator
         for(int i = 0 ; i < users.size(); i++){
-            if(users.get(i).getEmail().equals(creator)){
+            if(users.get(i).getEmail().equals(creator) || isthisAdmin){
                 users.get(i).deleteMyTravel(travelIdentifier);
+<<<<<<< HEAD
+=======
+                //counterTravels--;????
+>>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
             }
         }
 
         //remove travel from admins
         for(int i = 0 ; i < admins.size(); i++){
-            if(admins.get(i).getEmail().equals(creator)){
+            if(admins.get(i).getEmail().equals(creator) || isthisAdmin){
                 admins.get(i).deleteMyTravel(travelIdentifier);
+<<<<<<< HEAD
+=======
+                //counterTravels--; ????
+>>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
             }
         }
 
         System.out.println("Travel deleted!");
-
+        serialize_Object();
         return true;
     }
 
@@ -372,13 +444,19 @@ public class Server {
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
-                return users.get(i).getMyTravel(travelID).addPassenger(user);
+                if(users.get(i).getMyTravel(travelID).addPassenger(user)){
+                    Server.serialize_Object();
+                    return true;
+                }
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
-                return admins.get(i).getMyTravel(travelID).addPassenger(user);
+                if(admins.get(i).getMyTravel(travelID).addPassenger(user)){
+                    Server.serialize_Object();   
+                    return true;                 
+                }
             }
         }
         
@@ -391,13 +469,19 @@ public class Server {
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
-                return users.get(i).getMyTravel(travelID).removePassenger(user);
+                if(users.get(i).getMyTravel(travelID).removePassenger(user)){
+                    Server.serialize_Object();   
+                    return true; 
+                }
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
-                return admins.get(i).getMyTravel(travelID).removePassenger(user);
+                if(admins.get(i).getMyTravel(travelID).removePassenger(user)){
+                    Server.serialize_Object();   
+                    return true; 
+                }
             }
         }
         
@@ -464,13 +548,111 @@ public class Server {
         return true;
     }
 
+    public static boolean checkAdmin(String email){
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public static ArrayList<Travel> getAllTravels(){
+
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+
+        for(int i = 0 ; i < users.size(); i++){
+            for( int j = 0 ; j < users.get(i).getMyTravels().size(); j++){
+                if(!allTravels.contains(users.get(i).getMyTravels().get(j)))
+                    allTravels.add(users.get(i).getMyTravels().get(j));
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            for( int j = 0 ; j < admins.get(i).getMyTravels().size(); j++){
+                if(!allTravels.contains(admins.get(i).getMyTravels().get(j)))
+                    allTravels.add(admins.get(i).getMyTravels().get(j));
+            }
+        }
+
+        return allTravels;
+    }
+
+    public static ArrayList<Travel> getSpecificTravels(Date dateform, String startPoint, String endPoint){
+
+
+        SimpleDateFormat dateHour = new SimpleDateFormat("HH");
+        SimpleDateFormat dateDay = new SimpleDateFormat("dd");
+        SimpleDateFormat dateMonth = new SimpleDateFormat("MM");
+        SimpleDateFormat dateYear = new SimpleDateFormat("yyyy");
+
+        int hour = Integer.parseInt(dateHour.format(dateform));
+        int dayint = Integer.parseInt(dateDay.format(dateform));
+        int month = Integer.parseInt(dateMonth.format(dateform));
+        int year = Integer.parseInt(dateYear.format(dateform));
+
+        String day = Integer.toString(dayint)+"/"+Integer.toString(month)+"/"+year;
+
+        ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+        allTravels.addAll(getAllTravels());
+
+        for(int i = 0; i < allTravels.size(); i++){
+            if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
+                String dayOnly = Integer.toString(allTravels.get(i).getDayInt())+"/"+Integer.toString(allTravels.get(i).getMonthInt()) +"/"+ Integer.toString(allTravels.get(i).getYearInt());
+                int hourOnly = allTravels.get(i).getHourInt();
+                if(dayOnly.equals(day) && Math.abs(hour-hourOnly)<=1){
+                    selectedTravels.add(allTravels.get(i));
+                }
+            }
+        }
+
+
+        return selectedTravels;
+    }
+
+
+    public static ArrayList<Travel> getSpecificTravels(String day, String startPoint, String endPoint) throws Exception{
+
+        ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
+        ArrayList<Travel> allTravels = new ArrayList<Travel>();
+        allTravels.addAll(getAllTravels());
+
+        for(int i = 0; i < allTravels.size(); i++){
+            if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
+                String dayOnly = Integer.toString(allTravels.get(i).getDayInt())+"/"+Integer.toString(allTravels.get(i).getMonthInt()) +"/"+ Integer.toString(allTravels.get(i).getYearInt());
+                if(dayOnly.equals(day))
+                    selectedTravels.add(allTravels.get(i));
+            }
+        }
+
+
+        return selectedTravels;
+    }
+
+    public Boolean adminExists(String email){
+         for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email))
+                return true;
+        }
+        return false;       
+    }
+
+
     public void createAdministration(){
         String password = "123456";
 
-        admins.add(new User("up201505791@fe.up.pt",Integer.toString(password.hashCode()),true,1));
-        admins.add(new User("up201404464@fe.up.pt",Integer.toString(password.hashCode()),true,2));
-        admins.add(new User("up201506440@fe.up.pt",Integer.toString(password.hashCode()),true,3));
-        admins.add(new User("up201404302@fe.up.pt",Integer.toString(password.hashCode()),true,4));
+        if(!adminExists("up201505791@fe.up.pt"))
+            admins.add(new User("up201505791@fe.up.pt",Integer.toString(password.hashCode()),true,1));
+        if(!adminExists("up201404464@fe.up.pt"))
+            admins.add(new User("up201404464@fe.up.pt",Integer.toString(password.hashCode()),true,2));
+        if(!adminExists("up201506440@fe.up.pt"))
+            admins.add(new User("up201506440@fe.up.pt",Integer.toString(password.hashCode()),true,3));
+        if(!adminExists("up201404302@fe.up.pt"))
+            admins.add(new User("up201404302@fe.up.pt",Integer.toString(password.hashCode()),true,4));
     }
 
 

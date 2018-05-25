@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 
 
-public class Travel {
+public class Travel implements Serializable{
 
     private Integer ID;
     private Date date;
@@ -39,6 +42,7 @@ public class Travel {
                 passengersRequest.remove(passenger);
                 passenger.addJoinTravel(this);
                 passenger.deleteRequestTravel(this);
+                Server.serialize_Object();
                 return true;
             }
         }
@@ -66,6 +70,42 @@ public class Travel {
         return date;
     }
 
+    /**
+    Make an int Month from a date
+    */
+    public int getHourInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Month from a date
+    */
+    public int getDayInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Month from a date
+    */
+    public int getMonthInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    /**
+    Make an int Year from a date
+    */
+    public int getYearInt() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
     public boolean removePassenger(User passenger){
         if(passengers.size() == 0)
             return false;
@@ -75,6 +115,7 @@ public class Travel {
             passengersRequest.add(passenger);
             passenger.addRequestTravel(this);
         }
+        Server.serialize_Object();
         return  b;
     }
 
@@ -84,6 +125,7 @@ public class Travel {
             if(passengersRequest.get(i).getEmail().equals(passenger.getEmail())) {
                 passengersRequest.remove(passenger);
                 passenger.deleteRequestTravel(this);
+                Server.serialize_Object();
                 return true;
             }
         }
@@ -91,12 +133,16 @@ public class Travel {
             if(passengers.get(i).getEmail().equals(passenger.getEmail())) {
                 passengers.remove(passenger);
                 passenger.deleteJoinTravel(this);
+<<<<<<< HEAD
 
                 //Notification
                 System.out.println("Send Notification to User!!!");
                 Server.sendNotificationExitTravel(creator.getEmail(), Messages.sendNotificationExitTravel(creator.getEmail(), this.ID.toString(), passenger.getEmail()));
 
 
+=======
+                Server.serialize_Object();
+>>>>>>> f9c693740b93fa8ce6ffe3abf0072c4fb0f97ea9
                 return true;
             }
         }
@@ -123,7 +169,7 @@ public class Travel {
         }
         passengersRequest.add(user);
         user.addRequestTravel(this);
-
+        Server.serialize_Object();
         return true;
     }
 
