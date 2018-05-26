@@ -761,19 +761,15 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     private static void checkNotificationsWaitForTravel(Date date, String startPoint, String endPoint, Integer travelID) {
-        System.out.println("Server Function");
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, 0)) {
                 sendNotificationCreateTravel(users.get(i).getEmail(), Messages.sendNotificationCreateTravel(users.get(i).getEmail(), Integer.toString(travelID)));
-                System.out.println("Sending Notification");
-
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, 0)) {
                 sendNotificationCreateTravel(admins.get(i).getEmail(), Messages.sendNotificationCreateTravel(admins.get(i).getEmail(), Integer.toString(travelID)));
-                System.out.println("Sending Notification");
             }
         }
     }

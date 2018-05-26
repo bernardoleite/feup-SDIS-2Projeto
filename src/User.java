@@ -55,16 +55,12 @@ public class User implements Serializable{
     public boolean checkNotificationsWaitForTravel(Date date, String startPoint, String endPoint, Integer time){
         long hour = 3600*1000;
         for(int i=0; i < notificationsWaitForTravels.size();i++){
-            System.out.println("Checking Notification");
-
             Date date2 = new Date(notificationsWaitForTravels.get(i).getDate().getTime()+ notificationsWaitForTravels.get(i).getTime()*hour);
 
             if(date.after(notificationsWaitForTravels.get(i).getDate()) && date.before(date2) && notificationsWaitForTravels.get(i).getStartPoint().equals(startPoint) && notificationsWaitForTravels.get(i).getEndPoint().equals(endPoint)){
-                System.out.println("Found Notification");
                 return true;
             } 
         }
-        System.out.println("Not Found Notification");
         return false;
     }
 

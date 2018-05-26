@@ -197,7 +197,6 @@ public class Client {
                     if(action.equals("Success")) {
                         System.out.println("Client " + email + " is logged in");
                         isAdmin = Integer.parseInt(splitstr[3].trim());
-                        quit = true;
                         this.email=email;
                         menuOptions();
                     }
@@ -209,8 +208,8 @@ public class Client {
           }
           else if (n == 3) {
             System.out.println("Exiting...");  
-            return false;
-          }
+            System.exit(0);
+        }
           else {
             System.out.println("Invalid Argument");
             System.out.println();
@@ -257,7 +256,7 @@ public class Client {
                 System.out.println("My Travels - 8");
                 System.out.println("My Join Travels - 9");
                 System.out.println("Wait for a travel - 10");
-                System.out.println("Go Back - 11");
+                System.out.println("Logout - 11");
                 if (isAdmin==1){
                     System.out.println("[Admin] See all Travels - 12");
                     System.out.println("[Admin] Delete a Travel - 13");
@@ -266,6 +265,7 @@ public class Client {
             }while(!checkInputInteger(value));
 
             int n = Integer.parseInt(value);
+
             if(n == 1) {
                 boolean isDateAfter;
                 String hour, date, startPoint, endPoint, nrSeats;
@@ -329,7 +329,6 @@ public class Client {
                 System.out.println();
 
                     message =  Messages.createTravel(date+" "+hour,startPoint,endPoint,nrSeats,currentUser);
-                    System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("owner", message));
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
@@ -356,8 +355,6 @@ public class Client {
             
 
                 message =  Messages.deleteTravel(travelIdentifier, currentUser);
-                System.out.println();
-                System.out.println("Message to be Sended: " + message);
                 System.out.println();
                 receive = new String(sendCLientMessage("owner", message));
                 String[] splitstr = receive.split(" ");
@@ -510,9 +507,9 @@ public class Client {
                     String action = splitstr[0]+" "+splitstr[1].trim();
                     if(action.equals("SendSpecificTravels" + " " + currentUser)) {
                         System.out.println("Travels:");
-                        splitstr = receive.split("\n");
-                        for(int i = 1; i < splitstr.length; i++) {
-                            System.out.println(splitstr[i]);
+                        String[] travels = receive.split("\n");
+                        for(int i = 1; i < travels.length; i++) {
+                            System.out.println(travels[i]);
                         }
                     }
                 }
@@ -588,21 +585,46 @@ public class Client {
                 }
             }
             else if(n==8){
-                message = Messages.listMyTravels(email);
-                System.out.println(message);
+                message = Messages.listMyTravels(email);           
                 String receive = new String(sendCLientMessage("list", message));
-                System.out.println(receive);
+
+                String[] splitstr = receive.split(" ");
+                if(splitstr[0].equals("SendMyTravels")){
+                    splitstr = receive.split("\n");
+                    System.out.println("My Travels: ");
+                    for(int i=1; i < splitstr.length;i++)
+                        System.out.println(splitstr[i]);
+                }
+                else 
+                    System.out.println("Couldn't list your travels!");
             }
             else if(n==9){
                 message = Messages.listJoinTravels(email);
-                System.out.println(message);
                 String receive = new String(sendCLientMessage("list", message));
-                System.out.println(receive);
+
+                String[] splitstr = receive.split(" ");
+                if(splitstr[0].equals("SendJoinTravels")){
+                    splitstr = receive.split("\n");
+                    System.out.println("My Join Travels: ");
+                    for(int i=1; i < splitstr.length;i++)
+                        System.out.println(splitstr[i]);
+                }
+                else 
+                    System.out.println("Couldn't list your join travels!");
                 
                 message = Messages.listRequestTravels(email);
-                System.out.println(message);
                 receive = new String(sendCLientMessage("list", message));
-                System.out.println(receive);
+         
+                splitstr = receive.split(" ");
+                if(splitstr[0].equals("SendRequestTravels")){
+                    splitstr = receive.split("\n");
+                    System.out.println("My Request Join Travels: ");
+                    for(int i=1; i < splitstr.length;i++)
+                        System.out.println(splitstr[i]);
+                }
+                else 
+                    System.out.println("Couldn't list your request join travels!");
+
             }
             else if(n==10){
                 boolean isDateAfter;
@@ -667,24 +689,28 @@ public class Client {
                 System.out.println();
 
                 message =  Messages.waitForTravel(date+" "+hour,startPoint,endPoint,time,currentUser);
-                System.out.println("Message to be Sended: " + message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0]+" "+splitstr[1].trim();
                 if(action.equals("SuccessWaitForTravel" + " " + currentUser))
-                    System.out.println("Message Received: " + receive);
+                    System.out.println("Notification created");
                 else if(action.equals("TravelAlreadyExists" + " " + currentUser))
-                    System.out.println("Message Received: " + receive);
+                    System.out.println("Travel already Exists with ID " + splitstr[4]);
+                else
+                    System.out.println("Couldn't create notification");
             }
             else if(n==11){
-                quit=true;
+                System.out.println("Entered 11!!!");
+                quit = true;
             }
             else if(n == 12 && isAdmin==1) {
                 message = Messages.listAllTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");
                 System.out.println();
-                System.out.println(receive);
+                String[] splitstr = receive.split("\n");
+                for(int i = 1; i < splitstr.length; i++)
+                    System.out.println(splitstr[i]);
                 System.out.println();
             }
             else if(n == 13 && isAdmin==1) {
@@ -692,7 +718,9 @@ public class Client {
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");
                 System.out.println();
-                System.out.println(receive);
+                String[] splitstr = receive.split("\n");
+                for(int i = 1; i < splitstr.length; i++)
+                    System.out.println(splitstr[i]);
                 System.out.println();
 
                 String travelIdentifier = "";
@@ -707,12 +735,12 @@ public class Client {
                 System.out.println("Message to be Sended: " + message);
                 System.out.println();
                 receive = new String(sendCLientMessage("owner", message));
-                String[] splitstr = receive.split(" ");
+                splitstr = receive.split(" ");
                 String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
                 if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
-                    System.out.println("Message Received: " + receive);
+                    System.out.println("Admin: Travel deleted");
                 else 
-                    System.out.println("No success!");
+                    System.out.println("Admin: Couldn't delete travel");
             }
 
         }
@@ -906,7 +934,7 @@ public class Client {
     }
 
     boolean checkInputInteger(String integerToCheck){
-        if(!integerToCheck.matches("([1-9]+)")){
+        if(!integerToCheck.matches("([1-9][0-9]*)")){
             return false;
         }
         else{
