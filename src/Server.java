@@ -386,7 +386,6 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             for(int j = 0 ; j < admins.get(i).getRequestTravels().size(); j++){
                 if(admins.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
                     admins.get(i).deleteRequestTravel(travelIdentifier);
-                    System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
                     break;
                 }
@@ -398,7 +397,6 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             for(int j = 0 ; j < admins.get(i).getJoinTravels().size(); j++){
                 if(admins.get(i).getJoinTravels().get(j).getID() == travelIdentifier){
                     admins.get(i).deleteJoinTravel(travelIdentifier);
-                    System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
                     break;
                 }

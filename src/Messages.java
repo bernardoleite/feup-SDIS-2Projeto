@@ -21,11 +21,11 @@ public class Messages implements Serializable{
     }
 
     public static String successRegister(String email){
-        return "Success "+ email + " registration.";
+        return "Success "+ email + " registration";
     }
 
     public static String unsuccessRegister(String email){
-        return "User "+ email + " already exists.";
+        return "Failed "+ email + " registration";
     }
     
     public static String successLogin(String email, int admin){
@@ -33,7 +33,7 @@ public class Messages implements Serializable{
     }
 
     public static String unsuccessLogin(String email){
-        return "Failed "+ email + " login.";
+        return "Failed "+ email + " login";
     }
 
     public static String createTravel(String date, String startPoint, String endPoint, String numberOfSeats, String creator){
@@ -122,7 +122,7 @@ public class Messages implements Serializable{
     }
 
     public static String sendPassengers(String email, ArrayList<User> passengers){
-        String string = "SendPassengers "+ email + " Travel number\n";
+        String string = "SendPassengers "+ email + " Travel number \n";
         String aux;
 
         for(int i=0; i < passengers.size();i++){
@@ -134,7 +134,7 @@ public class Messages implements Serializable{
     }
 
     public static String sendPassengersRequest(String email, ArrayList<User> passengers){
-        String string = "SendPassengersRequest "+ email + " Travel number\n";
+        String string = "SendPassengersRequest "+ email + " Travel number \n";
         String aux;
 
         for(int i=0; i < passengers.size();i++){
@@ -207,7 +207,7 @@ public class Messages implements Serializable{
     }
 
     public static String sendRequestTravels(String email, ArrayList<Travel> travels){
-        String string = "SendJoinTravels "+ email + " " + "\n";
+        String string = "SendRequestTravels "+ email + " " + "\n";
         String aux;
 
         for(int i=0; i < travels.size();i++){

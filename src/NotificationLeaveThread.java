@@ -19,7 +19,6 @@ public class NotificationLeaveThread implements Runnable {
 
     public NotificationLeaveThread(String email){
         this.email = email;
-        System.out.println("HERE!!!!");
         setNotificationLeaveTravelChannel();
 
     }

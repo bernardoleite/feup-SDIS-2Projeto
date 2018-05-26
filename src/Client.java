@@ -45,9 +45,6 @@ public class Client {
         if(!menuAuthentication())
         return;
 
-      if(menuOptions())
-        return;
-
     }
 
     public static void setAuthenticationChannel() {
@@ -154,13 +151,16 @@ public class Client {
               System.out.println("Invalid Email");
             }
             else{
-              message =  Messages.userRegister(email,Integer.toString(password.hashCode()));
-              byte[] receive = sendCLientMessage("authentication", message);
-              String[] string = new String(receive).split(" ");
+                message =  Messages.userRegister(email,Integer.toString(password.hashCode()));
+                byte[] receive = sendCLientMessage("authentication", message);
+                String[] string = new String(receive).split(" ");
 
-              if(string[1].equals(email))
-                System.out.println(new String(receive));
-            
+                if(string[1].equals(email) && string[2].trim().equals("registration")) {
+                    if(string[0].equals(""))
+                        System.out.println("Registered new Client " + email);
+                    else
+                        System.out.println("Failed to registered Client " + email);
+                }
             }
 
           }
@@ -188,18 +188,22 @@ public class Client {
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0];
 
-                if(splitstr[1].equals(email)) {
-                    System.out.println(receive);
+                if(splitstr[1].equals(email) && splitstr[2].trim().equals("login")) {
                     if(action.equals("Success")) {
+                        System.out.println("Client " + email + " is logged in");
                         isAdmin = Integer.parseInt(splitstr[3].trim());
                         quit = true;
                         this.email=email;
+                        menuOptions();
                     }
+                    else 
+                        System.out.println("Couldn't Login Client " + email);
                 }
             
             }
           }
           else if (n == 3) {
+            System.out.println("Exiting...");  
             return false;
           }
           else {
@@ -208,7 +212,6 @@ public class Client {
           }
 
       }
-      System.out.println("You're Logged in");
       return true;      
     }
 
@@ -326,7 +329,9 @@ public class Client {
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim() + "travel created";
                     if(action.equals("Success" + " " + currentUser + "travel created"))
-                        System.out.println("Message Received: " + receive);
+                        System.out.println("Travel Created");
+                    else
+                        System.out.println("Couldn't create travel");
 
             }
 
@@ -353,9 +358,9 @@ public class Client {
                 String[] splitstr = receive.split(" ");
                 String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
                 if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
-                    System.out.println("Message Received: " + receive);
+                    System.out.println("Travel Deleted with success");
                 else 
-                    System.out.println("No success!");
+                    System.out.println("Couldn't delete travel");
 
             }
             else if(n==3){
@@ -367,23 +372,23 @@ public class Client {
                 }while(!checkInputInteger(travelID));
 
                 message= Messages.listPassengers(email, travelID);
-                System.out.println(message);
                 String receive = new String(sendCLientMessage("list", message));
                 String[] splitstr = receive.split(" ");
-                System.out.println("Receivedmsg: " +receive);
                 if(!splitstr[0].equals("FailedPassengers")) {
                     System.out.println("Travel Passengers:\n");
-                    System.out.println(receive);
-                    
+                    for(int i = 1; i < splitstr.length; i++)
+                        System.out.println(splitstr[i]);
+            
                     message= Messages.listPassengersRequest(email, travelID);
                     splitstr = receive.split(" ");
 
                     if(!splitstr[0].equals("FailedPassengersRequest")) {
 
-                        System.out.println(message);
                         receive = new String(sendCLientMessage("list", message));
+                        splitstr = receive.split("\n");
                         System.out.println("Travel Passengers Request:\n");
-                        System.out.println(receive);
+                        for(int i = 1; i < splitstr.length; i++)
+                            System.out.println(splitstr[i]);
 
                         menuManageTravel(travelID);
                     }
@@ -458,8 +463,10 @@ public class Client {
                    
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
-                    if(action.equals("SendSpecificTravels" + " " + currentUser))
-                        System.out.println("Message Received: " + receive);
+                    if(action.equals("SendSpecificTravels" + " " + currentUser)) {
+                        System.out.println("Travels");
+                        System.out.println(splitstr[2]);
+                    }
                 }
                 else if(optionSelected == 2){
 
@@ -492,10 +499,12 @@ public class Client {
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("list", message));
 
-                   /* String[] splitstr = receive.split(" ");
+                    String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
-                    if(action.equals("SendSpecificTravels" + " " + currentUser))*/
-                    System.out.println("Message Received: " + receive);
+                    if(action.equals("SendSpecificTravels" + " " + currentUser)) {
+                        System.out.println("Travels:");
+                        System.out.println(splitstr[2]);    
+                    }
                 }
                 else if(n==3){
                     quit = true;
@@ -514,21 +523,42 @@ public class Client {
                 message= Messages.joinTravel(email, travelID);
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
-                System.out.println(receive);
-                
+                String[] splitstr = receive.split(" ");
+                if(splitstr[2].equals("join") && splitstr[3].equals("travel")) {
+                    if(splitstr[0].equals("Success"))
+                        System.out.println("Join Travel with success");
+                    else
+                        System.out.println("Couldn't join travel");   
+                }
             }
             else if(n==7){
 
                 message = Messages.listJoinTravels(email);
-                System.out.println(message);
                 String receive = new String(sendCLientMessage("list", message));
-                System.out.println(receive);
 
+                String[] splitstr = receive.split(" ");
+                if(splitstr[0].equals("SendJoinTravels")) {
+                    System.out.println("List of join travels:");
+                    splitstr = receive.split("\n");
+                    for(int i = 1; i < splitstr.length; i++)
+                        System.out.println(splitstr[i]);
+
+                }
+                else
+                    System.out.println("Unsuccess to list join passengers");
 
                 message = Messages.listRequestTravels(email);
-                System.out.println(message);
                 receive = new String(sendCLientMessage("list", message));
-                System.out.println(receive);
+                splitstr = receive.split(" ");
+                if(splitstr[0].equals("SendRequestTravels")) {
+                    System.out.println("List of request travels:");
+                    splitstr = receive.split("\n");
+                    for(int i = 1; i < splitstr.length; i++)
+                        System.out.println(splitstr[i]);
+
+                }
+                else
+                    System.out.println("Unsuccess to list request passengers");
                
                 String travelID= "";
                 do{
@@ -538,10 +568,14 @@ public class Client {
                 }while(!checkInputInteger(travelID));
 
                 message= Messages.leaveTravel(email, travelID);
-                System.out.println(message);
                 receive = new String(sendCLientMessage("joinTravel", message));
-                System.out.println(receive);
-                
+                splitstr = receive.split(" ");
+                if(splitstr[0].equals("Success") && splitstr[2].equals("leave")) {
+                    System.out.println("Client " + email + " leaved travel with success");
+                }                
+                else {
+                    System.out.println("Couldn't leave travel");
+                }
             }
             else if(n==8){
                 message = Messages.listMyTravels(email);
