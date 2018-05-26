@@ -470,7 +470,9 @@ public class Client {
                     String action = splitstr[0]+" "+splitstr[1].trim();
                     if(action.equals("SendSpecificTravels" + " " + currentUser)) {
                         System.out.println("Travels");
-                        System.out.println(splitstr[2]);
+                        splitstr = receive.split("\n");
+                        for(int i = 1; i < splitstr.length; i++)
+                            System.out.println(splitstr[i]);
                     }
                 }
                 else if(optionSelected == 2){
@@ -503,12 +505,15 @@ public class Client {
                     message =  Messages.searchPartialTravel(searchDay,searchStartPoint,searchEndPoint,currentUser);
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("list", message));
-
+                    System.out.println(receive);
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
                     if(action.equals("SendSpecificTravels" + " " + currentUser)) {
                         System.out.println("Travels:");
-                        System.out.println(splitstr[2]);    
+                        splitstr = receive.split("\n");
+                        for(int i = 1; i < splitstr.length; i++) {
+                            System.out.println(splitstr[i]);
+                        }
                     }
                 }
                 else if(n==3){
