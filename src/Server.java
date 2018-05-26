@@ -72,6 +72,7 @@ public class Server implements Serializable{
           ObjectInputStream is = new ObjectInputStream(new FileInputStream(filebin));
           currentFiles = (ArrayOfFiles)is.readObject();
           is.close();
+          admins.clear();
           users.addAll(currentFiles.users);
           admins.addAll(currentFiles.admins);
           counterUsers = currentFiles.counterUsers;
