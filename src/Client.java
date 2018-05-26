@@ -124,12 +124,17 @@ public class Client {
       boolean quit = false;
 
       while(!quit) {
-          System.out.println();
-          System.out.println("Log In - 1");
-          System.out.println("Register - 2");
-          System.out.println("Exit - 3");
-          System.out.println();
-          int n = Integer.parseInt(System.console().readLine());
+          String value;
+          do{
+            System.out.println();
+            System.out.println("Log In - 1");
+            System.out.println("Register - 2");
+            System.out.println("Exit - 3");
+            System.out.println();
+              value = System.console().readLine();
+          }while(!checkInputInteger(value));
+
+          int n = Integer.parseInt(value);
 
           if(n == 2) {
             System.out.println("Email: ");
@@ -231,24 +236,28 @@ public class Client {
         notificationCreateTravelThread.start();
 
         while(!quit) {
-            System.out.println();
-            System.out.println("Create Travel - 1");
-            System.out.println("Delete Travel - 2");
-            System.out.println("Manage your Travels - 3");
-            System.out.println("Search for a Travel - 4");
-            System.out.println("Show your notifications - 5");
-            System.out.println("Join Travel - 6");
-            System.out.println("Leave Travel - 7");
-            System.out.println("My Travels - 8");
-            System.out.println("My Join Travels - 9");
-            System.out.println("Wait for a travel - 10");
-            System.out.println("Go Back - 11");
-            if (isAdmin==1){
-                System.out.println("[Admin] See all Travels - 12");
-                System.out.println("[Admin] Delete a Travel - 13");
-            }
-            int n = Integer.parseInt(System.console().readLine());
+            String value;
+            do{
+                System.out.println();
+                System.out.println("Create Travel - 1");
+                System.out.println("Delete Travel - 2");
+                System.out.println("Manage your Travels - 3");
+                System.out.println("Search for a Travel - 4");
+                System.out.println("Show your notifications - 5");
+                System.out.println("Join Travel - 6");
+                System.out.println("Leave Travel - 7");
+                System.out.println("My Travels - 8");
+                System.out.println("My Join Travels - 9");
+                System.out.println("Wait for a travel - 10");
+                System.out.println("Go Back - 11");
+                if (isAdmin==1){
+                    System.out.println("[Admin] See all Travels - 12");
+                    System.out.println("[Admin] Delete a Travel - 13");
+                }
+                value = System.console().readLine();
+            }while(!checkInputInteger(value));
 
+            int n = Integer.parseInt(value);
             if(n == 1) {
                 boolean isDateAfter;
                 String hour, date, startPoint, endPoint, nrSeats;
@@ -328,8 +337,13 @@ public class Client {
                 System.out.println();
                 System.out.println(receive);
                 System.out.println();
-                System.out.println("Please, select the (Id) of the one you want to delete: ");
-                String travelIdentifier = System.console().readLine();
+                String travelIdentifier="";
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the (Id) of the one you want to delete: ");
+                    travelIdentifier = System.console().readLine();
+                }while(!checkInputInteger(travelIdentifier));
+            
 
                 message =  Messages.deleteTravel(travelIdentifier, currentUser);
                 System.out.println();
@@ -345,8 +359,12 @@ public class Client {
 
             }
             else if(n==3){
-                System.out.println("Please, select the ID of the Travel that you want to manage: ");
-                String travelID= System.console().readLine();
+                String travelID= "";
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the ID of the Travel that you want to manage: ");
+                    travelID = System.console().readLine();
+                }while(!checkInputInteger(travelID));
 
                 message= Messages.listPassengers(email, travelID);
                 System.out.println(message);
@@ -485,8 +503,13 @@ public class Client {
 
             }
             else if(n==6){
-                System.out.println("Please, select the ID of the Travel: ");
-                String travelID= System.console().readLine();
+               
+                String travelID= "";
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the ID of the Travel: ");
+                    travelID = System.console().readLine();
+                }while(!checkInputInteger(travelID));
 
                 message= Messages.joinTravel(email, travelID);
                 System.out.println(message);
@@ -506,9 +529,13 @@ public class Client {
                 System.out.println(message);
                 receive = new String(sendCLientMessage("list", message));
                 System.out.println(receive);
-
-                System.out.println("Please, select the ID of the Travel: ");
-                String travelID= System.console().readLine();
+               
+                String travelID= "";
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the ID of the Travel: ");
+                    travelID = System.console().readLine();
+                }while(!checkInputInteger(travelID));
 
                 message= Messages.leaveTravel(email, travelID);
                 System.out.println(message);
@@ -623,8 +650,13 @@ public class Client {
                 System.out.println();
                 System.out.println(receive);
                 System.out.println();
-                System.out.println("Please, select the (Id) of the one you want to delete: ");
-                String travelIdentifier = System.console().readLine();
+
+                String travelIdentifier = "";
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the (Id) of the one you want to delete: ");
+                    travelIdentifier = System.console().readLine();
+                }while(!checkInputInteger(travelIdentifier));
 
                 message =  Messages.deleteTravel(travelIdentifier, currentUser);
                 System.out.println();
@@ -650,14 +682,20 @@ public class Client {
         String passengerEmail;
 
         while(!quit) {
-            System.out.println();
-            System.out.println("Join Passenger - 1");
-            System.out.println("Remove Passenger - 2");
-            System.out.println("Go Back - 3");
-            System.out.println();
-            int n = Integer.parseInt(System.console().readLine());
-            boolean setEmail=false;
 
+            String value;
+            boolean setEmail=false;
+            do{
+                System.out.println();
+                System.out.println("Join Passenger - 1");
+                System.out.println("Remove Passenger - 2");
+                System.out.println("Go Back - 3");
+                System.out.println();
+                value = System.console().readLine();
+            }while(!checkInputInteger(value));
+
+            int n = Integer.parseInt(value);
+            
             if(n == 1) {
                 
                 do{
@@ -815,7 +853,7 @@ public class Client {
     }
 
     boolean checkInputWords(String word){
-        if(!word.matches("([A-Za-z]*)")){
+        if(!word.matches("([A-Za-z]+)")){
             return false;
         }
         else{
@@ -824,7 +862,7 @@ public class Client {
     }
 
     boolean checkInputInteger(String integerToCheck){
-        if(!integerToCheck.matches("([1-9]*)")){
+        if(!integerToCheck.matches("([1-9]+)")){
             return false;
         }
         else{
