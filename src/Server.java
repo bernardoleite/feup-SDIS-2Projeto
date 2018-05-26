@@ -5,6 +5,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
+import java.net.Socket;
+import java.net.ServerSocket;
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.SSLServerSocketFactory;
+import java.io.Reader;
+import java.io.BufferedReader;
+
 
 public class Server implements Serializable{
 
@@ -96,7 +103,7 @@ public class Server implements Serializable{
 
     }
 
-    public Server() {
+    public Server() throws Exception {
 
         try{
               createAdministration();
@@ -109,7 +116,7 @@ public class Server implements Serializable{
                 currentFiles = new ArrayOfFiles();
               }
 
-            Thread authChannel = new Thread(new AuthenticationChannel(ip_authentication, port_authentication));
+            Thread authChannel = new Thread(new ServerAuthChannel());
             authChannel.start();
 
             Thread ownerChannel = new Thread(new OwnerChannel(ip_owner, port_owner));
@@ -130,7 +137,7 @@ public class Server implements Serializable{
 
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 
         System.setProperty("java.net.preferIPv4Stack", "true");
 

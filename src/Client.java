@@ -49,7 +49,7 @@ public class Client {
 
     public static void setAuthenticationChannel() {
         try{
-            authChannel = new AuthenticationChannel(ip_authentication, port_authentication);
+            authChannel = new AuthenticationChannel();
         }
         catch (UnknownHostException e) {
             e.printStackTrace();
@@ -87,7 +87,12 @@ public class Client {
 
 
     public static void sendAuthentication(byte[] message) throws UnknownHostException, InterruptedException {
+        try{
         authChannel.sendMessage(message);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
 	  }
 
     public static void sendOwner(byte[] message) throws UnknownHostException, InterruptedException {
@@ -156,7 +161,7 @@ public class Client {
                 String[] string = new String(receive).split(" ");
 
                 if(string[1].equals(email) && string[2].trim().equals("registration")) {
-                    if(string[0].equals(""))
+                    if(string[0].equals("Success"))
                         System.out.println("Registered new Client " + email);
                     else
                         System.out.println("Failed to registered Client " + email);
@@ -766,7 +771,7 @@ public class Client {
         return true;
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
 
         System.setProperty("java.net.preferIPv4Stack", "true");
 

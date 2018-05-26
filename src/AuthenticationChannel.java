@@ -9,108 +9,73 @@ import java.net.DatagramSocket;
 import java.io.*;
 import java.util.*;
 
+import java.net.Socket;
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
+
 
 public class AuthenticationChannel implements Runnable{
 
-    private InetAddress address;
-    private Integer port;
-    private static MulticastSocket receiverSocket;
-
     private static ExecutorService exec;
 
+    BufferedReader socketBufferedReader = null;
+    PrintWriter printWriter = null;
+    Socket socket = null;
 
-	public AuthenticationChannel(String address, int port) throws UnknownHostException{
 
+	public AuthenticationChannel() throws UnknownHostException{
 
         exec = Executors.newFixedThreadPool(1000);
 
-		try {
-			this.address = InetAddress.getByName(address);
-			this.port = port;
-
-		}
-		catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
     }
 
-    public void sendMessage(byte[] toSendContent) throws UnknownHostException, InterruptedException{
+    public void sendMessage(byte[] toSendContent) throws Exception{
 
-		try(DatagramSocket senderSocket = new DatagramSocket()){
-			//create a packet that will contain the data
-			DatagramPacket msgPacket = new DatagramPacket(toSendContent ,toSendContent.length,address,port);
-			senderSocket.send(msgPacket);
+		try{
+			System.setProperty("javax.net.ssl.trustStore", "za.store");
+			socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 4444);
+			socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			printWriter = new PrintWriter(socket.getOutputStream(), true);
 
-		} catch(IOException ex){
-			ex.printStackTrace();
+			String str = new String(toSendContent, StandardCharsets.UTF_8);
+			printWriter.println(str);
 
 		}
-	}
-
-	public byte[] receiveMessage(String email) throws UnknownHostException, InterruptedException{
-
-		byte[] buf = new byte[65000];
-		byte[] received = new byte[65000];
-		openSocket();
-		String receivedEmail = "";
-		try{
-			do {
-			DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
-			receiverSocket.receive(msgReceiverPacket);
-			received = Arrays.copyOfRange(buf, 0, buf.length-1);
-			String[] receivedStr = new String(received).split(" ");
-			receivedEmail = receivedStr[1].trim();
-			} while(!email.equals(receivedEmail));
-		}catch(IOException ex){
-			ex.printStackTrace();
-		}
-		return received;
-	}
-
-    public void openSocket(){
-		try{
-			receiverSocket = new MulticastSocket(port);
-
-			receiverSocket.joinGroup(address);
-		}catch(IOException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 
 	}
 
-	@Override
-	public void run(){
+	public byte[] receiveMessage(String email) throws Exception{
 
-		byte[] buf = new byte[65000];
-		openSocket();
-
+		String receivedEmail = "";
+		String received = "";
 		try{
-			while(true){
 
-				DatagramPacket msgReceiverPacket = new DatagramPacket(buf,buf.length);
-				receiverSocket.receive(msgReceiverPacket);
-
-				byte[] received = Arrays.copyOfRange(buf, 0, buf.length-1);
-        		System.out.println(new String(received));
-
-				MessageTreatment message = new MessageTreatment(received);
-
-				Thread.sleep(100);
-
-				if(message.getIsToSendMessage())
-					sendMessage(message.getSendMessage());
-
-
-				buf = new byte[65000];
-				received = new byte[65000];
-
-			}
+			do {
+			received = socketBufferedReader.readLine();
+			String[] receivedStr = received.split(" ");
+			receivedEmail = receivedStr[1].trim();
+			} while(!email.equals(receivedEmail));
 
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 
 
+		finally {
+		    printWriter.close(); 
+		    socketBufferedReader.close();
+		    socket.close();
+		}
+		return received.getBytes();
 	}
+
+	@Override
+	public void run(){}
 
 }
