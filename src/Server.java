@@ -678,7 +678,9 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0; i < allTravels.size(); i++){
             if(allTravels.get(i).getStartPoint().equals(startPoint) && allTravels.get(i).getEndPoint().equals(endPoint)){
-                String dayOnly = Integer.toString(allTravels.get(i).getDayInt())+"/"+Integer.toString(allTravels.get(i).getMonthInt()) +"/"+ Integer.toString(allTravels.get(i).getYearInt());
+                String dayOnly = String.format("%02d", allTravels.get(i).getDayInt())+"/"+String.format("%02d", allTravels.get(i).getMonthInt()) +"/"+ String.format("%04d", allTravels.get(i).getYearInt());
+                System.out.println("Search: " + dayOnly);
+                System.out.println("Passed: " + day);
                 if(dayOnly.equals(day))
                     selectedTravels.add(allTravels.get(i));
             }
