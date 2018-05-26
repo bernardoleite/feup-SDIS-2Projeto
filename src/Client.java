@@ -33,9 +33,9 @@ public class Client {
     private static String ip_list = "224.0.0.6";
     private static Integer port_list = 7777;
 
-    
+
     private static String currentUser="";
-    private String email; 
+    private String email;
 
     private static int isAdmin = 0;
 
@@ -121,6 +121,20 @@ public class Client {
         return date != null;
     }
 
+    private static boolean netIsAvailable() {
+      try {
+          final URL url = new URL("http://www.google.com");
+          final URLConnection conn = url.openConnection();
+          conn.connect();
+          conn.getInputStream().close();
+          return true;
+      } catch (MalformedURLException e) {
+          throw new RuntimeException(e);
+      } catch (IOException e) {
+          return false;
+      }
+  }
+
     public boolean menuAuthentication(){
 
       boolean quit = false;
@@ -135,6 +149,12 @@ public class Client {
             System.out.println();
               value = System.console().readLine();
           }while(!checkInputInteger(value));
+
+          if(!netIsAvailable()) {
+            System.out.println("Lost Internet Connection");
+            System.out.println("Exiting...");
+            System.exit(0);
+          }
 
           int n = Integer.parseInt(value);
 
@@ -200,14 +220,14 @@ public class Client {
                         this.email=email;
                         menuOptions();
                     }
-                    else 
+                    else
                         System.out.println("Couldn't Login Client " + email);
                 }
-            
+
             }
           }
           else if (n == 3) {
-            System.out.println("Exiting...");  
+            System.out.println("Exiting...");
             System.exit(0);
         }
           else {
@@ -216,7 +236,7 @@ public class Client {
           }
 
       }
-      return true;      
+      return true;
     }
 
 
@@ -264,6 +284,12 @@ public class Client {
                 value = System.console().readLine();
             }while(!checkInputInteger(value));
 
+            if(!netIsAvailable()) {
+              System.out.println("Lost Internet Connection");
+              System.out.println("Exiting...");
+              System.exit(0);
+            }
+
             int n = Integer.parseInt(value);
 
             if(n == 1) {
@@ -301,7 +327,7 @@ public class Client {
                     catch(ParseException pe) {
                         throw new IllegalArgumentException(pe);
                     }
-    
+
                     isDateAfter = confirmSuperiorDate(newDate);
                     if (!isDateAfter) {
                         System.out.println();
@@ -352,7 +378,7 @@ public class Client {
                     System.out.println("Please, select the (Id) of the one you want to delete: ");
                     travelIdentifier = System.console().readLine();
                 }while(!checkInputInteger(travelIdentifier));
-            
+
 
                 message =  Messages.deleteTravel(travelIdentifier, currentUser);
                 System.out.println();
@@ -361,7 +387,7 @@ public class Client {
                 String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
                 if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
                     System.out.println("Travel Deleted with success");
-                else 
+                else
                     System.out.println("Couldn't delete travel");
 
             }
@@ -380,7 +406,7 @@ public class Client {
                     System.out.println("Travel Passengers:\n");
                     for(int i = 1; i < splitstr.length; i++)
                         System.out.println(splitstr[i]);
-            
+
                     message= Messages.listPassengersRequest(email, travelID);
                     splitstr = receive.split(" ");
 
@@ -462,7 +488,7 @@ public class Client {
                     message =  Messages.searchCompleteTravel(searchDate+" "+searchHour,searchStartPoint,searchEndPoint,currentUser);
                     System.out.println("Message to be Sended: " + message);
                     String receive = new String(sendCLientMessage("list", message));
-                   
+
                     String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
                     if(action.equals("SendSpecificTravels" + " " + currentUser)) {
@@ -519,7 +545,7 @@ public class Client {
 
             }
             else if(n==6){
-               
+
                 String travelID= "";
                 do{
                     System.out.println();
@@ -535,7 +561,7 @@ public class Client {
                     if(splitstr[0].equals("Success"))
                         System.out.println("Join Travel with success");
                     else
-                        System.out.println("Couldn't join travel");   
+                        System.out.println("Couldn't join travel");
                 }
             }
             else if(n==7){
@@ -566,7 +592,7 @@ public class Client {
                 }
                 else
                     System.out.println("Unsuccess to list request passengers");
-               
+
                 String travelID= "";
                 do{
                     System.out.println();
@@ -579,13 +605,13 @@ public class Client {
                 splitstr = receive.split(" ");
                 if(splitstr[0].equals("Success") && splitstr[2].equals("leave")) {
                     System.out.println("Client " + email + " leaved travel with success");
-                }                
+                }
                 else {
                     System.out.println("Couldn't leave travel");
                 }
             }
             else if(n==8){
-                message = Messages.listMyTravels(email);           
+                message = Messages.listMyTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
 
                 String[] splitstr = receive.split(" ");
@@ -595,7 +621,7 @@ public class Client {
                     for(int i=1; i < splitstr.length;i++)
                         System.out.println(splitstr[i]);
                 }
-                else 
+                else
                     System.out.println("Couldn't list your travels!");
             }
             else if(n==9){
@@ -609,12 +635,12 @@ public class Client {
                     for(int i=1; i < splitstr.length;i++)
                         System.out.println(splitstr[i]);
                 }
-                else 
+                else
                     System.out.println("Couldn't list your join travels!");
-                
+
                 message = Messages.listRequestTravels(email);
                 receive = new String(sendCLientMessage("list", message));
-         
+
                 splitstr = receive.split(" ");
                 if(splitstr[0].equals("SendRequestTravels")){
                     splitstr = receive.split("\n");
@@ -622,7 +648,7 @@ public class Client {
                     for(int i=1; i < splitstr.length;i++)
                         System.out.println(splitstr[i]);
                 }
-                else 
+                else
                     System.out.println("Couldn't list your request join travels!");
 
             }
@@ -661,7 +687,7 @@ public class Client {
                     catch(ParseException pe) {
                         throw new IllegalArgumentException(pe);
                     }
-    
+
                     isDateAfter = confirmSuperiorDate(newDate);
                     if (!isDateAfter) {
                         System.out.println();
@@ -739,13 +765,13 @@ public class Client {
                 String action = splitstr[0] + " " + splitstr[1].trim() + " " + "delete travel" + " " + splitstr[4].trim();
                 if(action.equals("Success" + " " + currentUser + " " + "delete travel" + " " + travelIdentifier))
                     System.out.println("Admin: Travel deleted");
-                else 
+                else
                     System.out.println("Admin: Couldn't delete travel");
             }
 
         }
 
-        return true;      
+        return true;
     }
 
     public boolean menuManageTravel(String travelID){
@@ -767,9 +793,9 @@ public class Client {
             }while(!checkInputInteger(value));
 
             int n = Integer.parseInt(value);
-            
+
             if(n == 1) {
-                
+
                 do{
                     System.out.println("Choose the passenger email that you want to join: ");
                     passengerEmail = System.console().readLine();
@@ -780,8 +806,8 @@ public class Client {
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
                 System.out.println(receive);
-                
-                
+
+
 
             }
             if(n == 2) {
@@ -791,7 +817,7 @@ public class Client {
                     passengerEmail = System.console().readLine();
                     setEmail = passengerEmail.matches("(.+?)@(fe|fa|fba|fcna|fade|direito|fep|ff|letras|med|fmd|fpce|icbas).up.pt");
                 }while(!setEmail);
-                
+
                 message= Messages.removePassenger(email, passengerEmail, travelID);
                 System.out.println(message);
                 String receive = new String(sendCLientMessage("joinTravel", message));
@@ -803,7 +829,7 @@ public class Client {
         }
         return true;
     }
-    
+
     public static void main(String[] args) throws Exception{
 
         System.setProperty("java.net.preferIPv4Stack", "true");
@@ -827,7 +853,7 @@ public class Client {
             receive = joinTravelChannel.receiveMessage(this.email);
           else if(channel.equals("list"))
             receive = listChannel.receiveMessage(this.email);
-        
+
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -943,4 +969,3 @@ public class Client {
     }
 
 }
-

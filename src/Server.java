@@ -49,7 +49,7 @@ public class Server implements Serializable{
     //Notification Add Channel
     private static String ip_not_add = "224.0.0.10";
     private static Integer port_not_add = 9999;
-    
+
     //Notification Leave Channel
     private static String ip_not_leave = "224.0.0.11";
     private static Integer port_not_leave = 8888;
@@ -106,6 +106,12 @@ public class Server implements Serializable{
 
     public Server() throws Exception {
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         try{
               createAdministration();
 
@@ -147,6 +153,12 @@ public class Server implements Serializable{
 
     public static boolean alreadyAnUser(String email){
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i=0; i < users.size();i++){
             if(users.get(i).getEmail().equals(email))
                 return true;
@@ -161,7 +173,13 @@ public class Server implements Serializable{
 
 
     public static boolean existUser(String email,String password){
-     
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i=0; i < users.size();i++){
             if(users.get(i).getEmail().equals(email) && users.get(i).getPassword().equals(password))
                 return true;
@@ -176,6 +194,12 @@ public class Server implements Serializable{
 
     public static User getUser(String email){
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i=0; i < users.size();i++){
             if(users.get(i).getEmail().equals(email))
                 return users.get(i);
@@ -187,12 +211,19 @@ public class Server implements Serializable{
 
         return null;
     }
-    
+
     public static ArrayList<User> getAdmins(){
         return admins;
     }
 
     public static boolean joinTravel(String travelID, String email){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         Integer idTravel = Integer.parseInt(travelID);
         User user = getUser(email);
         boolean returnBoolean = false;
@@ -237,6 +268,14 @@ public class Server implements Serializable{
     }
 
     public static void sendNotificationExitTravel(String emailCreator, String message) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
+
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationExitThread = new Thread(new NotificationExitChannel(ip_not_exit, port_not_exit, emailCreator, message));
@@ -247,6 +286,14 @@ public class Server implements Serializable{
     }
 
     public static void sendNotificationDeleteTravel(String emailCreator, String message) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
+
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationDeleteThread = new Thread(new NotificationDeleteChannel(ip_not_delete, port_not_delete, emailCreator, message));
@@ -257,6 +304,13 @@ public class Server implements Serializable{
     }
 
     public static void sendNotificationAddPassenger(String emailCreator, String message) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationAddThread= new Thread(new NotificationAddChannel(ip_not_add, port_not_add, emailCreator, message));
@@ -267,6 +321,13 @@ public class Server implements Serializable{
     }
 
     public static void sendNotificationLeaveTravel(String emailCreator, String message) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationLeaveThread= new Thread(new NotificationLeaveChannel(ip_not_leave, port_not_leave, emailCreator, message));
@@ -277,6 +338,13 @@ public class Server implements Serializable{
     }
 
     public static void sendNotificationCreateTravel(String emailCreator, String message) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationCreateTravelThread= new Thread(new NotificationCreateTravelChannel(ip_not_create, port_not_create, emailCreator, message));
@@ -288,11 +356,18 @@ public class Server implements Serializable{
 
 
     public static boolean leaveTravel(String travelID, String email){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         Integer idTravel = Integer.parseInt(travelID);
         User user = getUser(email);
-        
+
         if(user!=null){
-        
+
 
             for(int i=0; i < admins.size();i++){
                 for(int j=0; j < admins.get(i).getMyTravels().size();j++){
@@ -328,7 +403,13 @@ public class Server implements Serializable{
     }
 
     public static boolean createNewTravel(Date date, String startPoint, String endPoint,Integer numberOfSeats,String email){
-        
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
                 if(users.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, users.get(i)))){
@@ -359,12 +440,18 @@ public class Server implements Serializable{
 
 public static boolean deleteTravel(String creator, int travelIdentifier){
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         Boolean isthisAdmin = false;
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(creator)){
                 isthisAdmin = true;
             }
-        }        
+        }
 
         //remove travel from user request travels
         for(int i = 0 ; i < users.size(); i++){
@@ -436,6 +523,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static ArrayList<User> getTravelPassengers(String email, Integer travelId){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<User> arrayToReturn= new ArrayList<User>();
 
         for(int i = 0 ; i < users.size(); i++){
@@ -449,11 +543,18 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                 arrayToReturn = admins.get(i).getMyTravel(travelId).getPassengers();
             }
         }
-        
+
         return arrayToReturn;
     }
 
     public static ArrayList<User> getTravelPassengersRequest(String email, Integer travelId){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<User> arrayToReturn= new ArrayList<User>();
 
         for(int i = 0 ; i < users.size(); i++){
@@ -467,11 +568,17 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                 arrayToReturn = admins.get(i).getMyTravel(travelId).getPassengersRequest();
             }
         }
-        
+
         return arrayToReturn;
     }
 
     public static boolean checkUserTravel(String email, Integer travelId){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
@@ -484,12 +591,19 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                 return admins.get(i).checkMyTravel(travelId);
             }
         }
-        
+
         return false;
     }
 
     public static boolean addPassenger(String email, Integer travelID, String emailPassenger){
-        
+
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         User user = getUser(emailPassenger);
 
         for(int i = 0 ; i < users.size(); i++){
@@ -510,24 +624,30 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                     //Send Notification
                     sendNotificationAddPassenger(emailPassenger, Messages.sendNotificationAddPassenger(emailPassenger, Integer.toString(travelID), admins.get(i).getEmail()));
 
-                    Server.serialize_Object();   
-                    return true;                 
+                    Server.serialize_Object();
+                    return true;
                 }
             }
         }
-        
+
         return false;
     }
 
     public static boolean removePassenger(String email, Integer travelID, String emailPassenger){
-    
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         User user = getUser(emailPassenger);
 
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
                 if(users.get(i).getMyTravel(travelID).removePassenger(user)){
-                    Server.serialize_Object();   
-                    return true; 
+                    Server.serialize_Object();
+                    return true;
                 }
             }
         }
@@ -535,17 +655,23 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
                 if(admins.get(i).getMyTravel(travelID).removePassenger(user)){
-                    Server.serialize_Object();   
-                    return true; 
+                    Server.serialize_Object();
+                    return true;
                 }
             }
         }
-        
+
         return false;
     }
 
     public static ArrayList<Travel> getUserJoinTravels(String email){
-    
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<Travel> joinTravel = new ArrayList<Travel>();
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
@@ -562,7 +688,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static ArrayList<Travel> getUserRequestTravels(String email){
-    
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<Travel> joinTravel = new ArrayList<Travel>();
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
@@ -580,7 +712,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
 
     public static ArrayList<Travel> getUserMyTravels(String email){
-    
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<Travel> joinTravel = new ArrayList<Travel>();
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
@@ -597,6 +735,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static boolean register(Register register){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         counterUsers++;
 
         users.add(new User(register.getEmail(),register.getPassword(),false,counterUsers));
@@ -605,6 +750,12 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static boolean checkAdmin(String email){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
@@ -617,6 +768,12 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static ArrayList<Travel> getAllTravels(){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
 
         ArrayList<Travel> allTravels = new ArrayList<Travel>();
 
@@ -639,6 +796,11 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
     public static ArrayList<Travel> getSpecificTravels(Date dateform, String startPoint, String endPoint){
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
 
         SimpleDateFormat dateHour = new SimpleDateFormat("HH");
         SimpleDateFormat dateDay = new SimpleDateFormat("dd");
@@ -673,6 +835,12 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
     public static ArrayList<Travel> getSpecificTravels(String day, String startPoint, String endPoint) throws Exception{
 
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         ArrayList<Travel> selectedTravels = new ArrayList<Travel>();
         ArrayList<Travel> allTravels = new ArrayList<Travel>();
         allTravels.addAll(getAllTravels());
@@ -692,15 +860,29 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public Boolean adminExists(String email){
-         for(int i = 0 ; i < admins.size(); i++){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
+       for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email))
                 return true;
         }
-        return false;       
+        return false;
     }
 
 
     public void createAdministration(){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         String password = "123456";
 
         if(!adminExists("up201505791@fe.up.pt"))
@@ -714,7 +896,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     public static int waitForTravel(Date date, String startPoint, String endPoint, Integer time, String email){
-        
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
                 if(users.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, time))
@@ -725,8 +913,8 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                     return b;
 
                 users.get(i).addNotificationsWaitForTravel(new Travel(date, startPoint, endPoint, time));
-                return -1;            
-                
+                return -1;
+
             }
         }
 
@@ -744,9 +932,16 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             }
         }
         return -2;
-    }        
+    }
 
     private static int checkTravelExist(Date date, String startPoint, String endPoint, Integer time) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i = 0 ; i < users.size(); i++){
             int b = users.get(i).checkMyTravels(date,startPoint,endPoint, time);
             if(b!=-1)
@@ -755,7 +950,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
 
         for(int i = 0 ; i < admins.size(); i++){
             int b = admins.get(i).checkMyTravels(date,startPoint,endPoint, time);
-            
+
             if(b!=-1)
                 return b;
         }
@@ -764,6 +959,13 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
     }
 
     private static void checkNotificationsWaitForTravel(Date date, String startPoint, String endPoint, Integer travelID) {
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, 0)) {
                 sendNotificationCreateTravel(users.get(i).getEmail(), Messages.sendNotificationCreateTravel(users.get(i).getEmail(), Integer.toString(travelID)));
@@ -775,5 +977,19 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                 sendNotificationCreateTravel(admins.get(i).getEmail(), Messages.sendNotificationCreateTravel(admins.get(i).getEmail(), Integer.toString(travelID)));
             }
         }
+    }
+
+    private static boolean netIsAvailable() {
+      try {
+          final URL url = new URL("http://www.google.com");
+          final URLConnection conn = url.openConnection();
+          conn.connect();
+          conn.getInputStream().close();
+          return true;
+      } catch (MalformedURLException e) {
+          throw new RuntimeException(e);
+      } catch (IOException e) {
+          return false;
+      }
     }
 }
