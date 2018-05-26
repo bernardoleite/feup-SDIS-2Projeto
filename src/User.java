@@ -11,6 +11,7 @@ public class User implements Serializable{
     private ArrayList<Travel> myTravels = new ArrayList<Travel>();
     private ArrayList<Travel> joinTravels= new ArrayList<Travel>();
     private ArrayList<Travel> requestTravels= new ArrayList<Travel>();
+    private ArrayList<Travel> notificationsWaitForTravels= new ArrayList<Travel>();
 
     public User(String email, String password, Boolean isAdmin,Integer id){
         this.email=email;
@@ -47,8 +48,39 @@ public class User implements Serializable{
         return requestTravels;
     }
 
-    public void addMyTravel(Travel travel){
+    public ArrayList<Travel> getNotificationsWaitForTravels(){
+        return notificationsWaitForTravels;
+    }
+
+    public boolean checkNotificationsWaitForTravel(Date date, String startPoint, String endPoint, Integer time){
+        long hour = 3600*1000;
+        for(int i=0; i < notificationsWaitForTravels.size();i++){
+            System.out.println("Checking Notification");
+
+            Date date2 = new Date(notificationsWaitForTravels.get(i).getDate().getTime()+ notificationsWaitForTravels.get(i).getTime()*hour);
+
+            if(date.after(notificationsWaitForTravels.get(i).getDate()) && date.before(date2) && notificationsWaitForTravels.get(i).getStartPoint().equals(startPoint) && notificationsWaitForTravels.get(i).getEndPoint().equals(endPoint)){
+                System.out.println("Found Notification");
+                return true;
+            } 
+        }
+        System.out.println("Not Found Notification");
+        return false;
+    }
+
+    public boolean addMyTravel(Travel travel){
+        for(int i=0; i < myTravels.size();i++){
+            if(myTravels.get(i).checkTravel(travel.getDate(), null, null, 0))
+                return false;
+        }
         myTravels.add(travel);
+        Server.serialize_Object();
+
+        return true;
+    }
+
+    public void addNotificationsWaitForTravel(Travel travel){
+        notificationsWaitForTravels.add(travel);
         Server.serialize_Object();
     }
 
@@ -134,5 +166,15 @@ public class User implements Serializable{
 
     public String getPassword(){
         return password;
+    }
+
+    public int checkMyTravels(Date date, String startPoint, String endPoint, Integer time) {
+        
+        for(int i=0; i < myTravels.size();i++){
+            if(myTravels.get(i).checkTravel(date, startPoint, endPoint, time))
+                return myTravels.get(i).getID();
+        }
+
+        return -1;
     }
 }

@@ -258,12 +258,21 @@ public class Server implements Serializable{
         }
     }
 
-
     public static void sendNotificationLeaveTravel(String emailCreator, String message) {
         System.out.println("Send Notification to User!!!");
         try {
             Thread notificationLeaveThread= new Thread(new NotificationLeaveChannel(ip_not_leave, port_not_leave, emailCreator, message));
             notificationLeaveThread.start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendNotificationCreateTravel(String emailCreator, String message) {
+        System.out.println("Send Notification to User!!!");
+        try {
+            Thread notificationCreateTravelThread= new Thread(new NotificationCreateTravelChannel(ip_not_create, port_not_create, emailCreator, message));
+            notificationCreateTravelThread.start();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -314,23 +323,30 @@ public class Server implements Serializable{
         
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(email)){
-                users.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, users.get(i)));
-                System.out.println(counterTravels);
-                counterTravels++;
+                if(users.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, users.get(i)))){
+                    checkNotificationsWaitForTravel(date, startPoint, endPoint, counterTravels);
+                    System.out.println(counterTravels);
+                    counterTravels++;
+                    serialize_Object();
+                    return true;
+                }
             }
         }
 
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(email)){
-                admins.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, admins.get(i)));
-                System.out.println(counterTravels);
-                counterTravels++;
+                if(admins.get(i).addMyTravel(new Travel(counterTravels,date, startPoint, endPoint, numberOfSeats, admins.get(i)))) {
+                    checkNotificationsWaitForTravel(date, startPoint, endPoint, counterTravels);
+                    System.out.println(counterTravels);
+                    counterTravels++;
+                    serialize_Object();
+                    return true;
+                }
             }
         }
 
-        System.out.println("Travel added!");
-        serialize_Object();
-        return true;
+        System.out.println("Travel Exists!");
+        return false;
     }
 
 public static boolean deleteTravel(String creator, int travelIdentifier){
@@ -348,6 +364,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                 if(users.get(i).getRequestTravels().get(j).getID() == travelIdentifier){
                     users.get(i).deleteRequestTravel(travelIdentifier);
                     sendNotificationDeleteTravel(users.get(i).getEmail(), Messages.sendNotificationDeleteTravel(users.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                    break;
                 }
             }
         }
@@ -357,8 +374,8 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             for(int j = 0 ; j < users.get(i).getJoinTravels().size(); j++){
                 if(users.get(i).getJoinTravels().get(j).getID() == travelIdentifier){
                     users.get(i).deleteJoinTravel(travelIdentifier);
-                    System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(users.get(i).getEmail(), Messages.sendNotificationDeleteTravel(users.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                    break;
                 }
             }
         }
@@ -371,6 +388,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                     admins.get(i).deleteRequestTravel(travelIdentifier);
                     System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                    break;
                 }
             }
         }
@@ -382,6 +400,7 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
                     admins.get(i).deleteJoinTravel(travelIdentifier);
                     System.out.println("HERE!!!!");
                     sendNotificationDeleteTravel(admins.get(i).getEmail(), Messages.sendNotificationDeleteTravel(admins.get(i).getEmail(), Integer.toString(travelIdentifier), creator));
+                    break;
                 }
             }
         }
@@ -389,20 +408,25 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
         //remove travel from the user creator
         for(int i = 0 ; i < users.size(); i++){
             if(users.get(i).getEmail().equals(creator) || isthisAdmin){
-                users.get(i).deleteMyTravel(travelIdentifier);
+                if(users.get(i).deleteMyTravel(travelIdentifier)) {
+                    serialize_Object();
+                    return true;
+                }
             }
         }
 
         //remove travel from admins
         for(int i = 0 ; i < admins.size(); i++){
             if(admins.get(i).getEmail().equals(creator) || isthisAdmin){
-                admins.get(i).deleteMyTravel(travelIdentifier);
+                if(admins.get(i).deleteMyTravel(travelIdentifier)) {
+                    serialize_Object();
+                    return true;
+                }
             }
         }
 
-        System.out.println("Travel deleted!");
-        serialize_Object();
-        return true;
+        System.out.println("Travel Not Deleted!");
+        return false;
     }
 
     public static ArrayList<User> getTravelPassengers(String email, Integer travelId){
@@ -681,5 +705,71 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
             admins.add(new User("up201404302@fe.up.pt",Integer.toString(password.hashCode()),true,4));
     }
 
+    public static int waitForTravel(Date date, String startPoint, String endPoint, Integer time, String email){
+        
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                if(users.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, time))
+                    return -2;
+                int b = checkTravelExist(date, startPoint, endPoint, time);
 
+                if(b != -1)
+                    return b;
+
+                users.get(i).addNotificationsWaitForTravel(new Travel(date, startPoint, endPoint, time));
+                return -1;            
+                
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                if(admins.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, time))
+                    return -2;
+                int b = checkTravelExist(date, startPoint, endPoint, time);
+
+                if(b != -1)
+                    return b;
+
+                admins.get(i).addNotificationsWaitForTravel(new Travel(date, startPoint, endPoint, time));
+                return -1;
+            }
+        }
+        return -2;
+    }        
+
+    private static int checkTravelExist(Date date, String startPoint, String endPoint, Integer time) {
+        for(int i = 0 ; i < users.size(); i++){
+            int b = users.get(i).checkMyTravels(date,startPoint,endPoint, time);
+            if(b!=-1)
+                return b;
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            int b = admins.get(i).checkMyTravels(date,startPoint,endPoint, time);
+            
+            if(b!=-1)
+                return b;
+        }
+
+        return -1;
+    }
+
+    private static void checkNotificationsWaitForTravel(Date date, String startPoint, String endPoint, Integer travelID) {
+        System.out.println("Server Function");
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, 0)) {
+                sendNotificationCreateTravel(users.get(i).getEmail(), Messages.sendNotificationCreateTravel(users.get(i).getEmail(), Integer.toString(travelID)));
+                System.out.println("Sending Notification");
+
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).checkNotificationsWaitForTravel(date, startPoint, endPoint, 0)) {
+                sendNotificationCreateTravel(admins.get(i).getEmail(), Messages.sendNotificationCreateTravel(admins.get(i).getEmail(), Integer.toString(travelID)));
+                System.out.println("Sending Notification");
+            }
+        }
+    }
 }

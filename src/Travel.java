@@ -15,6 +15,7 @@ public class Travel implements Serializable{
     private String endPoint;
     private Integer numberOfSeats;
     private User creator;
+    private Integer time;
     private ArrayList<User> passengers = new ArrayList<User>();
     private ArrayList<User> passengersRequest = new ArrayList<User>();
 
@@ -25,6 +26,19 @@ public class Travel implements Serializable{
         this.endPoint=endPoint;
         this.numberOfSeats=numberOfSeats;
         this.creator=creator;
+    }
+
+    public Travel(Date date, String startPoint, String endPoint,Integer time){
+        this.ID=null;
+        this.date=date;
+        this.startPoint=startPoint;
+        this.endPoint=endPoint;
+        this.time=time;
+        this.creator=null;
+    }
+
+    public Integer getTime() {
+        return time;
     }
 
     public boolean addPassenger(User passenger){
@@ -170,6 +184,21 @@ public class Travel implements Serializable{
         user.addRequestTravel(this);
         Server.serialize_Object();
         return true;
+    }
+
+    public boolean checkTravel(Date date, String startPoint, String endPoint, Integer time) {
+        long hour = 3600*1000;
+        Date date2 = new Date(date.getTime()+ time*hour);
+        if(startPoint == null || endPoint == null) {
+            if(this.date==date){
+                return true;
+            }
+            return false;
+        }
+        if(this.date.after(date) && this.date.before(date2) && startPoint.equals(this.startPoint) && endPoint.equals(this.endPoint)){
+            return true;
+        }
+        return false;
     }
 
 }

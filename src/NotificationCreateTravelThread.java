@@ -12,8 +12,8 @@ import java.util.*;
 public class NotificationCreateTravelThread implements Runnable {
     //Notification Add Channel
     private static NotificationCreateTravelChannel notificationCreateTravelChannel;
-    private static String ip_not_create = "224.0.0.10";
-    private static Integer port_not_create = 9999;
+    private static String ip_not_create = "224.0.0.12";
+    private static Integer port_not_create = 8888;
     
     private String email;
 

@@ -72,11 +72,12 @@ public class MessageTreatment {
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
                 Date date = format.parse(dateform);
                 System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
-              
-                Server.createNewTravel(date, startPoint, endPoint, Integer.parseInt(nrSeats), creator);
-              
                 isToSendMessage = true;
-                sendMessage = Messages.successCreateTravel(creator).getBytes();
+
+                if(Server.createNewTravel(date, startPoint, endPoint, Integer.parseInt(nrSeats), creator))
+                    sendMessage = Messages.successCreateTravel(creator).getBytes();
+                else
+                    sendMessage = Messages.unsuccessCreateTravel(creator).getBytes();
                 break;
             case "Delete":
 
@@ -84,10 +85,14 @@ public class MessageTreatment {
                 String travelIdstring = splitMessage[3].trim();
                 int travelIdentifier = Integer.parseInt(travelIdstring);
               
-                Server.deleteTravel(creator, travelIdentifier);
               
                 isToSendMessage = true;
-                sendMessage = Messages.successDeleteTravel(travelIdstring, creator).getBytes();
+
+                if(Server.deleteTravel(creator, travelIdentifier))
+                    sendMessage = Messages.successDeleteTravel(travelIdstring, creator).getBytes();
+                else
+                    sendMessage = Messages.unsuccessDeleteTravel(travelIdstring, creator).getBytes();
+
                 break;
             case "Join":
                 email = splitMessage[1];
@@ -188,6 +193,28 @@ public class MessageTreatment {
                 endPoint = splitMessage[4].trim();
                 isToSendMessage = true;
                 sendMessage = Messages.sendSpecificTravels(email, Server.getSpecificTravels(day, startPoint, endPoint)).getBytes();
+                break;
+            case "WaitForTravel":
+                String user = splitMessage[1];
+                String travelDate = splitMessage[2] + " " + splitMessage[3];
+                startPoint = splitMessage[4];
+                endPoint = splitMessage[5];
+                String time = splitMessage[6].trim();
+            
+                format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+                date = format.parse(travelDate);
+                System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
+            
+                isToSendMessage = true;
+
+                int b = Server.waitForTravel(date, startPoint, endPoint, Integer.parseInt(time), user);
+
+                if(b == -1)
+                    sendMessage = Messages.successWaitForTravel(user).getBytes();
+                else if (b == -2)
+                    sendMessage = Messages.unsuccessWaitForTravel(user).getBytes();
+                else
+                    sendMessage = Messages.travelAlreadyExists(user, Integer.toString(b)).getBytes();
                 break;
         }
 

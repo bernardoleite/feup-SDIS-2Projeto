@@ -48,8 +48,16 @@ public class Messages implements Serializable{
         return "Success" + " " + creator + " " + "delete travel" + " " + travelIdentifier;
     }
 
+    public static String unsuccessDeleteTravel(String travelIdentifier, String creator){
+        return "Unsuccess" + " " + creator + " " + "delete travel" + " " + travelIdentifier;
+    }
+
     public static String successCreateTravel(String creator){
         return "Success" +  " " + creator + " " + "travel created" ;
+    }
+
+    public static String unsuccessCreateTravel(String creator){
+        return "Unsuccess" +  " " + creator + " " + "travel created" ;
     }
 
     public static String joinTravel(String personIdentifier,String travelIdentifier){
@@ -266,5 +274,29 @@ public class Messages implements Serializable{
 
     public static String sendACKLeaveTravel(String email){
         return "ListenedLeaveTravel "+ email;
+    }
+
+    public static String waitForTravel(String date, String startPoint, String destinationPoint, String time, String email){
+        return "WaitForTravel "+ email + " " + date + " " + startPoint + " " + destinationPoint + " " + time;
+    }
+
+    public static String successWaitForTravel(String email){
+        return "SuccessWaitForTravel "+ email;
+    }
+
+    public static String unsuccessWaitForTravel(String email){
+        return "UnsuccessWaitForTravel "+ email;
+    }
+
+    public static String travelAlreadyExists(String email, String travelID){
+        return "TravelAlreadyExists "+ email + " travel number " + travelID;
+    }
+
+    public static String sendACKCreateTravel(String email){
+        return "ListenedCreateTravel "+ email;
+    }
+
+    public static String sendNotificationCreateTravel(String email, String travelID){
+        return "NotificationCreateTravel "+ email + " travel number " + travelID;
     }
 }

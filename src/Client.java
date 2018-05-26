@@ -241,10 +241,11 @@ public class Client {
             System.out.println("Leave Travel - 7");
             System.out.println("My Travels - 8");
             System.out.println("My Join Travels - 9");
-            System.out.println("Go Back - 10");
+            System.out.println("Wait for a travel - 10");
+            System.out.println("Go Back - 11");
             if (isAdmin==1){
-                System.out.println("[Admin] See all Travels - 11");
-                System.out.println("[Admin] Delete a Travel - 12");
+                System.out.println("[Admin] See all Travels - 12");
+                System.out.println("[Admin] Delete a Travel - 13");
             }
             int n = Integer.parseInt(System.console().readLine());
 
@@ -476,7 +477,7 @@ public class Client {
                    /* String[] splitstr = receive.split(" ");
                     String action = splitstr[0]+" "+splitstr[1].trim();
                     if(action.equals("SendSpecificTravels" + " " + currentUser))*/
-                        System.out.println("Message Received: " + receive);
+                    System.out.println("Message Received: " + receive);
                 }
                 else if(n==3){
                     quit = true;
@@ -533,10 +534,81 @@ public class Client {
                 System.out.println(receive);
             }
             else if(n==10){
+                boolean isDateAfter;
+                String hour, date, startPoint, endPoint, time;
+                do {
+                    System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                    date = System.console().readLine();
+                    boolean isDateCorrect = confirmDay(date);
+                    while (!isDateCorrect) {
+                        System.out.println("The date format is incorrect!");
+                        System.out.println("Please, select the date of the Travel (dd/mm/yyyy): ");
+                        date = System.console().readLine();
+                        isDateCorrect = confirmDay(date);
+                    }
+
+                    System.out.println();
+                    System.out.println("Please, select from what time you want to leave (HH:mm): ");
+                    hour = System.console().readLine();
+                    boolean isHourCorrect = confirmHour(hour);
+                    while (!isHourCorrect) {
+                        System.out.println();
+                        System.out.println("The hour format is incorrect!");
+                        System.out.println("Please, select from what time you want to leave (HH:mm): ");
+                        hour = System.console().readLine();
+                        isHourCorrect = confirmHour(hour);
+                    }
+                    String completeDate = date + " " + hour;
+                    Date newDate;
+                    try {
+                        SimpleDateFormat format =
+                            new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            newDate = format.parse(completeDate);
+                    }
+                    catch(ParseException pe) {
+                        throw new IllegalArgumentException(pe);
+                    }
+    
+                    isDateAfter = confirmSuperiorDate(newDate);
+                    if (!isDateAfter) {
+                        System.out.println();
+                        System.out.println("The date you choose is after de date of today!");
+                    }
+                }while(!isDateAfter);
+
+                do {
+                    System.out.println();
+                    System.out.println("Please, select the Start Point of the Travel: ");
+                    startPoint = System.console().readLine();
+                }while(!checkInputWords(startPoint));
+
+                do {
+                    System.out.println();
+                    System.out.println("Please, select the Destination of the Travel: ");
+                    endPoint = System.console().readLine();
+                }while(!checkInputWords(endPoint));
+
+                do{
+                    System.out.println();
+                    System.out.println("Please, select the time you are willing to wait (in hours) : ");
+                    time = System.console().readLine();
+                }while(!checkInputInteger(time));
+                System.out.println();
+
+                message =  Messages.waitForTravel(date+" "+hour,startPoint,endPoint,time,currentUser);
+                System.out.println("Message to be Sended: " + message);
+                String receive = new String(sendCLientMessage("joinTravel", message));
+                String[] splitstr = receive.split(" ");
+                String action = splitstr[0]+" "+splitstr[1].trim();
+                if(action.equals("SuccessWaitForTravel" + " " + currentUser))
+                    System.out.println("Message Received: " + receive);
+                else if(action.equals("TravelAlreadyExists" + " " + currentUser))
+                    System.out.println("Message Received: " + receive);
+            }
+            else if(n==11){
                 quit=true;
             }
-
-            else if(n == 11 && isAdmin==1) {
+            else if(n == 12 && isAdmin==1) {
                 message = Messages.listAllTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");
@@ -544,7 +616,7 @@ public class Client {
                 System.out.println(receive);
                 System.out.println();
             }
-            else if(n == 12 && isAdmin==1) {
+            else if(n == 13 && isAdmin==1) {
                 message = Messages.listAllTravels(email);
                 String receive = new String(sendCLientMessage("list", message));
                 System.out.println("These are the Travels of the Server: ");
