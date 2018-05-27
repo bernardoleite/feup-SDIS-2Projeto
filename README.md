@@ -4,17 +4,17 @@
 
 Linux:
 
-1 - Go to 'src' folder;
-2 - Run command 'chmod u+x client.sh' on terminal to allow permissions;
-3 - Execute script with command './client.sh' to execute the program.
+1. Go to 'src' folder;
+2. Run command 'chmod u+x client.sh' on terminal to allow permissions;
+3. Execute script with command './client.sh' to execute the program.
 
 Note: Same steps are applied to turn on the Server. Just replace 'client' for 'server'.
 
 Windows:
 
-1 - Go to 'src' folder;
-2 - 
-3 - 
+1. Go to 'src' folder;
+2. 
+3.
 
 Note: Same steps are applied to turn on the Server. Just replace 'client' for 'server'.
 
