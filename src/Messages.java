@@ -27,7 +27,7 @@ public class Messages implements Serializable{
     public static String unsuccessRegister(String email){
         return "Failed "+ email + " registration";
     }
-    
+
     public static String successLogin(String email, int admin){
         return "Success "+ email  + " login " + admin;
     }
@@ -39,7 +39,7 @@ public class Messages implements Serializable{
     public static String createTravel(String date, String startPoint, String endPoint, String numberOfSeats, String creator){
         return "Create" + " " + creator + " " + date + " " + startPoint + " " + endPoint + " " + numberOfSeats;
     }
-    
+
     public static String deleteTravel(String travelIdentifier, String creator){
         return "Delete" + " " + creator + " " + "travel" + " " + travelIdentifier;
     }
@@ -104,7 +104,7 @@ public class Messages implements Serializable{
             aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
             string= string+aux;
         }
-        
+
         return string;
     }
 
@@ -117,7 +117,7 @@ public class Messages implements Serializable{
             aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
             string= string+aux;
         }
-        
+
         return string;
     }
 
@@ -197,7 +197,7 @@ public class Messages implements Serializable{
             aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
             string= string+aux;
         }
-        
+
         return string;
     }
 
@@ -214,7 +214,7 @@ public class Messages implements Serializable{
             aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
             string= string+aux;
         }
-        
+
         return string;
     }
 
@@ -230,10 +230,9 @@ public class Messages implements Serializable{
             aux= " " + travels.get(i).getID() + " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + "\n";
             string= string+aux;
         }
-        
+
         return string;
     }
-
 
     public static String sendNotificationJoinTravel(String emailCreator, String travelID, String email){
         return "NotificationJoinTravel "+ emailCreator + " travel number " + travelID +" passenger " + email;
@@ -298,5 +297,21 @@ public class Messages implements Serializable{
 
     public static String sendNotificationCreateTravel(String email, String travelID){
         return "NotificationCreateTravel "+ email + " travel number " + travelID;
+    }
+
+    public static String listNotifications(String email){
+        return "ListNotifications "+ email;
+    }
+
+    public static String sendNotifications(String email, ArrayList<Travel> travels){
+        String string = "sendNotifications "+ email + " " + "\n";
+        String aux;
+
+        for(int i=0; i < travels.size();i++){
+            aux= " " + travels.get(i).getDate() + " from " + travels.get(i).getStartPoint() + " to " + travels.get(i).getEndPoint() + " " + travels.get(i).getTime() + "\n";
+            string= string+aux;
+        }
+
+        return string;
     }
 }

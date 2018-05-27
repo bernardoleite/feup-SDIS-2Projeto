@@ -68,7 +68,7 @@ public class MessageTreatment {
                 String startPoint = splitMessage[4];
                 String endPoint = splitMessage[5];
                 String nrSeats = splitMessage[6].trim();
-            
+
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
                 Date date = format.parse(dateform);
                 System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
@@ -84,8 +84,8 @@ public class MessageTreatment {
                 creator = splitMessage[1];
                 String travelIdstring = splitMessage[3].trim();
                 int travelIdentifier = Integer.parseInt(travelIdstring);
-              
-              
+
+
                 isToSendMessage = true;
 
                 if(Server.deleteTravel(creator, travelIdentifier))
@@ -100,7 +100,7 @@ public class MessageTreatment {
                 isToSendMessage = true;
                 if(Server.joinTravel(travelID, email))
                     sendMessage = Messages.successJoinTravel(email).getBytes();
-                else 
+                else
                     sendMessage = Messages.unsuccessJoinTravel(email).getBytes();
                 break;
             case "Leave":
@@ -109,7 +109,7 @@ public class MessageTreatment {
                 isToSendMessage = true;
                 if(Server.leaveTravel(travelID, email))
                     sendMessage = Messages.successLeaveTravel(email).getBytes();
-                else 
+                else
                     sendMessage = Messages.unsuccessLeaveTravel(email).getBytes();
                 break;
             case "Passengers":
@@ -130,7 +130,7 @@ public class MessageTreatment {
                 else
                     sendMessage = Messages.sendFailedPassengersRequest(email).getBytes();
                 break;
-                
+
             case "AddPassenger":
                 email = splitMessage[1];
                 travelID = splitMessage[4].trim();
@@ -141,7 +141,7 @@ public class MessageTreatment {
                 else
                     sendMessage = Messages.unsuccessAddPassenger(email).getBytes();
                 break;
-                
+
             case "RemovePassenger":
                 email = splitMessage[1];
                 travelID = splitMessage[4].trim();
@@ -153,7 +153,7 @@ public class MessageTreatment {
                     sendMessage = Messages.unsuccessRemovePassenger(email).getBytes();
             break;
 
-                            
+
             case "ListJoinTravels":
                 email = splitMessage[1].trim();
                 isToSendMessage = true;
@@ -200,11 +200,11 @@ public class MessageTreatment {
                 startPoint = splitMessage[4];
                 endPoint = splitMessage[5];
                 String time = splitMessage[6].trim();
-            
+
                 format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
                 date = format.parse(travelDate);
                 System.out.println(date); // Sat Jan 02 00:00:00 GMT 2010
-            
+
                 isToSendMessage = true;
 
                 int b = Server.waitForTravel(date, startPoint, endPoint, Integer.parseInt(time), user);
@@ -216,6 +216,12 @@ public class MessageTreatment {
                 else
                     sendMessage = Messages.travelAlreadyExists(user, Integer.toString(b)).getBytes();
                 break;
+						case "ListNotifications":
+										email = splitMessage[1].trim();
+										isToSendMessage = true;
+										sendMessage = Messages.sendNotifications(email, Server.getUserNotifications(email)).getBytes();
+								break;
+
         }
 
     }

@@ -43,7 +43,7 @@ public class User implements Serializable{
     public ArrayList<Travel> getJoinTravels(){
         return joinTravels;
     }
-    
+
     public ArrayList<Travel> getRequestTravels(){
         return requestTravels;
     }
@@ -59,7 +59,7 @@ public class User implements Serializable{
 
             if(date.after(notificationsWaitForTravels.get(i).getDate()) && date.before(date2) && notificationsWaitForTravels.get(i).getStartPoint().equals(startPoint) && notificationsWaitForTravels.get(i).getEndPoint().equals(endPoint)){
                 return true;
-            } 
+            }
         }
         return false;
     }
@@ -93,17 +93,17 @@ public class User implements Serializable{
     public Integer getId(){
         return id;
     }
-    
+
     public boolean deleteMyTravel(int travelID){
 
          for(int i = 0 ; i < myTravels.size(); i++){
             if(myTravels.get(i).getID()==travelID){
                 if(myTravels.remove(myTravels.get(i))){
                      Server.serialize_Object();
-                     return true;  
+                     return true;
                 }
             }
-        }       
+        }
 
         return false;
     }
@@ -112,7 +112,7 @@ public class User implements Serializable{
 
         if(joinTravels.remove(travel)){
              Server.serialize_Object();
-             return true;  
+             return true;
         }
 
         return false;
@@ -124,10 +124,10 @@ public class User implements Serializable{
             if(joinTravels.get(i).getID()==travelID){
                 if(joinTravels.remove(joinTravels.get(i))){
                      Server.serialize_Object();
-                     return true;                     
+                     return true;
                 }
             }
-        }       
+        }
         return false;
     }
 
@@ -149,10 +149,10 @@ public class User implements Serializable{
             if(requestTravels.get(i).getID()==travelID){
                 if(requestTravels.remove(requestTravels.get(i))){
                      Server.serialize_Object();
-                     return true;                   
+                     return true;
                 }
             }
-        }       
+        }
         return false;
     }
 
@@ -165,12 +165,16 @@ public class User implements Serializable{
     }
 
     public int checkMyTravels(Date date, String startPoint, String endPoint, Integer time) {
-        
+
         for(int i=0; i < myTravels.size();i++){
             if(myTravels.get(i).checkTravel(date, startPoint, endPoint, time))
                 return myTravels.get(i).getID();
         }
 
         return -1;
+    }
+
+    public ArrayList<Travel> getNotifications(){
+        return notificationsWaitForTravels;
     }
 }

@@ -405,7 +405,7 @@ public class Client {
                 if(!splitstr[0].equals("FailedPassengers")) {
                     System.out.println("Travel Passengers:\n");
                     for(int i = 1; i < splitstr.length; i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
 
                     message= Messages.listPassengersRequest(email, travelID);
                     splitstr = receive.split(" ");
@@ -416,7 +416,7 @@ public class Client {
                         splitstr = receive.split("\n");
                         System.out.println("Travel Passengers Request:\n");
                         for(int i = 1; i < splitstr.length; i++)
-                            System.out.println(splitstr[i]);
+                            System.out.println(splitstr[i].trim());
 
                         menuManageTravel(travelID);
                     }
@@ -495,7 +495,7 @@ public class Client {
                         System.out.println("Travels");
                         splitstr = receive.split("\n");
                         for(int i = 1; i < splitstr.length; i++)
-                            System.out.println(splitstr[i]);
+                            System.out.println(splitstr[i].trim());
                     }
                 }
                 else if(optionSelected == 2){
@@ -544,6 +544,20 @@ public class Client {
                 }
 
             }
+            else if(n==5){
+              message = Messages.listNotifications(email);
+              String receive = new String(sendCLientMessage("list", message));
+
+              String[] splitstr = receive.split(" ");
+              if(splitstr[0].equals("sendNotifications")){
+                  splitstr = receive.split("\n");
+                  System.out.println("My Notifications: ");
+                  for(int i=1; i < splitstr.length;i++)
+                      System.out.println(splitstr[i].trim());
+              }
+              else
+                  System.out.println("Couldn't list your notifications travels!");
+            }
             else if(n==6){
 
                 String travelID= "";
@@ -574,7 +588,7 @@ public class Client {
                     System.out.println("List of join travels:");
                     splitstr = receive.split("\n");
                     for(int i = 1; i < splitstr.length; i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
 
                 }
                 else
@@ -587,7 +601,7 @@ public class Client {
                     System.out.println("List of request travels:");
                     splitstr = receive.split("\n");
                     for(int i = 1; i < splitstr.length; i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
 
                 }
                 else
@@ -619,7 +633,7 @@ public class Client {
                     splitstr = receive.split("\n");
                     System.out.println("My Travels: ");
                     for(int i=1; i < splitstr.length;i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
                 }
                 else
                     System.out.println("Couldn't list your travels!");
@@ -633,7 +647,7 @@ public class Client {
                     splitstr = receive.split("\n");
                     System.out.println("My Join Travels: ");
                     for(int i=1; i < splitstr.length;i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
                 }
                 else
                     System.out.println("Couldn't list your join travels!");
@@ -646,7 +660,7 @@ public class Client {
                     splitstr = receive.split("\n");
                     System.out.println("My Request Join Travels: ");
                     for(int i=1; i < splitstr.length;i++)
-                        System.out.println(splitstr[i]);
+                        System.out.println(splitstr[i].trim());
                 }
                 else
                     System.out.println("Couldn't list your request join travels!");
@@ -736,7 +750,7 @@ public class Client {
                 System.out.println();
                 String[] splitstr = receive.split("\n");
                 for(int i = 1; i < splitstr.length; i++)
-                    System.out.println(splitstr[i]);
+                    System.out.println(splitstr[i].trim());
                 System.out.println();
             }
             else if(n == 13 && isAdmin==1) {
@@ -746,7 +760,7 @@ public class Client {
                 System.out.println();
                 String[] splitstr = receive.split("\n");
                 for(int i = 1; i < splitstr.length; i++)
-                    System.out.println(splitstr[i]);
+                    System.out.println(splitstr[i].trim());
                 System.out.println();
 
                 String travelIdentifier = "";

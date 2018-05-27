@@ -992,4 +992,27 @@ public static boolean deleteTravel(String creator, int travelIdentifier){
           return false;
       }
     }
+
+    public static ArrayList<Travel> getUserNotifications(String email){
+
+        if(!netIsAvailable()) {
+          System.out.println("Lost Internet Connection");
+          System.out.println("Exiting...");
+          System.exit(0);
+        }
+
+        ArrayList<Travel> notifications = new ArrayList<Travel>();
+        for(int i = 0 ; i < users.size(); i++){
+            if(users.get(i).getEmail().equals(email)){
+                notifications = users.get(i).getNotifications();
+            }
+        }
+
+        for(int i = 0 ; i < admins.size(); i++){
+            if(admins.get(i).getEmail().equals(email)){
+                notifications = admins.get(i).getNotifications();
+            }
+        }
+        return notifications;
+    }
 }
