@@ -13,8 +13,7 @@ Note: Same steps are applied to turn on the Server. Just replace 'client' for 's
 ### Windows:
 
 1. Go to 'src' folder;
-2. 
-3.
+2. Execute script with command './client.sh' to execute the program.
 
 Note: Same steps are applied to turn on the Server. Just replace 'client' for 'server'.
 
