@@ -2,7 +2,7 @@
 
 ## Setup and Execution Instructions
 
-Linux:
+### Linux:
 
 1. Go to 'src' folder;
 2. Run command 'chmod u+x client.sh' on terminal to allow permissions;
@@ -10,7 +10,7 @@ Linux:
 
 Note: Same steps are applied to turn on the Server. Just replace 'client' for 'server'.
 
-Windows:
+### Windows:
 
 1. Go to 'src' folder;
 2. 
@@ -18,6 +18,14 @@ Windows:
 
 Note: Same steps are applied to turn on the Server. Just replace 'client' for 'server'.
 
+### Credentials for Admins:
+
+- up201505791@fe.up.pt
+- up201404464@fe.up.pt
+- up201506440@fe.up.pt
+- up201404302@fe.up.pt
+
+Password: 123456
 
 ### Members
 
