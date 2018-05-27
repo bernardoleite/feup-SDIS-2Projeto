@@ -740,7 +740,6 @@ public class Client {
                     System.out.println("Couldn't create notification");
             }
             else if(n==11){
-                System.out.println("Entered 11!!!");
                 quit = true;
             }
             else if(n == 12 && isAdmin==1) {
