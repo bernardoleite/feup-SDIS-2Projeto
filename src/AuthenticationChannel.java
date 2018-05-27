@@ -36,7 +36,8 @@ public class AuthenticationChannel implements Runnable{
 
 		try{
 			System.setProperty("javax.net.ssl.trustStore", "za.store");
-			socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket("localhost", 4444);
+			InetAddress addr = InetAddress.getByName("localhost");
+			socket = ((SSLSocketFactory)SSLSocketFactory.getDefault()).createSocket(addr, 4444);
 			socketBufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
 
