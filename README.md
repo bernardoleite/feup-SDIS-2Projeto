@@ -20,6 +20,8 @@ Note: Same steps are applied to turn on the Server. Just replace 'client' for 's
 
 ### Credentials for Admins:
 
+Emails:
+
 - up201505791@fe.up.pt
 - up201404464@fe.up.pt
 - up201506440@fe.up.pt
