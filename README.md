@@ -2,7 +2,7 @@
 
 ### Description
 
-UPER is a Distributed System that has as main function the sharing of hitchhiking among the people involved in the community of the University of Porto. With this project we intended to implement a platform capable of managing a travel between two points. A registered user who is going to take a trip can create it on the platform and another user could join the trip.
+UPER is a Distributed System that has as main function the sharing of hitchhiking among the people involved in the community of the University of Porto. With this project we intended to implement a platform capable of managing a travel between two points. A registered that is going to take a trip can create it on the platform and another user could join the trip.
 
 ### Functionalities
 
